@@ -1,0 +1,40 @@
+homem(nuno).
+homem(avelino).
+homem(fernando).
+homem(santiago).
+mulher(elita).
+mulher(claudia).
+mulher(ines).
+mulher(sofia).
+pais(nuno, avelino, elita).
+pais(santiago, fernando, claudia).
+pais(sofia, fernando, claudia).
+pai(P,F):-
+    pais(F,P,_).
+pai(P):-
+    pai(P,_).
+mae(M,F):-
+    pais(F,_,M).
+mae(M):-
+    mae(M,_).
+filho(F,X):-
+    homem(F),
+    (pai(X,F);mae(X,F)).
+filha(F,X):-
+    mulher(F),
+    (pai(X,F);mae(X,F)).
+irmao(I1,I2):-
+    homem(I1),
+    pais(I1,P,M),
+    pais(I2,P,M),
+    I1\=I2.
+irma(I1,I2):-
+    mulher(I1),
+    pais(I1,P,M),
+    pais(I2,P,M),
+    I1\=I2.
+irmaos(I1,I2):-
+    (homem(I1);homem(I2)),
+    pais(I1,P,M),
+    pais(I2,P,M),
+    I1\=I2.
