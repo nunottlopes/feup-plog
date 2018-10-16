@@ -20,6 +20,17 @@ initialBoard([
     [empty, empty, black, black, black, black, empty, empty]
 ]).
 
+finalBoard([
+    [empty, empty, white, empty, empty, empty, white, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, black, empty],
+    [empty, empty, black, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, white, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, white, empty, empty, empty, black],
+    [empty, empty, empty, black, empty, empty, empty, empty]
+]).
+
 symbol(empty, S) :- S=' '.
 symbol(black, S) :- S='X'.
 symbol(white, S) :- S='O'.
@@ -62,3 +73,9 @@ printLine([]).
 
 display_game(B, P) :- 
     printBoard(B).
+
+movePiece(InitialBoard, InitialColumn, InitialRow, NewColumn, NewRow, NewBoard) :-
+    checkEmptySpot(InitialBoard, InitialColumn, InitialRow).
+
+checkEmptySpot(InitialBoard, InitialColumn, InitialRow) :-
+    write('empty spot').
