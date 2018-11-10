@@ -22,16 +22,13 @@ handleStartMenuInput(0) :-
     write('\nExiting game...\n').
 
 handleStartMenuInput(1) :-
-    initializeGame('Player', 'Player'),
-    write('\nStarting Player vs Player\n').
+    initializeGame('Player', 'Player').
 
 handleStartMenuInput(2) :-
-    initializeGame('Player', 'Computer'),
-    write('\nStarting Player vs Computer\n').
+    initializeGame('Player', 'Computer').
 
 handleStartMenuInput(3) :-
-    initializeGame('Computer', 'Computer'),
-    write('\nStarting Computer vs Computer\n').
+    initializeGame('Computer', 'Computer').
 
 handleStartMenuInput(_) :-
     write('> Wrong option, please chose another option '),
@@ -96,3 +93,35 @@ printStartMenu :-
     write('|         |         |          Francisco Ferreira           |         |         |'), nl,
     write('|         |         |                                       |         |         |'), nl,
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl, nl.
+
+
+player1Turn :-
+	write('\n\n------------------------- PLAYER 1 TURN -------------------------\n').
+
+player2Turn :-
+	write('\n\n------------------------- PLAYER 2 TURN -------------------------\n').
+
+askMove(OldPosition, NewPosition, OldBoard, NewBoard, Player) :-
+    write('Which board piece do you want to move? '),
+    readExistPiece(Player, OldPosition, OldBoard),
+    choseNewPosition(Player, NewPosition).
+
+readExistPiece(Player, OldPosition, OldBoard) :- 
+    read(OldPosition),
+    checkPieceOnPosition(OldPosition, Player, OldBoard, Valid),
+    Valid == 1 -> (
+        write('No piece in that position, please chose another one '),
+        readExistPiece(Player, OldPosition, OldBoard)
+    ).
+
+choseNewPosition(Player, Position) :-
+    write('Where do you want to place the piece? '),
+    readNewPiece(Player, Position).
+
+readNewPiece(Player, Position) :-
+    read(Position),
+    checkValidNewPosition(Position, Player, Valid),
+    Valid == 1 -> (
+        write('ask for new position again')
+    ).
+

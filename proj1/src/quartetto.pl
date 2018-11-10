@@ -4,5 +4,8 @@
 :- include('player.pl').
 :- include('computer.pl').
 
+:- use_module(library(random)).
+:- use_module(library(lists)).
+
 quartetto :-
     mainMenu.
