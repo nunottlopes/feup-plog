@@ -3,9 +3,7 @@
 :- include('logic.pl').
 :- include('player.pl').
 :- include('computer.pl').
-
-:- use_module(library(random)).
-:- use_module(library(lists)).
+:- include('input.pl').
 
 quartetto :-
     mainMenu.

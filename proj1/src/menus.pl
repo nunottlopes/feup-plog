@@ -96,32 +96,15 @@ printStartMenu :-
 
 
 player1Turn :-
-	write('\n\n------------------------- PLAYER 1 TURN -------------------------\n').
+	write('\n\n------------------------- PLAYER 1 TURN (X) -------------------------\n').
 
 player2Turn :-
-	write('\n\n------------------------- PLAYER 2 TURN -------------------------\n').
+	write('\n\n------------------------- PLAYER 2 TURN (O) -------------------------\n').
 
-askMove(OldPosition, NewPosition, OldBoard, NewBoard, Player) :-
-    write('Which board piece do you want to move? '),
-    readExistPiece(Player, OldPosition, OldBoard),
-    choseNewPosition(Player, NewPosition).
+player1Win :-
+	write('\n\n------------------------- PLAYER 1 WINS (X) !! -------------------------\n').
 
-readExistPiece(Player, OldPosition, OldBoard) :- 
-    read(OldPosition),
-    checkPieceOnPosition(OldPosition, Player, OldBoard, Valid),
-    Valid == 1 -> (
-        write('No piece in that position, please chose another one '),
-        readExistPiece(Player, OldPosition, OldBoard)
-    ).
+player2Win :-
+	write('\n\n------------------------- PLAYER 2 WINS (O) !! -------------------------\n').
 
-choseNewPosition(Player, Position) :-
-    write('Where do you want to place the piece? '),
-    readNewPiece(Player, Position).
-
-readNewPiece(Player, Position) :-
-    read(Position),
-    checkValidNewPosition(Position, Player, Valid),
-    Valid == 1 -> (
-        write('ask for new position again')
-    ).
 
