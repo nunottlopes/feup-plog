@@ -1,66 +1,83 @@
 askColumn(NewColumn) :-
     write('> Column: '),
-    read(Column),
+    get_code(Column),
     convertColumn(Column, NewColumn).
 
-convertColumn('A', NewColumn) :-
+convertColumn(65, NewColumn) :-
     NewColumn = 1.
 
-convertColumn('B', NewColumn) :-
+convertColumn(66, NewColumn) :-
     NewColumn = 2.
 
-convertColumn('C', NewColumn) :-
+convertColumn(67, NewColumn) :-
     NewColumn = 3.
 
-convertColumn('D', NewColumn) :-
+convertColumn(68, NewColumn) :-
     NewColumn = 4.
 
-convertColumn('E', NewColumn) :-
+convertColumn(69, NewColumn) :-
     NewColumn = 5.
 
-convertColumn('F', NewColumn) :-
+convertColumn(70, NewColumn) :-
     NewColumn = 6.
 
-convertColumn('G', NewColumn) :-
+convertColumn(71, NewColumn) :-
     NewColumn = 7.
 
-convertColumn('H', NewColumn) :-
+convertColumn(72, NewColumn) :-
     NewColumn = 8.
 
-convertColumn(_, NewColumn) :-
+convertColumn(10, NewColumn) :-
+    get_code(Column),
+    convertColumn(Column, NewColumn).
+
+convertColumn(46, NewColumn) :-
+    get_code(Column),
+    convertColumn(Column, NewColumn).
+
+convertColumn(_Column, NewColumn) :-
     write('ERROR: That column is not valid!\n'),
     askColumn(NewColumn).
 
 askRow(NewRow) :-
     write('> Row: '),
-    read(Row),
+    get_code(Row),
     checkCorrectRow(Row, NewRow).
 
-checkCorrectRow(1, NewRow) :-
+checkCorrectRow(10, NewRow) :-
+    get_code(Input),
+    checkCorrectRow(Input, NewRow).
+
+checkCorrectRow(46, NewRow) :-
+    get_code(Input2),
+    checkCorrectRow(Input2, NewRow).
+
+checkCorrectRow(56, NewRow) :-
     NewRow = 1.
 
-checkCorrectRow(2, NewRow) :-
+checkCorrectRow(55, NewRow) :-
     NewRow = 2.
 
-checkCorrectRow(3, NewRow) :-
+checkCorrectRow(54, NewRow) :-
     NewRow = 3.
 
-checkCorrectRow(4, NewRow) :-
+checkCorrectRow(53, NewRow) :-
     NewRow = 4.
 
-checkCorrectRow(5, NewRow) :-
+checkCorrectRow(52, NewRow) :-
     NewRow = 5.
 
-checkCorrectRow(6, NewRow) :-
+checkCorrectRow(51, NewRow) :-
     NewRow = 6.
 
-checkCorrectRow(7, NewRow) :-
+checkCorrectRow(50, NewRow) :-
     NewRow = 7.
 
-checkCorrectRow(8, NewRow) :-
+checkCorrectRow(49, NewRow) :-
     NewRow = 8.
 
-checkCorrectRow(_, NewRow) :-
+checkCorrectRow(X, NewRow) :-
+    write(X),
     write('ERROR: That row is not valid!\n'),
     askRow(NewRow).
 

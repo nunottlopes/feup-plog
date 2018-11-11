@@ -33,7 +33,7 @@ readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
     askColumn(OldColumn),
     checkPieceOnPosition(OldRow, OldColumn, Player, OldBoard, Valid),
     (Valid == 1 -> (
-        write('> No piece in that position, please chose another one\n'),
+        write('\n> No piece in that position, please chose another one\n'),
         readExistPiece(Player, OldRow, OldColumn, OldBoard)
     );
     write('\n')).
@@ -43,14 +43,53 @@ readNewPiece(Player, NewRow, NewColumn, NewBoard) :-
     askColumn(NewColumn),
     checkValidNewPosition(NewRow, NewColumn, Player, NewBoard, Valid),
     (Valid == 1 -> (
-        write('> Invalid position to place the piece, please chose another one\n'),
+        write('\n> Invalid position to place the piece, please chose another one\n'),
         readNewPiece(Player, NewRow, NewColumn, NewBoard)
     );
     write('\n')).
 
-checkPieceOnPosition(OldRow, OldColumn, Player, OldBoard, Valid) :-
-    Valid is 2,
-    write('check here if there is a piece in Position, return on Valid\n').
+checkPieceOnPosition(OldRow, OldColumn, Player, [H|T], Valid) :-
+    OldRow == 1 -> (
+        lookOnColumn(OldColumn, Player, H, Valid)
+    );(
+        OldRow1 is OldRow-1,
+        checkPieceOnPosition(OldRow1, OldColumn, Player, T, Valid)
+    ).
+
+checkPieceOnPosition(OldRow, OldColumn, Player, [], Valid).
+
+lookOnColumn(OldColumn, Player, [H|T], Valid) :-
+    OldColumn == 1 -> (
+        checkIfCorrectPiece(H, Player, Valid)
+    );(
+        OldColumn1 is OldColumn-1,
+        lookOnColumn(OldColumn1, Player, T, Valid)
+    ).
+
+checkIfCorrectPiece(Piece, Player, Valid) :-
+    Player == 'Player1' -> (
+        Piece == 'black' -> (
+            Valid is 2
+        );(
+            Valid is 1
+        )
+    );(
+        Piece == 'white' -> (
+            Valid is 2
+        );(
+            Valid is 1
+        )
+    ).
+
+
+
+
+
+
+
+
+
+
 
 checkValidNewPosition(NewRow, NewColumn, Player, NewBoard, Valid) :-
     Valid is 1,

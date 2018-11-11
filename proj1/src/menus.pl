@@ -22,10 +22,10 @@ handleStartMenuInput(0) :-
     write('\nExiting game...\n').
 
 handleStartMenuInput(1) :-
-    initializeGame('Player', 'Player').
+    initializeGame('Player1', 'Player2').
 
 handleStartMenuInput(2) :-
-    initializeGame('Player', 'Computer').
+    initializeGame('Player1', 'Computer').
 
 handleStartMenuInput(3) :-
     initializeGame('Computer', 'Computer').
