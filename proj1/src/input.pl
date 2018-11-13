@@ -12,15 +12,15 @@ readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
         OldColumn = Cnumber
     )).
 
-readNewPiece(Player, NewRow, NewColumn, NewBoard) :-
+readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
     write('> Row'), read(R),
     write('> Column'), read(C),
     convertRow(R, Rnumber),
     convertColumn(C, Cnumber),
-    checkValidNewPosition(Rnumber, Cnumber, Player, NewBoard, Valid),
+    checkValidNewPosition(OldRow, OldColumn, Rnumber, Cnumber, OldBoard, Valid),
     (Valid == 1 -> (
         write('\n> Invalid position to place the piece, please chose another one\n'),
-        readNewPiece(Player, NewRow, NewColumn, OldBoard)
+        readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard)
     );(
         NewRow = Rnumber,
         NewColumn = Cnumber
