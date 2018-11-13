@@ -1,83 +1,84 @@
-askColumn(NewColumn) :-
-    write('> Column: '),
-    get_code(Column),
-    convertColumn(Column, NewColumn).
+readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
+    write('> Row'), read(R),
+    write('> Column'), read(C),
+    convertRow(R, Rnumber),
+    convertColumn(C, Cnumber),
+    checkPieceOnPosition(Rnumber, Cnumber, Player, OldBoard, Valid),
+    (Valid == 1 -> (
+        write('\n> No piece in that position, please chose another one\n'),
+        readExistPiece(Player, OldRow, OldColumn, OldBoard)
+    );(
+        OldRow = Rnumber,
+        OldColumn = Cnumber
+    )).
 
-convertColumn(65, NewColumn) :-
-    NewColumn = 1.
+readNewPiece(Player, NewRow, NewColumn, NewBoard) :-
+    write('> Row'), read(R),
+    write('> Column'), read(C),
+    convertRow(R, Rnumber),
+    convertColumn(C, Cnumber),
+    checkValidNewPosition(Rnumber, Cnumber, Player, NewBoard, Valid),
+    (Valid == 1 -> (
+        write('\n> Invalid position to place the piece, please chose another one\n'),
+        readNewPiece(Player, NewRow, NewColumn, OldBoard)
+    );(
+        NewRow = Rnumber,
+        NewColumn = Cnumber
+    )).
 
-convertColumn(66, NewColumn) :-
-    NewColumn = 2.
+convertRow(1, T) :-
+    T = 8.
 
-convertColumn(67, NewColumn) :-
-    NewColumn = 3.
+convertRow(2, T) :-
+    T = 7.
 
-convertColumn(68, NewColumn) :-
-    NewColumn = 4.
+convertRow(3, T) :-
+    T = 6.
 
-convertColumn(69, NewColumn) :-
-    NewColumn = 5.
+convertRow(4, T) :-
+    T = 5.
 
-convertColumn(70, NewColumn) :-
-    NewColumn = 6.
+convertRow(5, T) :-
+    T = 4.
 
-convertColumn(71, NewColumn) :-
-    NewColumn = 7.
+convertRow(6, T) :-
+    T = 3.
 
-convertColumn(72, NewColumn) :-
-    NewColumn = 8.
+convertRow(7, T) :-
+    T = 2.
 
-convertColumn(10, NewColumn) :-
-    get_code(Column),
-    convertColumn(Column, NewColumn).
+convertRow(8, T) :-
+    T = 1.
 
-convertColumn(46, NewColumn) :-
-    get_code(Column),
-    convertColumn(Column, NewColumn).
+convertRow(_, T) :-
+    % Error
+    T = 10.
 
-convertColumn(_Column, NewColumn) :-
-    write('ERROR: That column is not valid!\n'),
-    askColumn(NewColumn).
+convertColumn('a', V) :-
+    V = 1.
 
-askRow(NewRow) :-
-    write('> Row: '),
-    get_code(Row),
-    checkCorrectRow(Row, NewRow).
+convertColumn('b', V) :-
+    V = 2.
 
-checkCorrectRow(10, NewRow) :-
-    get_code(Input),
-    checkCorrectRow(Input, NewRow).
+convertColumn('c', V) :-
+    V = 3.
 
-checkCorrectRow(46, NewRow) :-
-    get_code(Input2),
-    checkCorrectRow(Input2, NewRow).
+convertColumn('d', V) :-
+    V = 4.
 
-checkCorrectRow(56, NewRow) :-
-    NewRow = 1.
+convertColumn('e', V) :-
+    V = 5.
 
-checkCorrectRow(55, NewRow) :-
-    NewRow = 2.
+convertColumn('f', V) :-
+    V = 6.
 
-checkCorrectRow(54, NewRow) :-
-    NewRow = 3.
+convertColumn('g', V) :-
+    V = 7.
 
-checkCorrectRow(53, NewRow) :-
-    NewRow = 4.
+convertColumn('h', V) :-
+    V = 8.
 
-checkCorrectRow(52, NewRow) :-
-    NewRow = 5.
-
-checkCorrectRow(51, NewRow) :-
-    NewRow = 6.
-
-checkCorrectRow(50, NewRow) :-
-    NewRow = 7.
-
-checkCorrectRow(49, NewRow) :-
-    NewRow = 8.
-
-checkCorrectRow(X, NewRow) :-
-    write(X),
-    write('ERROR: That row is not valid!\n'),
-    askRow(NewRow).
+convertColumn(_, V) :- !,
+    % Error
+    V = 10.
 

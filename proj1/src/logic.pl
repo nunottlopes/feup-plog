@@ -28,33 +28,20 @@ askNewPosition(Player, NewRow, NewColumn, NewBoard) :-
     write('> Where do you want to place the piece?\n'),
     readNewPiece(Player, NewRow, NewColumn, NewBoard).
 
-readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
-    askRow(OldRow),
-    askColumn(OldColumn),
-    checkPieceOnPosition(OldRow, OldColumn, Player, OldBoard, Valid),
-    (Valid == 1 -> (
-        write('\n> No piece in that position, please chose another one\n'),
-        readExistPiece(Player, OldRow, OldColumn, OldBoard)
-    );
-    write('\n')).
-
-readNewPiece(Player, NewRow, NewColumn, NewBoard) :-
-    askRow(NewRow),
-    askColumn(NewColumn),
-    checkValidNewPosition(NewRow, NewColumn, Player, NewBoard, Valid),
-    (Valid == 1 -> (
-        write('\n> Invalid position to place the piece, please chose another one\n'),
-        readNewPiece(Player, NewRow, NewColumn, NewBoard)
-    );
-    write('\n')).
-
 checkPieceOnPosition(OldRow, OldColumn, Player, [H|T], Valid) :-
-    OldRow == 1 -> (
-        lookOnColumn(OldColumn, Player, H, Valid)
+    OldColumn == 10 -> (
+        Valid is 1
     );(
-        OldRow1 is OldRow-1,
-        checkPieceOnPosition(OldRow1, OldColumn, Player, T, Valid)
-    ).
+        OldRow == 10 ->(
+            Valid is 1
+        );(
+            OldRow == 1 -> (
+                lookOnColumn(OldColumn, Player, H, Valid)
+            );(
+                OldRow1 is OldRow-1,
+                checkPieceOnPosition(OldRow1, OldColumn, Player, T, Valid) 
+            )
+    )).
 
 checkPieceOnPosition(OldRow, OldColumn, Player, [], Valid).
 
@@ -81,18 +68,10 @@ checkIfCorrectPiece(Piece, Player, Valid) :-
         )
     ).
 
-
-
-
-
-
-
-
-
-
-
 checkValidNewPosition(NewRow, NewColumn, Player, NewBoard, Valid) :-
     Valid is 1,
+    write(NewRow),
+    write(NewColumn),
     write('check here if new position for piece is valid, return on Valid\n').
 
 
