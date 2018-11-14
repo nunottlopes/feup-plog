@@ -195,14 +195,16 @@ checkEmptySpot([], Column, Flag).
 
 
 
-
 move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
     askMove(OldRow, OldColumn, NewRow, NewColumn, OldBoard, Player),
     write(OldRow), nl,
     write(OldColumn), nl,
     write(NewRow), nl,
     write(NewColumn), nl,
-    write('move the piece from oldposition to newposition here\n').
+    write('move the piece from oldposition to newposition here'), nl,
+    makeMove( OldBoard, Player, NewRow, NewColumn, NewBoard ),
+    write('New Board'), nl,
+    printBoard(NewBoard).
 
 checkVictory(Player, Board, Result) :-
     write('check if player won, response on Result\n').
