@@ -1,34 +1,59 @@
-play(Player1, Player2, Board) :-
+play('Player1', 'Player2', Board, _) :-
+    Player1 = 'Player1',
+    Player2 = 'Player2',
     display_game(Board, Player1),
     player1Turn,
-    move(OldRow1, OldColumn1, NewRow1, NewColumn1, Board, NewBoard1, Player1),
+    move(Board, NewBoard1, Player1),
     checkVictory(Player1, NewBoard1, Result1),
 
     if(Result1 == 1,
         (
             display_game(NewBoard1, Player2),
             player2Turn,
-            move(OldRow2, OldColumn2, NewRow2, NewColumn2, NewBoard1, NewBoard2, Player2),
+            move(NewBoard1, NewBoard2, Player2),
             checkVictory(Player2, NewBoard2, Result2),
 
             if(Result2 == 1, play(Player1, Player2, NewBoard2), player2Win)
 
         ), player1Win).
 
-%-------------------------------------------------------
-% INPUT HANDLER FOR GAME MOVES
+play('Player1', 'Computer2', Board, Level) :-
+    Player1 = 'Player1',
+    Player2 = 'Computer2',
+    display_game(Board, Player1),
+    player1Turn,
+    move(Board, NewBoard1, Player1),
+    checkVictory(Player1, NewBoard1, Result1),
 
-askMove(OldRow, OldColumn, NewRow, NewColumn, OldBoard, Player) :-
-    askOldPosition(Player, OldRow, OldColumn, OldBoard),
-    askNewPosition(OldRow, OldColumn, NewRow, NewColumn, OldBoard).
+    if(Result1 == 1,
+        (
+            display_game(NewBoard1, Player2),
+            computer2Turn,
+            moveComputer(NewBoard1, NewBoard2, Player2, Level),
+            checkVictory(Player2, NewBoard2, Result2),
 
-askOldPosition(Player, OldRow, OldColumn, OldBoard) :-
-    write('> Which board piece do you want to move?\n'),
-    readExistPiece(Player, OldRow, OldColumn, OldBoard).
+            if(Result2 == 1, play(Player1, Player2, NewBoard2), computer2Win)
 
-askNewPosition(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
-    write('> Where do you want to place the piece?\n'),
-    readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard).
+        ), player1Win).
+
+play('Computer1', 'Computer2', Board, Level) :-
+    Player1 = 'Computer1',
+    Player2 = 'Computer2',
+    display_game(Board, Player1),
+    computer1Turn,
+    moveComputer(Board, NewBoard1, Player1, Level),
+    checkVictory(Player1, NewBoard1, Result1),
+
+    if(Result1 == 1,
+        (
+            display_game(NewBoard1, Player2),
+            computer2Turn,
+            moveComputer(NewBoard1, NewBoard2, Player2, Level),
+            checkVictory(Player2, NewBoard2, Result2),
+
+            if(Result2 == 1, play(Player1, Player2, NewBoard2), computer2Win)
+
+        ), computer1Win).
 
 
 %-------------------------------------------------------
@@ -62,10 +87,25 @@ checkIfCorrectPiece('black', 'Player1', Valid) :-
 checkIfCorrectPiece(Piece, 'Player1', Valid) :-
     Valid is 1.
 
-checkIfCorrectPiece('white', Player, Valid) :-
+checkIfCorrectPiece('white', 'Player2', Valid) :-
     Valid is 2.
 
-checkIfCorrectPiece(Piece, Player, Valid) :-
+checkIfCorrectPiece(Piece, 'Player2', Valid) :-
+    Valid is 1.
+
+checkIfCorrectPiece('black', 'Computer1', Valid) :-
+    Valid is 2.
+
+checkIfCorrectPiece(Piece, 'Computer1', Valid) :-
+    Valid is 1.
+
+checkIfCorrectPiece('white', 'Computer2', Valid) :-
+    Valid is 2.
+
+checkIfCorrectPiece(Piece, 'Computer2', Valid) :-
+    Valid is 1.
+
+checkIfCorrectPiece(_, _, Valid) :-
     Valid is 1.
 
 
@@ -218,14 +258,6 @@ makeMoveAux( [H|T], N, Type, NewRow, NewColumn, TempBoard, FinalBoard ):-
 
 
 %-------------------------------------------------------
-% MOVE
-
-move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
-    askMove(OldRow, OldColumn, NewRow, NewColumn, OldBoard, Player),
-    makeMove(OldBoard, Player,OldRow, OldColumn, NewRow, NewColumn, NewBoard).
-
-
-%-------------------------------------------------------
 % CHECK VICTORY
 
 checkVictory(Player, Board, Result) :-
@@ -368,9 +400,10 @@ minList([H|T], Min0, Min) :-
 minList([H|T], Min) :-
     minList(T, H, Min).
 
+
 %-------------------------------------------------------
 % FUNCTION THAT INITIALIZES GAME
 
-initializeGame(Player1, Player2) :-
+initializeGame(Player1, Player2, Level) :-
     initialBoard(Board),
-    play(Player1, Player2, Board).
+    play(Player1, Player2, Board, Level).

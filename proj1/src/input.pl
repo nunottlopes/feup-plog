@@ -7,7 +7,7 @@ readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
     handleResponsePieceOldPosition(Valid, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber).
 
 handleResponsePieceOldPosition(1, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber) :-
-    write('\n> No piece in that position, please chose another one\n'),
+    write('> No piece in that position, please chose another one\n'),
     readExistPiece(Player, OldRow, OldColumn, OldBoard).
 
 handleResponsePieceOldPosition(_, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber) :-
@@ -23,7 +23,7 @@ readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
     handleResponsePieceNewPosition(Valid, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber).
 
 handleResponsePieceNewPosition(1, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber) :-
-    write('\n> Invalid position to place the piece, please chose another one\n'),
+    write('> Invalid position to place the piece, please chose another one\n'),
     readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard).
 
 handleResponsePieceNewPosition(_, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber) :-

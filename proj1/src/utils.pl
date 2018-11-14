@@ -14,3 +14,13 @@ elementAt(N, List, Element):- nth0(N, List, Element).
 isWithinLimits(N):-
 	N > 0,
 	N < 9.
+
+reverseAllBoard([], []) :- !.
+
+reverseAllBoard([H|T], X) :-
+    !,
+    reverseAllBoard(H, NewH),
+    reverseAllBoard(T, NewT),
+    append(NewT, [NewH], X).
+
+reverseAllBoard(X, X).

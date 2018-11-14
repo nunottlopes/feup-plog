@@ -8,11 +8,11 @@
 
 re :-
     reconsult('src/quartetto'),
-    quartetto.
+    play.
 
 q :-
   reconsult('src/quartetto'),
   mainMenu.
 
-quartetto :-
+play :-
     mainMenu.
