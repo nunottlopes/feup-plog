@@ -8,8 +8,7 @@ play(Player1, Player2, Board) :-
         (
             display_game(NewBoard1, Player2),
             player2Turn,
-            askMove(Position2, Player2),
-            move(OldPosition2, NewPosition2, NewBoard1, NewBoard2),
+            move(OldRow2, OldColumn2, NewRow2, NewColumn2, NewBoard1, NewBoard2, Player2),
             checkVictory(Player2, NewBoard2, Result2),
 
             if(Result2 == 1, play(Player1, Player2, NewBoard2), player2Win)
@@ -218,28 +217,93 @@ makeMoveAux( [H|T], N, Type, NewRow, NewColumn, TempBoard, FinalBoard ):-
   ).
 
 
-
+%-------------------------------------------------------
+% MOVE
 
 move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
     askMove(OldRow, OldColumn, NewRow, NewColumn, OldBoard, Player),
-    write(OldRow), nl,
-    write(OldColumn), nl,
-    write(NewRow), nl,
-    write(NewColumn), nl,
-    makeMove(OldBoard, Player,OldRow, OldColumn, NewRow, NewColumn, NewBoard),
-    write('New Board'), nl,
-    printBoard(NewBoard).
+    makeMove(OldBoard, Player,OldRow, OldColumn, NewRow, NewColumn, NewBoard).
+
+
+%-------------------------------------------------------
+% CHECK VICTORY
 
 checkVictory(Player, Board, Result) :-
     write('check if player won, response on Result\n'),
-    Result is 1.
+    Result is 1,
+    getColor(Player, Type),
+    getPiecesList(Type, Board, [], Ret),
+    write('Aqui2'),
+    checkIfSquare(Ret, Square),
+    write('Check Square').
+
+
+%-------------------------------------------------------
+% FUNCTIONS TO GET THE PIECES POSITION
+
+getPiecesList(Player, Board, List, Ret) :-
+    getPositionPlayer(Player, Board, 0, 0, List, Ret).
+ 
+getPositionPlayerLine(_, _, _, 9, List, Ret) :- Ret = List.
+ 
+getPositionPlayerLine(Player, Board, Row, Col, List, Ret) :-
+    matrix(Board, Row, Col, Value),
+    Value = Player,
+    % adiciona
+    append(List, [[Row, Col]], Ret1),
+    Col1 is Col + 1,
+    getPositionPlayerLine(Player, Board, Row, Col1, Ret1, Ret);
+    Col1 is Col + 1,
+    getPositionPlayerLine(Player, Board, Row, Col1, List, Ret).
+ 
+getPositionPlayer(_, _, 9, _, List, Ret) :- Ret = List.
+ 
+getPositionPlayer(Player, Board, Row, Col, List, Ret) :-
+  getPositionPlayerLine(Player, Board, Row, 0, List, Ret1),
+  Row1 is Row + 1,
+  getPositionPlayer(Player, Board, Row1, 0, Ret1, Ret).
+ 
+matrix(Matrix, I, J, Value) :-
+    nth0(I, Matrix, Row),
+    nth0(J, Row, Value).
+
+
+%-------------------------------------------------------
+% FUNCTIONS TO SEE IF THE PIECES FORM A SQUARE
+
+distPoints([[P1X,P1Y],[P2X,P2Y]], Result) :-
+    Result is ((P1X - P2X) * (P1X - P2X) + (P1Y - P2Y) * (P1Y - P2Y)).
+
+checkIfSquare([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], Square) :-
+    distPoints([[P1X,P1Y],[P2X,P2Y]], D2),
+    distPoints([[P1X,P1Y],[P3X,P3Y]], D3),
+    distPoints([[P1X,P1Y],[P4X,P4Y]], D4),
+    distPoints([[P2X,P2Y],[P3X,P3Y]], D5),
+    distPoints([[P2X,P2Y],[P4X,P4Y]], D6),
+    distPoints([[P3X,P3Y],[P4X,P4Y]], D7),
+    R1 is (2 * D2),
+    R2 is (2 * D3),
+    checkValues(D2, D3, D4, D5, D6, D7, R1, R2, Square).
+
+checkValues(D2, D3, D4, D5, D6, D7, R1, R2, Square) :-
+    (D2 == D3, R1 == D4, R1 == D5),(
+        (D6 == D7, D6 == D2),(Square is 2);(Square is 1)
+    );(
+        (D3 == D4, R2 == D2, R2 == D7),(
+            (D5 == D6, D5 == D3),(Square is 2);(Square is 1)
+        );(
+            (D2 == D4, R1 == D3, R1 == D6),(
+                (D5 == D7, D5 == D2),(Square is 2);(Square is 1)
+            );(
+                Square is 1
+            )
+        )
+    ).
+
+
+%-------------------------------------------------------
+% FUNCTION THAT INITIALIZES GAME
 
 initializeGame(Player1, Player2) :-
     initialBoard(Board),
     play(Player1, Player2, Board).
-
-
-
-re :-
-    reconsult('src/quartetto'),
-    quartetto.
