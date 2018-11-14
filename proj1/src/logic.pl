@@ -229,13 +229,14 @@ move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
 % CHECK VICTORY
 
 checkVictory(Player, Board, Result) :-
-    write('check if player won, response on Result\n'),
-    Result is 1,
     getColor(Player, Type),
     getPiecesList(Type, Board, [], Ret),
-    write('Aqui2'),
     checkIfSquare(Ret, Square),
-    write('Check Square').
+    % write('Check Square '), write(Square), nl,
+    checkIfRotate(Ret, Square, Rotate),
+    % write('Check Rotate '), write(Rotate), nl,
+    checkIfMinSize(Ret, Rotate, Result).
+    % write('Check Size '), write(Result), nl
 
 
 %-------------------------------------------------------
@@ -300,6 +301,72 @@ checkValues(D2, D3, D4, D5, D6, D7, R1, R2, Square) :-
         )
     ).
 
+
+%-------------------------------------------------------
+% FUNCTIONS TO CHECK IF SQUARE IS ROTATED
+
+checkIfRotate(Ret, 1, Rotate) :-
+    Rotate is 1.
+
+checkIfRotate([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], _, Rotate) :-
+    (P1X == P2X, P3X == P4X), (
+        Rotate is 1
+    );(
+        (P1X == P3X, P2X == P4X), (
+            Rotate is 1
+        );(
+            (P1X == P4X, P2X == P3X), (
+                Rotate is 1
+            );(
+                Rotate is 2
+            )
+        )
+    ).
+
+
+%-------------------------------------------------------
+% FUNCTIONS TO CHECK IF SQUARE HAS MIN SIZE
+
+checkIfMinSize(Ret, 1, Result) :-
+    Result is 1.
+
+checkIfMinSize([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], Rotate, Result) :-
+    maxList([P1X,P2X,P3X,P4X], MaxRow),
+    minList([P1X,P2X,P3X,P4X], MinRow),
+    Dif is (MaxRow - MinRow),
+    (Dif > 3), (
+        Result is 2
+    );(
+        Result is 1
+    ).
+
+
+% GET THE MAX NUMBER FROM A LIST
+
+maxList([], Max, Max).
+
+maxList([H|T], Max0, Max) :- 
+    H >  Max0, 
+    maxList(T, H, Max).
+
+maxList([H|T], Max0, Max) :- 
+    H =< Max0, 
+    maxList(T, Max0, Max).
+
+maxList([H|T], Max):- 
+    maxList(T, H, Max).
+
+
+% GET THE MIN NUMBER FROM A LIST
+
+minList([], Min, Min).
+
+minList([H|T], Min0, Min) :-
+    Min1 is min(H, Min0),
+    minList(T, Min1, Min).
+
+minList([H|T], Min) :-
+    minList(T, H, Min).
 
 %-------------------------------------------------------
 % FUNCTION THAT INITIALIZES GAME
