@@ -195,11 +195,14 @@ checkEmptySpot([], Column, Flag).
 %-------------------------------------------------------
 % ACTUAL MOVE ON BOARD
 
-makeMove(OldBoard, Player, NewRow, NewColumn, NewBoard):-
+makeMove(OldBoard, Player,OldRow, OldColumn, NewRow, NewColumn, NewBoard):-
     isWithinLimits(NewRow),
-	isWithinLimits(NewColumn),
+	  isWithinLimits(NewColumn),
     getColor(Player, Type),
-    makeMoveAux(OldBoard, 1, Type, NewRow, NewColumn, [], NewBoard ).
+    % REMOVES THE PIECE FROM PREVIOUS POSITION
+    makeMoveAux(OldBoard, 1, empty, OldRow, OldColumn, [], TempBoard ),
+    % PLACES THE PIECE IN THE NEW POSITION
+    makeMoveAux(TempBoard, 1, Type, NewRow, NewColumn, [], NewBoard ).
 
 makeMoveAux([], _, _, _, _, InvertedBoard, FinalBoard) :-
     reverse(InvertedBoard, FinalBoard).
@@ -223,12 +226,13 @@ move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
     write(OldColumn), nl,
     write(NewRow), nl,
     write(NewColumn), nl,
-    makeMove(OldBoard, Player, NewRow, NewColumn, NewBoard),
+    makeMove(OldBoard, Player,OldRow, OldColumn, NewRow, NewColumn, NewBoard),
     write('New Board'), nl,
     printBoard(NewBoard).
 
 checkVictory(Player, Board, Result) :-
-    write('check if player won, response on Result\n').
+    write('check if player won, response on Result\n'),
+    Result is 1.
 
 initializeGame(Player1, Player2) :-
     initialBoard(Board),
