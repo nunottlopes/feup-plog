@@ -4,13 +4,15 @@ readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
     convertRow(R, Rnumber),
     convertColumn(C, Cnumber),
     checkPieceOnPosition(Rnumber, Cnumber, Player, OldBoard, Valid),
-    (Valid == 1 -> (
-        write('\n> No piece in that position, please chose another one\n'),
-        readExistPiece(Player, OldRow, OldColumn, OldBoard)
-    );(
-        OldRow = Rnumber,
-        OldColumn = Cnumber
-    )).
+    handleResponsePieceOldPosition(Valid, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber).
+
+handleResponsePieceOldPosition(1, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber) :-
+    write('\n> No piece in that position, please chose another one\n'),
+    readExistPiece(Player, OldRow, OldColumn, OldBoard).
+
+handleResponsePieceOldPosition(_, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber) :-
+    OldRow = Rnumber,
+    OldColumn = Cnumber.
 
 readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
     write('> Row'), read(R),
@@ -18,13 +20,15 @@ readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
     convertRow(R, Rnumber),
     convertColumn(C, Cnumber),
     checkValidNewPosition(OldRow, OldColumn, Rnumber, Cnumber, OldBoard, Valid),
-    (Valid == 1 -> (
-        write('\n> Invalid position to place the piece, please chose another one\n'),
-        readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard)
-    );(
-        NewRow = Rnumber,
-        NewColumn = Cnumber
-    )).
+    handleResponsePieceNewPosition(Valid, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber).
+
+handleResponsePieceNewPosition(1, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber) :-
+    write('\n> Invalid position to place the piece, please chose another one\n'),
+    readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard).
+
+handleResponsePieceNewPosition(_, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber) :-
+    NewRow = Rnumber,
+    NewColumn = Cnumber.
 
 convertRow(1, T) :-
     T = 8.

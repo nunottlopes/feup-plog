@@ -122,7 +122,7 @@ validColumn(OldColumn, NewColumn, [], Valid).
 
 validColumnForward([H|T], Column, Valid) :-
     H == 'empty' -> (
-        Column == 1 -> (
+        Column == 2 -> (
             Valid is 2
         );(
             Column1 is Column-1,
@@ -171,16 +171,36 @@ validRow(OldRow, NewRow, Column, [], Valid).
 
 validRowIterator([H|T], Row, Column, Valid) :-
     checkEmptySpot(H, Column, Flag),
-    Flag == 1 ->(
-        Valid is 1
-    );(
-        Row == 2 -> (
-            write('')
-        );(
-            Row1 is Row-1,
-            validRowIterator(T, Row1, Column, Valid)
-        )
-    ).
+    % Flag == 1 ->(
+      %  Valid is 1
+    % );(
+      %  Row == 2 -> (
+         %   Valid is 2
+       % );(
+         %   Row1 is Row-1,
+         %   validRowIterator(T, Row1, Column, Valid)
+       % )
+    %).
+    checkFlag(Flag, Valid, Row, T, Column).
+
+checkFlag(1, Valid, Row, T, Column) :-
+    Valid is 1.
+
+checkFlag(_, Valid, Row, T, Column) :-
+    % Row == 2 -> (
+       %  Valid is 2
+    % );(
+       %  Row1 is Row-1,
+        % validRowIterator(T, Row1, Column, Valid)
+    %)
+    checkIfRow(Valid, Row, T, Column).
+
+checkIfRow(Valid, 2, T, Column) :-
+    Valid is 2.
+
+checkIfRow(Valid, Row, T, Column) :-
+    Row1 is Row-1,
+    validRowIterator(T, Row1, Column, Valid).
 
 validRowIterator([], Row, Column, Valid).
 
@@ -200,7 +220,10 @@ checkEmptySpot([], Column, Flag).
 
 move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
     askMove(OldRow, OldColumn, NewRow, NewColumn, OldBoard, Player),
-    
+    write(OldRow), nl,
+    write(OldColumn), nl,
+    write(NewRow), nl,
+    write(NewColumn), nl,
     write('move the piece from oldposition to newposition here\n').
 
 checkVictory(Player, Board, Result) :-
