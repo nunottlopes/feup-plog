@@ -16,6 +16,9 @@ play(Player1, Player2, Board) :-
 
         ), player1Win).
 
+%-------------------------------------------------------
+% INPUT HANDLER FOR GAME MOVES
+
 askMove(OldRow, OldColumn, NewRow, NewColumn, OldBoard, Player) :-
     askOldPosition(Player, OldRow, OldColumn, OldBoard),
     askNewPosition(OldRow, OldColumn, NewRow, NewColumn, OldBoard).
@@ -28,195 +31,170 @@ askNewPosition(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
     write('> Where do you want to place the piece?\n'),
     readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard).
 
+
+%-------------------------------------------------------
+% CHECK IF THERE IS A PIECE IN THE POSITION CHOSEN
+
+checkPieceOnPosition(OldRow, 10, Player, [H|T], Valid) :-
+    Valid is 1.
+
+checkPieceOnPosition(10, OldColumn, Player, [H|T], Valid) :-
+    Valid is 1.
+
+checkPieceOnPosition(1, OldColumn, Player, [H|T], Valid) :-
+    lookOnColumn(OldColumn, Player, H, Valid).
+
 checkPieceOnPosition(OldRow, OldColumn, Player, [H|T], Valid) :-
-    OldColumn == 10 -> (
-        Valid is 1
-    );(
-        OldRow == 10 ->(
-            Valid is 1
-        );(
-            OldRow == 1 -> (
-                lookOnColumn(OldColumn, Player, H, Valid)
-            );(
-                OldRow1 is OldRow-1,
-                checkPieceOnPosition(OldRow1, OldColumn, Player, T, Valid) 
-            )
-    )).
+    OldRow1 is OldRow-1,
+    checkPieceOnPosition(OldRow1, OldColumn, Player, T, Valid).
 
 checkPieceOnPosition(OldRow, OldColumn, Player, [], Valid).
 
+lookOnColumn(1, Player, [H|T], Valid) :-
+    checkIfCorrectPiece(H, Player, Valid).
+
 lookOnColumn(OldColumn, Player, [H|T], Valid) :-
-    OldColumn == 1 -> (
-        checkIfCorrectPiece(H, Player, Valid)
-    );(
-        OldColumn1 is OldColumn-1,
-        lookOnColumn(OldColumn1, Player, T, Valid)
-    ).
+    OldColumn1 is OldColumn-1,
+    lookOnColumn(OldColumn1, Player, T, Valid).
+
+checkIfCorrectPiece('black', 'Player1', Valid) :-
+    Valid is 2.
+
+checkIfCorrectPiece(Piece, 'Player1', Valid) :-
+    Valid is 1.
+
+checkIfCorrectPiece('white', Player, Valid) :-
+    Valid is 2.
 
 checkIfCorrectPiece(Piece, Player, Valid) :-
-    Player == 'Player1' -> (
-        Piece == 'black' -> (
-            Valid is 2
-        );(
-            Valid is 1
-        )
-    );(
-        Piece == 'white' -> (
-            Valid is 2
-        );(
-            Valid is 1
-        )
-    ).
+    Valid is 1.
+
+%-------------------------------------------------------
+% CHECK IF NEW PLACE CHOSEN IS VALID
+
+checkValidNewPosition(OldRow, OldColumn, NewRow, 10, Board, Valid) :-
+    Valid is 1.
+
+checkValidNewPosition(OldRow, OldColumn, 10, NewColumn, Board, Valid) :-
+    Valid is 1.
 
 checkValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [H|T], Valid) :-
-    NewColumn == 10 -> (
-        Valid is 1
-    );(
-        NewRow == 10 ->(
-            Valid is 1
-        );(
-            OldRow == NewRow -> (
-                OldColumn == NewColumn -> (
-                Valid is 1
-            );(
-                OldRow == 1 -> (
-                    validColumn(OldColumn, NewColumn, H, Valid)
-                );(
-                    OldRow1 is OldRow-1,
-                    NewRow1 is NewRow-1,
-                    checkValidNewPosition(OldRow1, OldColumn, NewRow1, NewColumn, T, Valid) 
-                    )
-                )
-            );(
-                OldColumn == NewColumn -> (
-                    validRow(OldRow, NewRow, OldColumn, [H|T], Valid)
-                );(
-                    Valid is 1
-                )
-            )
-        )
-    ).
+    OldRow == NewRow,
+    (OldColumn == NewColumn,
+    Valid is 1;
+    checkIfRowValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [H|T], Valid));
+    (OldColumn == NewColumn,
+    validRow(OldRow, NewRow, OldColumn, [H|T], Valid);
+    Valid is 1).
+
+checkIfRowValidNewPosition(1, OldColumn, NewRow, NewColumn, [H|T], Valid) :-
+    validColumn(OldColumn, NewColumn, H, Valid).
+
+checkIfRowValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [H|T], Valid) :-
+    OldRow1 is OldRow-1,
+    NewRow1 is NewRow-1,
+    checkValidNewPosition(OldRow1, OldColumn, NewRow1, NewColumn, T, Valid).
 
 checkValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [], Valid).
 
+
+%-------------------------------------------------------
+% HORIZONTAL MOVES
+
 validColumn(OldColumn, NewColumn, [H|T], Valid) :-
-    OldColumn < NewColumn -> (
-        OldColumn == 1 -> (
-            validColumnForward(T, NewColumn, Valid)
-        );(
-            OldColumn1 is OldColumn-1,
-            NewColumn1 is NewColumn-1,
-            validColumn(OldColumn1, NewColumn1, T, Valid)
-        )
-    );(
-        NewColumn == 1 -> (
-            validColumnBackward([H|T], OldColumn, Valid)
-        );(
-            OldColumn1 is OldColumn-1,
-            NewColumn1 is NewColumn-1,
-            validColumn(OldColumn1, NewColumn1, T, Valid)
-        )
-    ).
+    checkIfColumnIterator(OldColumn, NewColumn, [H|T], Valid).
+
+checkIfColumnIterator(1, NewColumn, [H|T], Valid) :-
+    validColumnIterator(T, NewColumn, Valid).
+
+checkIfColumnIterator(OldColumn, 1, [H|T], Valid) :-
+    validColumnIterator([H|T], OldColumn, Valid).
+
+checkIfColumnIterator(OldColumn, NewColumn, [H|T], Valid) :-
+    OldColumn1 is OldColumn-1,
+    NewColumn1 is NewColumn-1,
+    validColumn(OldColumn1, NewColumn1, T, Valid).
 
 validColumn(OldColumn, NewColumn, [], Valid).
 
-validColumnForward([H|T], Column, Valid) :-
-    H == 'empty' -> (
-        Column == 2 -> (
-            Valid is 2
-        );(
-            Column1 is Column-1,
-            validColumnForward(T, Column1, Valid)
-        )
-    );(
-        Valid is 1
-    ).
+validColumnIterator([H|T], Column, Valid) :-
+    checkPieceEmpty(H, T, Column, Valid).
 
-validColumnForward([], Column, Valid).
+checkPieceEmpty('empty', T, Column, Valid) :-
+    checkEndColumn(T, Column, Valid).
 
-validColumnBackward([H|T], Column, Valid) :-
-    H == 'empty' -> (
-        Column == 2 -> (
-            Valid is 2
-        );(
-            Column1 is Column-1,
-            validColumnBackward(T, Column1, Valid)
-        )
-    );(
-        Valid is 1
-    ).
+checkEndColumn(T, 2, Valid) :-
+    Valid is 2.
 
-validColumnBackward([], Column, Valid).
+checkEndColumn(T, Column, Valid) :-
+    Column1 is Column-1,
+    validColumnIterator(T, Column1, Valid).
 
-validRow(OldRow, NewRow, Column, [H|T], Valid) :- 
-    OldRow < NewRow -> (
-        OldRow = 1 -> (
-            validRowIterator(T, NewRow, Column, Valid)
-        );(
-            OldRow1 is OldRow-1,
-            NewRow1 is NewRow-1,
-            validRow(OldRow1, NewRow1, Column, T, Valid)
-        )
-    );(
-        NewRow = 1 -> (
-            validRowIterator([H|T], OldRow, Column, Valid)
-        );(
-            OldRow1 is OldRow-1,
-            NewRow1 is NewRow-1,
-            validRow(OldRow1, NewRow1, Column, T, Valid)
-        )
-    ).
+checkPieceEmpty(H, T, Column, Valid) :-
+    Valid is 1.
+
+validColumnIterator([], Column, Valid).
+
+
+%-------------------------------------------------------
+% VERTICAL MOVES
+
+validRow(1, NewRow, Column, [H|T], Valid) :-
+    validRowIterator(T, NewRow, Column, Valid).
+
+validRow(OldRow, 1, Column, [H|T], Valid) :-
+    validRowIterator([H|T], OldRow, Column, Valid).
+
+validRow(OldRow, NewRow, Column, [H|T], Valid) :-
+    OldRow1 is OldRow-1,
+    NewRow1 is NewRow-1,
+    validRow(OldRow1, NewRow1, Column, T, Valid).
 
 validRow(OldRow, NewRow, Column, [], Valid).
 
 validRowIterator([H|T], Row, Column, Valid) :-
     checkEmptySpot(H, Column, Flag),
-    % Flag == 1 ->(
-      %  Valid is 1
-    % );(
-      %  Row == 2 -> (
-         %   Valid is 2
-       % );(
-         %   Row1 is Row-1,
-         %   validRowIterator(T, Row1, Column, Valid)
-       % )
-    %).
     checkFlag(Flag, Valid, Row, T, Column).
 
 checkFlag(1, Valid, Row, T, Column) :-
     Valid is 1.
 
-checkFlag(_, Valid, Row, T, Column) :-
-    % Row == 2 -> (
-       %  Valid is 2
-    % );(
-       %  Row1 is Row-1,
-        % validRowIterator(T, Row1, Column, Valid)
-    %)
-    checkIfRow(Valid, Row, T, Column).
-
-checkIfRow(Valid, 2, T, Column) :-
+checkFlag(_, Valid, 2, T, Column) :-
     Valid is 2.
 
-checkIfRow(Valid, Row, T, Column) :-
+checkFlag(_, Valid, Row, T, Column) :-
     Row1 is Row-1,
     validRowIterator(T, Row1, Column, Valid).
 
 validRowIterator([], Row, Column, Valid).
 
+
+%-------------------------------------------------------
+% CHECK IF THE POSITION IS EMPTY
+
 checkEmptySpot([H|T], Column, Flag) :-
-    Column == 1 -> (
-        H == 'empty' -> (
-            Flag is 2
-        );(
-            Flag is 1
-        )
-    );(
-        Column1 is Column-1,
-        checkEmptySpot(T, Column1, Flag)
-    ).
+    handleIfColumn(Column, [H|T], Flag).
+
+handleIfColumn(1, [H|T], Flag) :-
+    handleTypePiece(H,Flag).
+
+handleTypePiece('empty', Flag) :-
+    Flag is 2.
+
+handleTypePiece(_,Flag) :-
+    Flag is 1.
+
+handleIfColumn(Column, [H|T], Flag) :-
+    Column1 is Column-1,
+    checkEmptySpot(T, Column1, Flag).
 
 checkEmptySpot([], Column, Flag).
+
+
+%-------------------------------------------------------
+
+
+
 
 move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
     askMove(OldRow, OldColumn, NewRow, NewColumn, OldBoard, Player),
