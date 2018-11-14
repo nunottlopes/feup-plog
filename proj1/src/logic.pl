@@ -69,6 +69,7 @@ checkIfCorrectPiece('white', Player, Valid) :-
 checkIfCorrectPiece(Piece, Player, Valid) :-
     Valid is 1.
 
+
 %-------------------------------------------------------
 % CHECK IF NEW PLACE CHOSEN IS VALID
 
@@ -192,6 +193,27 @@ checkEmptySpot([], Column, Flag).
 
 
 %-------------------------------------------------------
+% ACTUAL MOVE ON BOARD
+
+makeMove(OldBoard, Player, NewRow, NewColumn, NewBoard):-
+    isWithinLimits(NewRow),
+	isWithinLimits(NewColumn),
+    getColor(Player, Type),
+    makeMoveAux(OldBoard, 1, Type, NewRow, NewColumn, [], NewBoard ).
+
+makeMoveAux([], _, _, _, _, InvertedBoard, FinalBoard) :-
+    reverse(InvertedBoard, FinalBoard).
+
+makeMoveAux( [H|T], N, Type, NewRow, NewColumn, TempBoard, FinalBoard ):-
+  N == NewRow,(
+    replace(H, NewColumn, Type, NewLine),
+    N1 is NewRow+1,
+    makeMoveAux(T, N1, Type, NewRow, NewColumn, [NewLine|TempBoard], FinalBoard)
+  );(
+    N1 is N+1,
+    makeMoveAux(T, N1, Type, NewRow, NewColumn, [H|TempBoard], FinalBoard)
+  ).
+
 
 
 
@@ -201,8 +223,7 @@ move(OldRow, OldColumn, NewRow, NewColumn, OldBoard, NewBoard, Player) :-
     write(OldColumn), nl,
     write(NewRow), nl,
     write(NewColumn), nl,
-    write('move the piece from oldposition to newposition here'), nl,
-    makeMove( OldBoard, Player, NewRow, NewColumn, NewBoard ),
+    makeMove(OldBoard, Player, NewRow, NewColumn, NewBoard),
     write('New Board'), nl,
     printBoard(NewBoard).
 
