@@ -1,6 +1,7 @@
 play('Player1', 'Player2', Board, Level) :-
     Player1 = 'Player1',
     Player2 = 'Player2',
+    clearScreen,
     display_game(Board, Player1),
     player1Turn,
     move(Board, NewBoard1, Player1),
@@ -8,6 +9,7 @@ play('Player1', 'Player2', Board, Level) :-
 
     if(Result1 == 1,
         (
+            clearScreen,
             display_game(NewBoard1, Player2),
             player2Turn,
             move(NewBoard1, NewBoard2, Player2),
@@ -27,7 +29,7 @@ play('Player1', 'Computer2', Board, Level) :-
 
     if(Result1 == 1,
         (
-            display_game(NewBoard1, Player2),
+            clearScreen,
             computer2Turn,
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
@@ -40,6 +42,8 @@ play('Computer1', 'Computer2', Board, Level) :-
     Player1 = 'Computer1',
     Player2 = 'Computer2',
     display_game(Board, Player1),
+    sleep(0.8),
+    clearScreen,
     computer1Turn,
     moveComputer(Board, NewBoard1, Player1, Level),
     checkVictory(Player1, NewBoard1, Result1),
@@ -47,6 +51,8 @@ play('Computer1', 'Computer2', Board, Level) :-
     if(Result1 == 1,
         (
             display_game(NewBoard1, Player2),
+            sleep(0.8),
+            clearScreen,
             computer2Turn,
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
@@ -446,5 +452,6 @@ minList([H|T], Min) :-
 % FUNCTION THAT INITIALIZES GAME
 
 initializeGame(Player1, Player2, Level) :-
+    clearScreen,
     initialBoard(Board),
     play(Player1, Player2, Board, Level).

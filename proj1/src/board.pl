@@ -64,16 +64,7 @@ printBoardReverse([H|T], N) :-
 printBoardReverse([], _) :-
     write('  |---------|---------|---------|---------|---------|---------|---------|---------|').
 
-display_game(Board, 'Player1') :-
-    printBoard(Board).
-
-display_game(Board, 'Computer1') :-
-    printBoard(Board).
-
 display_game(Board, 'Player2') :-
-    printBoardReverse(Board).
-
-display_game(Board, 'Computer2') :-
     printBoardReverse(Board).
 
 display_game(Board, Player) :-

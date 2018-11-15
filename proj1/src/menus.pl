@@ -59,6 +59,7 @@ askInput :-
     write('> Insert your option ').
 
 printMainMenu :-
+    clearScreen,
     nl,
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl,
     write('|                 _____                 _         _    _                        |'), nl,
@@ -87,6 +88,7 @@ printMainMenu :-
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl, nl.
 
 printStartMenu :-
+    clearScreen,
     nl,
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl,
     write('|                 _____                 _         _    _                        |'), nl,
@@ -115,6 +117,7 @@ printStartMenu :-
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl, nl.
 
 printDificultLevelMenu :-
+    clearScreen,
     nl,
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl,
     write('|                 _____                 _         _    _                        |'), nl,
@@ -153,7 +156,7 @@ computer1Turn :-
 	write('\n\n------------------------- COMPUTER 1 TURN (X) -------------------------\n').
 
 computer2Turn :-
-	write('\n\n------------------------- COMPUTER 2 TURN (X) -------------------------\n').
+	write('\n\n------------------------- COMPUTER 2 TURN (O) -------------------------\n').
 
 player1Win(Board) :-
     display_game(Board, 'Player1'),
@@ -169,4 +172,4 @@ computer1Win(Board) :-
 
 computer2Win(Board) :-
     display_game(Board, 'Computer2'),
-	write('\n\n------------------------- COMPUTER 2 WINS (X) !! -------------------------\n\n').
+	write('\n\n------------------------- COMPUTER 2 WINS (O) !! -------------------------\n\n').

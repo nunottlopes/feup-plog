@@ -1,10 +1,15 @@
-:- use_module(library(lists)).
+clearScreen :-
+	addNL(65).
+	
+addNL(A) :-
+	A > 0, nl,
+	A1 is A-1,
+	addNL(A1).
+	
+addNL(_).
 
 increment(Old, New) :-
 	New is Old + 1.
-
-clearScreen:
-	nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl.
 
 % Replace element at Index with New
 replace([_|T], 1, X, [X|T]).

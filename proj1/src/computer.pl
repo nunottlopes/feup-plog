@@ -14,13 +14,63 @@ choose_move(Player, Board, 2, OldRow, OldColumn, NewRow, NewColumn) :-
 
 
 printComputerMove(OldRow, OldColumn, NewRow, NewColumn) :-
+    convertRowReverse(OldRow, OR),
+    convertColumnReverse(OldColumn, OC),
+    convertRowReverse(NewRow, NR),
+    convertColumnReverse(NewColumn, NC),
     write('FROM:\n > Row: '),
-    write(OldRow), nl,
+    write(OR), nl,
     write(' > Column: '),
-    write(OldColumn), nl,
+    write(OC), nl,
     write('TO:\n > Row: '),
-    write(NewRow), nl,
+    write(NR), nl,
     write(' > Column: '),
-    write(NewColumn), nl.
+    write(NC), nl.
 
+convertRowReverse(1, T) :-
+    T = 8.
 
+convertRowReverse(2, T) :-
+    T = 7.
+
+convertRowReverse(3, T) :-
+    T = 6.
+
+convertRowReverse(4, T) :-
+    T = 5.
+
+convertRowReverse(5, T) :-
+    T = 4.
+
+convertRowReverse(6, T) :-
+    T = 3.
+
+convertRowReverse(7, T) :-
+    T = 2.
+
+convertRowReverse(8, T) :-
+    T = 1.
+
+convertColumnReverse(1, V) :-
+    V = 'A'.
+
+convertColumnReverse(2, V) :-
+    V = 'B'.
+
+convertColumnReverse(3, V) :-
+    V = 'C'.
+
+convertColumnReverse(4, V) :-
+    V = 'D'.
+
+convertColumnReverse(5, V) :-
+    V = 'E'.
+
+convertColumnReverse(6, V) :-
+    V = 'F'.
+
+convertColumnReverse(7, V) :-
+    V = 'G'.
+
+convertColumnReverse(8, V) :-
+    V = 'H'.
