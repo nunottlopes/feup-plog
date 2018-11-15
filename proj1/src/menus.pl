@@ -173,3 +173,66 @@ computer1Win(Board) :-
 computer2Win(Board) :-
     display_game(Board, 'Computer2'),
 	write('\n\n------------------------- COMPUTER 2 WINS (O) !! -------------------------\n\n').
+
+
+printMove(OldRow, OldColumn, NewRow, NewColumn) :-
+    convertRowReverse(OldRow, OR),
+    convertColumnReverse(OldColumn, OC),
+    convertRowReverse(NewRow, NR),
+    convertColumnReverse(NewColumn, NC),
+    write('FROM:\n > Row: '),
+    write(OR), nl,
+    write(' > Column: '),
+    write(OC), nl,
+    write('TO:\n > Row: '),
+    write(NR), nl,
+    write(' > Column: '),
+    write(NC), nl.
+
+convertRowReverse(1, T) :-
+    T = 8.
+
+convertRowReverse(2, T) :-
+    T = 7.
+
+convertRowReverse(3, T) :-
+    T = 6.
+
+convertRowReverse(4, T) :-
+    T = 5.
+
+convertRowReverse(5, T) :-
+    T = 4.
+
+convertRowReverse(6, T) :-
+    T = 3.
+
+convertRowReverse(7, T) :-
+    T = 2.
+
+convertRowReverse(8, T) :-
+    T = 1.
+
+convertColumnReverse(1, V) :-
+    V = 'A'.
+
+convertColumnReverse(2, V) :-
+    V = 'B'.
+
+convertColumnReverse(3, V) :-
+    V = 'C'.
+
+convertColumnReverse(4, V) :-
+    V = 'D'.
+
+convertColumnReverse(5, V) :-
+    V = 'E'.
+
+convertColumnReverse(6, V) :-
+    V = 'F'.
+
+convertColumnReverse(7, V) :-
+    V = 'G'.
+
+convertColumnReverse(8, V) :-
+    V = 'H'.

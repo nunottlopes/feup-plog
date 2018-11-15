@@ -1,12 +1,12 @@
 initialBoard([
     [empty, empty, white, white, white, white, empty, empty],
     [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, black, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, black, empty, empty],
     [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, black, black, black, black, empty, empty]
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty]
 ]).
 
 symbol(empty, S) :- S=' '.

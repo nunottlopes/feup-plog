@@ -1,7 +1,7 @@
 moveComputer(OldBoard, NewBoard, Player, Level) :-
     choose_move(Player, OldBoard, Level, OldRow, OldColumn, NewRow, NewColumn),
     makeMove(OldBoard, Player, OldRow, OldColumn, NewRow, NewColumn, NewBoard),
-    printComputerMove(OldRow, OldColumn, NewRow, NewColumn).
+    printMove(OldRow, OldColumn, NewRow, NewColumn).
 
 choose_move(Player, Board, 1, OldRow, OldColumn, NewRow, NewColumn) :-
     valid_moves(Player, Board, [], Ret),
@@ -9,68 +9,81 @@ choose_move(Player, Board, 1, OldRow, OldColumn, NewRow, NewColumn) :-
 
 
 choose_move(Player, Board, 2, OldRow, OldColumn, NewRow, NewColumn) :-
-    write('nivel dificil\n'),
-    write('chamar aqui a função que gera todas as Moves possiveis').
+    checkIfAlmostVictory(Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp, Flag),
+    handleFlagAlmostVictory(Flag, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp).
+
+handleFlagAlmostVictory(2, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
+    OldRow = OldRowTemp, 
+    OldColumn = OldColumnTemp, 
+    NewRow = NewRowTemp, 
+    NewColumn = NewColumnTemp.
+
+handleFlagAlmostVictory(_, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
+    checkIfAlmostDefeat(Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp, Flag),
+    write('handle').
 
 
-printComputerMove(OldRow, OldColumn, NewRow, NewColumn) :-
-    convertRowReverse(OldRow, OR),
-    convertColumnReverse(OldColumn, OC),
-    convertRowReverse(NewRow, NR),
-    convertColumnReverse(NewColumn, NC),
-    write('FROM:\n > Row: '),
-    write(OR), nl,
-    write(' > Column: '),
-    write(OC), nl,
-    write('TO:\n > Row: '),
-    write(NR), nl,
-    write(' > Column: '),
-    write(NC), nl.
 
-convertRowReverse(1, T) :-
-    T = 8.
 
-convertRowReverse(2, T) :-
-    T = 7.
+checkIfAlmostVictory(Player, Board, OldRow, OldColumn, NewRow, NewColumn, Flag) :-
+    valid_moves(Player, Board, [], Ret),
+    checkEachMove(Player, Board, Ret, Flag2, OR, OC, NR, NC),
+    handleFlag(Flag2, Flag, OR, OC, NR, NC, OldRow, OldColumn, NewRow, NewColumn).
 
-convertRowReverse(3, T) :-
-    T = 6.
+handleFlag(2, Flag, OR, OC, NR, NC, OldRow, OldColumn, NewRow, NewColumn) :-
+    OldRow = OR, 
+    OldColumn = OC, 
+    NewRow = NR, 
+    NewColumn = NC,
+    Flag is 2.
 
-convertRowReverse(4, T) :-
-    T = 5.
+handleFlag(_, Flag, OR, OC, NR, NC, OldRow, OldColumn, NewRow, NewColumn) :-
+    Flag is 1.
 
-convertRowReverse(5, T) :-
-    T = 4.
+checkEachMove(Player, Board, [], Flag2, OldRow, OldColumn, NewRow, NewColumn) :-
+    Flag2 is 1.
 
-convertRowReverse(6, T) :-
-    T = 3.
+checkEachMove(Player, Board, [[OR,OC,NR,NC]|T], Flag2, OldRow, OldColumn, NewRow, NewColumn) :-
+    makeMove(Board, Player, OR, OC, NR, NC, BoardTemp),
+    checkVictory(Player, BoardTemp, Result),
+    handleCheckVictory(Player, Board, T, OR, OC, NR, NC, Result, Flag2, OldRow, OldColumn, NewRow, NewColumn).
 
-convertRowReverse(7, T) :-
-    T = 2.
+handleCheckVictory(Player, Board, T, OR, OC, NR, NC, 2, Flag2, OldRow, OldColumn, NewRow, NewColumn) :-
+    OldRow = OR, 
+    OldColumn = OC, 
+    NewRow = NR, 
+    NewColumn = NC,
+    Flag2 is 2.
 
-convertRowReverse(8, T) :-
-    T = 1.
+handleCheckVictory(Player, Board, T, OR, OC, NR, NC, 1, Flag2, OldRow, OldColumn, NewRow, NewColumn) :-
+    checkEachMove(Player, Board, T, Flag2, OldRow, OldColumn, NewRow, NewColumn).
 
-convertColumnReverse(1, V) :-
-    V = 'A'.
+checkVictory(Player, NewBoard, Result)
 
-convertColumnReverse(2, V) :-
-    V = 'B'.
 
-convertColumnReverse(3, V) :-
-    V = 'C'.
 
-convertColumnReverse(4, V) :-
-    V = 'D'.
 
-convertColumnReverse(5, V) :-
-    V = 'E'.
 
-convertColumnReverse(6, V) :-
-    V = 'F'.
 
-convertColumnReverse(7, V) :-
-    V = 'G'.
 
-convertColumnReverse(8, V) :-
-    V = 'H'.
+
+board([
+    [empty, empty, white, white, white, white, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, black, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, black, empty, empty, empty, empty, empty, empty]
+]).
+
+t :-
+    board(X),
+    checkIfAlmostVictory('Player1', X, OldRow, OldColumn, NewRow, NewColumn, Flag),
+    write(OldRow), nl,
+    write(OldColumn), nl,
+    write(NewRow), nl,
+    write(NewColumn), nl,
+    write('Flag final: '),
+    write(Flag), nl.
