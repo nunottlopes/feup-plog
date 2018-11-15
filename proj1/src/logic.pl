@@ -13,9 +13,9 @@ play('Player1', 'Player2', Board, Level) :-
             move(NewBoard1, NewBoard2, Player2),
             checkVictory(Player2, NewBoard2, Result2),
 
-            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), player2Win)
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), player2Win(NewBoard2))
 
-        ), player1Win).
+        ), player1Win(NewBoard1)).
 
 play('Player1', 'Computer2', Board, Level) :-
     Player1 = 'Player1',
@@ -32,9 +32,9 @@ play('Player1', 'Computer2', Board, Level) :-
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
 
-            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win)
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win(NewBoard2))
 
-        ), player1Win).
+        ), player1Win(NewBoard1)).
 
 play('Computer1', 'Computer2', Board, Level) :-
     Player1 = 'Computer1',
@@ -51,9 +51,9 @@ play('Computer1', 'Computer2', Board, Level) :-
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
 
-            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win)
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win(NewBoard2))
 
-        ), computer1Win).
+        ), computer1Win(NewBoard1)).
 
 
 %-------------------------------------------------------
@@ -310,9 +310,7 @@ valid_moves(Player, Board, List, Ret) :-
   getMovesList(Player, Board, P1X, P1Y, 0, 0, List, Temp1),
   getMovesList(Player, Board, P2X, P2Y, 0, 0, Temp1, Temp2),
   getMovesList(Player, Board, P3X, P3Y, 0, 0, Temp2, Temp3),
-  getMovesList(Player, Board, P4X, P4Y, 0, 0, Temp3, Ret),
-  write('MOVES LIST:'), nl,
-  write(Ret), nl.
+  getMovesList(Player, Board, P4X, P4Y, 0, 0, Temp3, Ret).
 
 getMovesLineList(_, _, _, _, _, 9, List, Ret) :-
   Ret = List.
@@ -325,7 +323,6 @@ getMovesLineList(Player, Board,OldRow, OldColumn, Row, Col, List, Ret) :-
   checkValidNewPosition(OldRowTemp, OldColumnTemp, RowTemp, ColTemp, Board, Valid),
   validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, Valid).
 
-
 validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, 1) :-
   Col1 is Col + 1,
   getMovesLineList(Player, Board, OldRow, OldColumn, Row, Col1, List, Ret).
@@ -335,7 +332,6 @@ validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColu
   append(List, [[OldRowTemp, OldColumnTemp, RowTemp, ColTemp]], Ret1),
   Col1 is Col + 1,
   getMovesLineList(Player, Board,OldRow, OldColumn, Row, Col1, Ret1, Ret).
-
 
 getMovesList(_, _, _, _, 9, _, List, Ret) :-
   Ret = List.

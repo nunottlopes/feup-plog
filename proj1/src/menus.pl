@@ -155,14 +155,18 @@ computer1Turn :-
 computer2Turn :-
 	write('\n\n------------------------- COMPUTER 2 TURN (X) -------------------------\n').
 
-player1Win :-
-	write('\n\n------------------------- PLAYER 1 WINS (X) !! -------------------------\n').
+player1Win(Board) :-
+    display_game(Board, 'Player1'),
+	write('\n\n------------------------- PLAYER 1 WINS (X) !! -------------------------\n\n').
 
-player2Win :-
-	write('\n\n------------------------- PLAYER 2 WINS (O) !! -------------------------\n').
+player2Win(Board) :-
+    display_game(Board, 'Player2'),
+	write('\n\n------------------------- PLAYER 2 WINS (O) !! -------------------------\n\n').
 
-computer1Win :-
-	write('\n\n------------------------- COMPUTER 1 WINS (X) !! -------------------------\n').
+computer1Win(Board) :-
+    display_game(Board, 'Computer1'),
+	write('\n\n------------------------- COMPUTER 1 WINS (X) !! -------------------------\n\n').
 
-computer2Win :-
-	write('\n\n------------------------- COMPUTER 2 WINS (X) !! -------------------------\n').
+computer2Win(Board) :-
+    display_game(Board, 'Computer2'),
+	write('\n\n------------------------- COMPUTER 2 WINS (X) !! -------------------------\n\n').

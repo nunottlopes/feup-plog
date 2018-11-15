@@ -6,6 +6,8 @@
 :- include('input.pl').
 :- include('utils.pl').
 
+:- use_module(library(random)).
+
 re :-
     reconsult('src/quartetto'),
     play.

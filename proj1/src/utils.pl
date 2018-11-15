@@ -27,3 +27,12 @@ reverseAllBoard([H|T], X) :-
     append(NewT, [NewH], X).
 
 reverseAllBoard(X, X).
+
+listLength(Xs, L) :- 
+    listLength(Xs, 0, L).
+
+listLength( [], L, L).
+
+listLength([_|Xs], T, L) :-
+  T1 is T+1,
+  listLength(Xs, T1, L).
