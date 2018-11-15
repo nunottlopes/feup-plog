@@ -276,9 +276,9 @@ checkVictory(Player, Board, Result) :-
 
 getPiecesList(Player, Board, List, Ret) :-
     getPositionPlayer(Player, Board, 0, 0, List, Ret).
- 
+
 getPositionPlayerLine(_, _, _, 9, List, Ret) :- Ret = List.
- 
+
 getPositionPlayerLine(Player, Board, Row, Col, List, Ret) :-
     matrix(Board, Row, Col, Value),
     Value = Player,
@@ -288,17 +288,62 @@ getPositionPlayerLine(Player, Board, Row, Col, List, Ret) :-
     getPositionPlayerLine(Player, Board, Row, Col1, Ret1, Ret);
     Col1 is Col + 1,
     getPositionPlayerLine(Player, Board, Row, Col1, List, Ret).
- 
+
 getPositionPlayer(_, _, 9, _, List, Ret) :- Ret = List.
- 
+
 getPositionPlayer(Player, Board, Row, Col, List, Ret) :-
   getPositionPlayerLine(Player, Board, Row, 0, List, Ret1),
   Row1 is Row + 1,
   getPositionPlayer(Player, Board, Row1, 0, Ret1, Ret).
- 
+
 matrix(Matrix, I, J, Value) :-
     nth0(I, Matrix, Row),
     nth0(J, Row, Value).
+
+
+%-------------------------------------------------------
+% FUNCTIONS TO GET A LIST WITH ALL THE PLAYER VALID MOVES
+
+valid_moves(Player, Board, List, Ret) :-
+  getColor(Player, Type),
+  getPiecesList(Type, Board, [], [[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]]),
+  getMovesList(Player, Board, P1X, P1Y, 0, 0, List, Temp1),
+  getMovesList(Player, Board, P2X, P2Y, 0, 0, Temp1, Temp2),
+  getMovesList(Player, Board, P3X, P3Y, 0, 0, Temp2, Temp3),
+  getMovesList(Player, Board, P4X, P4Y, 0, 0, Temp3, Ret),
+  write('MOVES LIST:'), nl,
+  write(Ret), nl.
+
+getMovesLineList(_, _, _, _, _, 9, List, Ret) :-
+  Ret = List.
+
+getMovesLineList(Player, Board,OldRow, OldColumn, Row, Col, List, Ret) :-
+  increment(OldRow, OldRowTemp),
+  increment(OldColumn, OldColumnTemp),
+  increment(Row, RowTemp),
+  increment(Col, ColTemp),
+  checkValidNewPosition(OldRowTemp, OldColumnTemp, RowTemp, ColTemp, Board, Valid),
+  validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, Valid).
+
+
+validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, 1) :-
+  Col1 is Col + 1,
+  getMovesLineList(Player, Board, OldRow, OldColumn, Row, Col1, List, Ret).
+
+validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, _) :-
+  % adiciona
+  append(List, [[OldRowTemp, OldColumnTemp, RowTemp, ColTemp]], Ret1),
+  Col1 is Col + 1,
+  getMovesLineList(Player, Board,OldRow, OldColumn, Row, Col1, Ret1, Ret).
+
+
+getMovesList(_, _, _, _, 9, _, List, Ret) :-
+  Ret = List.
+
+getMovesList(Player, Board, OldRow, OldColumn, Row, Col, List, Ret) :-
+  getMovesLineList(Player, Board,OldRow, OldColumn, Row, 0, List, Ret1),
+  Row1 is Row + 1,
+  getMovesList(Player, Board, OldRow, OldColumn, Row1, 0, Ret1, Ret).
 
 
 %-------------------------------------------------------
@@ -377,15 +422,15 @@ checkIfMinSize([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], Rotate, Result) :-
 
 maxList([], Max, Max).
 
-maxList([H|T], Max0, Max) :- 
-    H >  Max0, 
+maxList([H|T], Max0, Max) :-
+    H >  Max0,
     maxList(T, H, Max).
 
-maxList([H|T], Max0, Max) :- 
-    H =< Max0, 
+maxList([H|T], Max0, Max) :-
+    H =< Max0,
     maxList(T, Max0, Max).
 
-maxList([H|T], Max):- 
+maxList([H|T], Max):-
     maxList(T, H, Max).
 
 

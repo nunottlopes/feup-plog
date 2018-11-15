@@ -1,6 +1,9 @@
 :- use_module(library(lists)).
 
-clearScreen:-
+increment(Old, New) :-
+	New is Old + 1.
+
+clearScreen:
 	nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl.
 
 % Replace element at Index with New
