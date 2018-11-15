@@ -1,4 +1,4 @@
-play('Player1', 'Player2', Board, _) :-
+play('Player1', 'Player2', Board, Level) :-
     Player1 = 'Player1',
     Player2 = 'Player2',
     display_game(Board, Player1),
@@ -13,7 +13,7 @@ play('Player1', 'Player2', Board, _) :-
             move(NewBoard1, NewBoard2, Player2),
             checkVictory(Player2, NewBoard2, Result2),
 
-            if(Result2 == 1, play(Player1, Player2, NewBoard2), player2Win)
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), player2Win)
 
         ), player1Win).
 
@@ -32,7 +32,7 @@ play('Player1', 'Computer2', Board, Level) :-
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
 
-            if(Result2 == 1, play(Player1, Player2, NewBoard2), computer2Win)
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win)
 
         ), player1Win).
 
@@ -51,7 +51,7 @@ play('Computer1', 'Computer2', Board, Level) :-
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
 
-            if(Result2 == 1, play(Player1, Player2, NewBoard2), computer2Win)
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win)
 
         ), computer1Win).
 
