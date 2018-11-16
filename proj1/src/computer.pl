@@ -21,31 +21,42 @@ handleFlagAlmostVictory(2, Player, Board, OldRow, OldColumn, NewRow, NewColumn, 
 handleFlagAlmostVictory(_, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
     checkIfAlmostDefeat(Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp, Flag),
     handleFlagAlmostDefeat(Flag, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp).
+    OldRow = OldRowTemp,
+    OldColumn = OldColumnTemp,
+    NewRow = NewRowTemp,
+    NewColumn = NewColumnTemp,
     write('handle').
 
 % ------------------------------------------------------------------------------------------------------
 
 handleFlagAlmostDefeat(2, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
     write('Almost Defeat'), nl,
-    possibleDefense(isDefensible, Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp),
-    generateMove(isDefensible, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp).
+    possibleDefense(IsDefensible, Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp),
+    write('Teste'), write(IsDefensible),
+    generateMove(IsDefensible, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp).
 
-possibleDefense(isDefensible, Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
+possibleDefense(IsDefensible, Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
     valid_moves(Player, Board, [], Ret),
-    countOccurences(Ret, [OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp], Count),
-    setIsDefensible(isDefensible, Count).
+    countOccurences(Ret, [Row1, Col1, NewRowTemp, NewColumnTemp], Count),
+    write('entrei'), nl,
+    setIsDefensible(Count, IsDefensible, OldRowTemp, OldColumnTemp, Row1, Col1).
 
-setIsDefensible(isDefensible, 0) :-
-  isDefensible = 1.
+setIsDefensible(0, IsDefensible, OldRowTemp, OldColumnTemp, Row1, Col1) :-
+  write('Indefensavel'),
+  IsDefensible = 1.
 
-  setIsDefensible(isDefensible, _) :-
-    isDefensible = 2.
+setIsDefensible(_, IsDefensible, OldRowTemp, OldColumnTemp, Row1, Col1) :-
+  write('Defensavel'),
+  OldRowTemp = Row1,
+  OldColumnTemp = Col1,
+  IsDefensible = 2.
 
 generateMove(1, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp):-
     valid_moves(Player, Board, [], Ret),
     random_member([OldRow, OldColumn, NewRow, NewColumn], Ret).
 
 generateMove(2, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp):-
+    write('Moving'),
     OldRow = OldRowTemp,
     OldColumn = OldColumnTemp,
     NewRow = NewRowTemp,
@@ -63,17 +74,17 @@ countOccurencesAux( [ Head | Tail ], Value, N, Result ):-
 	countOccurencesAux( Tail, Value, N, Result ).
 
 
-OtherPlayer('Player1', P2) :-
+otherPlayer('Player1', P2) :-
   P2 = 'Player2'.
 
-OtherPlayer('Player2', P2) :-
+otherPlayer('Player2', P2) :-
   P2 = 'Player1'.
 
 checkIfAlmostDefeat(Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp, Flag) :-
-  OtherPlayer(Player, P2)
+  otherPlayer(Player, P2),
   valid_moves(P2, Board, [], Ret),
   checkEachMove(P2, Board, Ret, Flag2, OR, OC, NR, NC),
-  handleFlag(Flag2, Flag, OR, OC, NR, NC, OldRow, OldColumn, NewRow, NewColumn).
+  handleFlag(Flag2, Flag, OR, OC, NR, NC, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp).
 
 % ------------------------------------------------------------------------------------------------------
 
@@ -110,25 +121,35 @@ handleCheckVictory(Player, Board, T, OR, OC, NR, NC, 2, Flag2, OldRow, OldColumn
 handleCheckVictory(Player, Board, T, OR, OC, NR, NC, 1, Flag2, OldRow, OldColumn, NewRow, NewColumn) :-
     checkEachMove(Player, Board, T, Flag2, OldRow, OldColumn, NewRow, NewColumn).
 
-checkVictory(Player, NewBoard, Result)
-
-
-
-
-
-
+% checkVictory(Player, NewBoard, Result)
 
 
 board([
-    [empty, empty, white, white, white, white, empty, empty],
+    [empty, white, empty, white, white, white, empty, empty],
     [empty, empty, empty, empty, empty, empty, empty, empty],
     [empty, empty, empty, black, empty, empty, empty, empty],
     [empty, empty, empty, empty, empty, empty, empty, empty],
     [empty, empty, empty, empty, empty, black, empty, empty],
     [empty, empty, empty, empty, empty, empty, empty, empty],
     [empty, empty, empty, black, empty, empty, empty, empty],
-    [empty, black, empty, empty, empty, empty, empty, empty]
+    [empty, black, empty, empty , empty, empty, empty, empty]
 ]).
+
+t2 :-
+    board(X),
+    valid_moves('Player2', X, [], Ret),
+    write(Ret),
+    countOccurences( Ret, [_,_,5,2], N),
+    write('N: '),
+    write(N).
+
+t1 :-
+    board(X),
+    choose_move('Player2', X, 2, OldRow, OldColumn, NewRow, NewColumn),
+    write(OldRow), nl,
+    write(OldColumn), nl,
+    write(NewRow), nl,
+    write(NewColumn), nl.
 
 t :-
     board(X),
