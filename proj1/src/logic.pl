@@ -38,16 +38,16 @@ play('Computer1', 'Computer2', Board, 3) :-
     Player1 = 'Computer1',
     Player2 = 'Computer2',
     display_game(Board, Player1),
-    moveComputer(Board, NewBoard1, Player1, Level),
+    moveComputer(Board, NewBoard1, Player1, 3),
     checkVictory(Player1, NewBoard1, Result1),
 
     if(Result1 == 1,
         (
             display_game(NewBoard1, Player2),
-            moveComputer(NewBoard1, NewBoard2, Player2, Level),
+            moveComputer(NewBoard1, NewBoard2, Player2, 3),
             checkVictory(Player2, NewBoard2, Result2),
 
-            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win(NewBoard2))
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, 3), computer2Win(NewBoard2))
 
         ), computer1Win(NewBoard1)).
 
