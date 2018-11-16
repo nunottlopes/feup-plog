@@ -3,14 +3,20 @@ moveComputer(OldBoard, NewBoard, Player, Level) :-
     makeMove(OldBoard, Player, OldRow, OldColumn, NewRow, NewColumn, NewBoard),
     printMove(OldRow, OldColumn, NewRow, NewColumn).
 
+% ------------------------------------------------------------------------------------------------------
+% EASY MODE
+
 choose_move(Player, Board, 1, OldRow, OldColumn, NewRow, NewColumn) :-
     valid_moves(Player, Board, [], Ret),
     random_member([OldRow, OldColumn, NewRow, NewColumn], Ret).
 
+% ------------------------------------------------------------------------------------------------------
+% HARD MODE
 
 choose_move(Player, Board, 2, OldRow, OldColumn, NewRow, NewColumn) :-
-    checkIfAlmostVictory(Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp, Flag),
-    handleFlagAlmostVictory(Flag, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp).
+    evaluate_and_choose(Player, Board, OldRow, OldColumn, NewRow, NewColumn).
+    % checkIfAlmostVictory(Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp, Flag),
+    % handleFlagAlmostVictory(Flag, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp).
 
 handleFlagAlmostVictory(2, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
     OldRow = OldRowTemp,
@@ -74,12 +80,6 @@ countOccurencesAux( [ Head | Tail ], Value, N, Result ):-
 	countOccurencesAux( Tail, Value, N, Result ).
 
 
-otherPlayer('Player1', P2) :-
-  P2 = 'Player2'.
-
-otherPlayer('Player2', P2) :-
-  P2 = 'Player1'.
-
 checkIfAlmostDefeat(Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp, Flag) :-
   otherPlayer(Player, P2),
   valid_moves(P2, Board, [], Ret),
@@ -123,18 +123,6 @@ handleCheckVictory(Player, Board, T, OR, OC, NR, NC, 1, Flag2, OldRow, OldColumn
 
 % checkVictory(Player, NewBoard, Result)
 
-
-board([
-    [empty, white, empty, white, white, white, empty, empty],
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, empty, black, empty, empty, empty, empty],
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, empty, empty, empty, black, empty, empty],
-    [empty, empty, empty, empty, empty, empty, empty, empty],
-    [empty, empty, empty, black, empty, empty, empty, empty],
-    [empty, black, empty, empty , empty, empty, empty, empty]
-]).
-
 t2 :-
     board(X),
     valid_moves('Player2', X, [], Ret),
@@ -151,7 +139,7 @@ t1 :-
     write(NewRow), nl,
     write(NewColumn), nl.
 
-t :-
+t0 :-
     board(X),
     checkIfAlmostVictory('Player1', X, OldRow, OldColumn, NewRow, NewColumn, Flag),
     write(OldRow), nl,
@@ -160,3 +148,179 @@ t :-
     write(NewColumn), nl,
     write('Flag final: '),
     write(Flag), nl.
+
+
+
+
+
+board([
+    [empty, white, empty, white, white, white, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, black, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, black, empty, empty , empty, empty, empty, empty]
+]).
+
+board1([
+    [empty, empty, white, white, white, white, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, black, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, empty, black, empty, empty, empty, empty, empty]
+]).
+
+
+board2([
+    [empty, empty, white, white, white, white, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, black, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, black, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, empty, empty, empty, empty, empty, empty],
+    [empty, empty, black, empty, black, empty, empty, empty]
+]).
+
+% t :-
+  %  board1(X),
+  %  valid_moves('Player1', X, [], Ret),
+  %  twoMovesToVictory(Player, X, Ret, [[], -1000], Move, Value),
+  %  write(Move), nl,
+  %  write(Value), nl.
+
+%-------------------------------------------------------
+% FUNCTIONS TO EVALUATE BEST TWO MOVES TO VICTORY
+
+twoMovesToVictory(Player, Board, [[OR, OC, NR, NC]|Moves], Record, BestMove, BestValue) :-
+    makeMove(Board, Player, OR, OC, NR, NC, NewBoard),
+    valid_moves(Player, NewBoard, [], Ret),
+    moveToVictory(Player, NewBoard, Ret, [[], -1000], Move2, Value2),
+    update_two_moves([OR, OC, NR, NC], Value2, Record, Record1),
+    twoMovesToVictory(Player, Board, Moves, Record1, BestMove, BestValue).
+
+twoMovesToVictory(Player, Board, [], [Move, Value], Move, Value).
+
+update_two_moves(Move, Value, [Move1, Value1], [Move2, Value2]) :-
+    Value > Value1,
+    Move2 = Move,
+    Value2 = Value;
+    Move2 = Move1,
+    Value2 = Value1.
+
+
+%-------------------------------------------------------
+% FUNCTIONS TO EVALUATE BEST MOVE TO VICTORY
+
+moveToVictory(Player, Board, [Move|Moves], Record, BestMove, BestValue) :-
+    value(Player, Board, Move, Value),
+    update(Move, Value, Record, Record1),
+    moveToVictory(Player, Board, Moves, Record1, BestMove, BestValue).
+
+moveToVictory(Player, Board, [], [Move, Value], Move, Value).
+
+update(Move, Value, [Move1, Value1], [Move2, Value2]) :-
+    Value > Value1,
+    Move2 = Move,
+    Value2 = Value;
+    Move2 = Move1,
+    Value2 = Value1.
+
+value(Player, Board, [OR, OC, NR, NC], Value) :-
+    makeMove(Board, Player, OR, OC, NR, NC, NewBoard),
+    checkVictory(Player, NewBoard, Value).
+
+
+
+otherPlayer('Computer1', P2) :-
+  P2 = 'Computer2'.
+
+otherPlayer('Computer2', P2) :-
+  P2 = 'Computer1'.
+
+otherPlayer('Player1', P2) :-
+  P2 = 'Player2'.
+
+otherPlayer('Player2', P2) :-
+  P2 = 'Player1'.
+
+
+t :-
+    board(X),
+    evaluate_and_choose('Player1', X, OldRow, OldColumn, NewRow, NewColumn).
+
+
+evaluate_and_choose(Player, Board, OldRow, OldColumn, NewRow, NewColumn) :-
+    valid_moves(Player, Board, [], Ret),
+    moveToVictory(Player, Board, Ret, [[], -1000], Move1, Value1),
+    otherPlayer(Player, Player2),
+    moveToAvoidLoss(Player2, Board, Ret, Move2, Value2),
+    twoMovesToVictory(Player, Board, Ret, [[], -1000], Move3, Value3),
+    twoMovesToAvoidLoss(Player2, Board, Ret, Move4, Value4),
+    chooseFinalMove(Player, Board, OldRow, OldColumn, NewRow, NewColumn, Move1, Value1, Move2, Value2, Move3, Value3, Move4, Value4).
+
+
+chooseFinalMove(Player, Board, OldRow, OldColumn, NewRow, NewColumn, [OR, OC, NR, NC], 2, Move2, Value2, Move3, Value3, Move4, Value4) :-
+    OldRow = OR,
+    OldColumn = OC,
+    NewRow = NR,
+    NewColumn = NC.
+
+chooseFinalMove(Player, Board, OldRow, OldColumn, NewRow, NewColumn, Move1, Value1, [OR, OC, NR, NC], 2, Move3, Value3, Move4, Value4) :-
+    OldRow = OR,
+    OldColumn = OC,
+    NewRow = NR,
+    NewColumn = NC.
+
+chooseFinalMove(Player, Board, OldRow, OldColumn, NewRow, NewColumn, Move1, Value1, Move2, Value2, [OR, OC, NR, NC], 2, Move4, Value4) :-
+    OldRow = OR,
+    OldColumn = OC,
+    NewRow = NR,
+    NewColumn = NC.
+
+chooseFinalMove(Player, Board, OldRow, OldColumn, NewRow, NewColumn, Move1, Value1, Move2, Value2, Move3, Value3, [OR, OC, NR, NC], 2) :-
+    OldRow = OR,
+    OldColumn = OC,
+    NewRow = NR,
+    NewColumn = NC.
+
+chooseFinalMove(Player, Board, OldRow, OldColumn, NewRow, NewColumn, Move1, Value1, Move2, Value2, Move3, Value3, Move4, Value4) :-
+    choose_move(Player, Board, 1, OldRow, OldColumn, NewRow, NewColumn).
+
+
+%-------------------------------------------------------
+% FUNCTIONS TO EVALUATE BEST MOVE TO AVOID LOSS
+
+moveToAvoidLoss(Player, Board, OtherPlayerMoves, BestMove, Value) :-
+    valid_moves(Player, Board, [], Ret),
+    moveToVictory(Player, Board, Ret, [[], -1000], Move2, Value2),
+    checkIfEqualPosition(OtherPlayerMoves, Move2, Value2, BestMove, Value).
+
+checkIfEqualPosition([], Move2, 2, Move3, Value) :-
+    Value is 1.
+
+checkIfEqualPosition([[OR, OC, NR, NC]| OtherMoves], [_, _, NR1, NC1], 2, [OR2, OC2, NR2, NC2], Value) :-
+    NR == NR1,
+    NC == NC1,
+    OR2 = OR,
+    OC2 = OC,
+    NR2 = NR,
+    NC2 = NC,
+    Value is 2;
+    checkIfEqualPosition(OtherMoves, [_, _, NR1, NC1], 2, [OR2, OC2, NR2, NC2], Value).
+
+checkIfEqualPosition(OtherPlayerMoves, Move2, _, Move3, Value) :-
+    Value is 1.
+
+%-------------------------------------------------------
+% FUNCTIONS TO EVALUATE BEST TWO MOVES TO AVOID LOSS
+
+twoMovesToAvoidLoss(Player, Board, OtherPlayerMoves, BestMove, Value) :-
+    valid_moves(Player, Board, [], Ret),
+    twoMovesToVictory(Player, Board, Ret, [[], -1000], Move2, Value2),
+    checkIfEqualPosition(OtherPlayerMoves, Move2, Value2, BestMove, Value).
