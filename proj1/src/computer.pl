@@ -32,8 +32,14 @@ handleFlagAlmostDefeat(2, Player, Board, OldRow, OldColumn, NewRow, NewColumn, O
 
 possibleDefense(isDefensible, Player, Board, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp) :-
     valid_moves(Player, Board, [], Ret),
-    % Iterar e ver se pode movimentar-se para a jogada que salva o jogo
-    % member(X, [One]).
+    countOccurences(Ret, [OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp], Count),
+    setIsDefensible(isDefensible, Count).
+
+setIsDefensible(isDefensible, 0) :-
+  isDefensible = 1.
+
+  setIsDefensible(isDefensible, _) :-
+    isDefensible = 2.
 
 generateMove(1, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp, OldColumnTemp, NewRowTemp, NewColumnTemp):-
     valid_moves(Player, Board, [], Ret),
@@ -44,6 +50,17 @@ generateMove(2, Player, Board, OldRow, OldColumn, NewRow, NewColumn, OldRowTemp,
     OldColumn = OldColumnTemp,
     NewRow = NewRowTemp,
     NewColumn = NewColumnTemp.
+
+countOccurences( List, Value, N ):-
+	countOccurencesAux( List, Value, 0, N ).
+
+countOccurencesAux( [], _, Result, Result ).
+countOccurencesAux( [ Value | Tail ], Value, N, Result ):-
+	N1 is N+1,
+	countOccurencesAux( Tail, Value, N1, Result ).
+
+countOccurencesAux( [ Head | Tail ], Value, N, Result ):-
+	countOccurencesAux( Tail, Value, N, Result ).
 
 
 OtherPlayer('Player1', P2) :-
