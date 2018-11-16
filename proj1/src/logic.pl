@@ -420,34 +420,6 @@ checkIfMinSize([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], Rotate, Result) :-
     ).
 
 
-% GET THE MAX NUMBER FROM A LIST
-
-maxList([], Max, Max).
-
-maxList([H|T], Max0, Max) :-
-    H >  Max0,
-    maxList(T, H, Max).
-
-maxList([H|T], Max0, Max) :-
-    H =< Max0,
-    maxList(T, Max0, Max).
-
-maxList([H|T], Max):-
-    maxList(T, H, Max).
-
-
-% GET THE MIN NUMBER FROM A LIST
-
-minList([], Min, Min).
-
-minList([H|T], Min0, Min) :-
-    Min1 is min(H, Min0),
-    minList(T, Min1, Min).
-
-minList([H|T], Min) :-
-    minList(T, H, Min).
-
-
 %-------------------------------------------------------
 % FUNCTION THAT INITIALIZES GAME
 

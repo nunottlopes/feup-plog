@@ -33,6 +33,9 @@ reverseAllBoard([H|T], X) :-
 
 reverseAllBoard(X, X).
 
+
+% GET THE LENGTH FROM A LIST
+
 listLength(Xs, L) :- 
     listLength(Xs, 0, L).
 
@@ -41,3 +44,32 @@ listLength( [], L, L).
 listLength([_|Xs], T, L) :-
   T1 is T+1,
   listLength(Xs, T1, L).
+
+
+
+% GET THE MAX NUMBER FROM A LIST
+
+maxList([], Max, Max).
+
+maxList([H|T], Max0, Max) :-
+    H >  Max0,
+    maxList(T, H, Max).
+
+maxList([H|T], Max0, Max) :-
+    H =< Max0,
+    maxList(T, Max0, Max).
+
+maxList([H|T], Max):-
+    maxList(T, H, Max).
+
+
+% GET THE MIN NUMBER FROM A LIST
+
+minList([], Min, Min).
+
+minList([H|T], Min0, Min) :-
+    Min1 is min(H, Min0),
+    minList(T, Min1, Min).
+
+minList([H|T], Min) :-
+    minList(T, H, Min).
