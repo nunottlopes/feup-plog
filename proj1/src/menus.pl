@@ -47,6 +47,9 @@ handleDificultLevelMenuInput(Player1, Player2, 1) :-
 handleDificultLevelMenuInput(Player1, Player2, 2) :-
     initializeGame(Player1, Player2, 2).
 
+handleDificultLevelMenuInput(Player1, Player2, 3) :-
+    initializeGame(Player1, Player2, 3).
+
 handleDificultLevelMenuInput(Player1, Player2, 0) :-
     write('\nExiting game...\n\n').
 
@@ -129,15 +132,15 @@ printDificultLevelMenu :-
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl,
     write('|         |         |                                       |         |         |'), nl,
     write('|         |         |                                       |         |         |'), nl,
-    write('|---------|---------|------|                         |------|---------|---------|'), nl,
-    write('|         |         |      |-------------------------|      |         |         |'), nl,
+    write('|---------|---------|------|-------------------------|------|---------|---------|'), nl,
     write('|         |         |      |         1. Easy         |      |         |         |'), nl,
     write('|         |         |      |                         |      |         |         |'), nl,
-    write('|---------|---------|------|         2. Hard         |------|---------|---------|'), nl,
+    write('|         |         |      |         2. Normal       |      |         |         |'), nl,
+    write('|---------|---------|------|                         |------|---------|---------|'), nl,
+    write('|         |         |      |         3. Hard         |      |         |         |'), nl,
     write('|         |         |      |                         |      |         |         |'), nl,
     write('|         |         |      |         0. Exit         |      |         |         |'), nl,
-    write('|         |         |      |-------------------------|      |         |         |'), nl,
-    write('|---------|---------|------|                         |------|---------|---------|'), nl,
+    write('|---------|---------|------|-------------------------|------|---------|---------|'), nl,
     write('|         |         |                                       |         |         |'), nl,
     write('|         |         |        ______________________         |         |         |'), nl,
     write('|         |         |               Nuno Lopes              |         |         |'), nl,
@@ -152,30 +155,44 @@ player1Turn :-
 player2Turn :-
 	write('\n\n------------------------- PLAYER 2 TURN (O) -------------------------\n').
 
-computer1Turn :-
-	write('\n\n------------------------- COMPUTER 1 TURN (X) -------------------------\n').
-
-computer2Turn :-
-	write('\n\n------------------------- COMPUTER 2 TURN (O) -------------------------\n').
-
 player1Win(Board) :-
     display_game(Board, 'Player1'),
-	write('\n\n------------------------- PLAYER 1 WINS (X) !! -------------------------\n\n').
+    write('\n\n\n-----------------------------------------------------------------------\n'),
+	write('|                          PLAYER 1 WINS (X)                          |\n'),
+    write('-----------------------------------------------------------------------\n\n').
 
 player2Win(Board) :-
     display_game(Board, 'Player2'),
-	write('\n\n------------------------- PLAYER 2 WINS (O) !! -------------------------\n\n').
+    write('\n\n\n-----------------------------------------------------------------------\n'),
+	write('|                          PLAYER 2 WINS (O)                          |\n'),
+    write('-----------------------------------------------------------------------\n\n').
 
 computer1Win(Board) :-
     display_game(Board, 'Computer1'),
-	write('\n\n------------------------- COMPUTER 1 WINS (X) !! -------------------------\n\n').
+    write('\n\n\n-----------------------------------------------------------------------\n'),
+	write('|                         COMPUTER 1 WINS (X)                         |\n'),
+    write('-----------------------------------------------------------------------\n\n').
 
 computer2Win(Board) :-
     display_game(Board, 'Computer2'),
-	write('\n\n------------------------- COMPUTER 2 WINS (O) !! -------------------------\n\n').
+    write('\n\n\n-----------------------------------------------------------------------\n'),
+	write('|                         COMPUTER 2 WINS (O)                         |\n'),
+    write('-----------------------------------------------------------------------\n\n').
 
+printPlayerMove('Player1') :-
+    write('\n\n------------------------- PLAYER 1 MOVE (X) -------------------------\n').
 
-printMove(OldRow, OldColumn, NewRow, NewColumn) :-
+printPlayerMove('Player2') :-
+    write('\n\n------------------------- PLAYER 2 MOVE (O) -------------------------\n').
+
+printPlayerMove('Computer1') :-
+    write('\n\n------------------------- COMPUTER 1 MOVE (X) -------------------------\n').
+
+printPlayerMove('Computer2') :-
+    write('\n\n------------------------- COMPUTER 2 MOVE (O) -------------------------\n').
+
+printMove(Player, OldRow, OldColumn, NewRow, NewColumn) :-
+    printPlayerMove(Player),
     convertRowReverse(OldRow, OR),
     convertColumnReverse(OldColumn, OC),
     convertRowReverse(NewRow, NR),

@@ -46,7 +46,6 @@ listLength([_|Xs], T, L) :-
   listLength(Xs, T1, L).
 
 
-
 % GET THE MAX NUMBER FROM A LIST
 
 maxList([], Max, Max).

@@ -10,13 +10,5 @@
 :- use_module(library(random)).
 :- use_module(library(system)).
 
-re :-
-    reconsult('src/quartetto'),
-    play.
-
-q :-
-  reconsult('src/quartetto'),
-  mainMenu.
-
 play :-
     mainMenu.

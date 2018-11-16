@@ -1,7 +1,6 @@
 play('Player1', 'Player2', Board, Level) :-
     Player1 = 'Player1',
     Player2 = 'Player2',
-    clearScreen,
     display_game(Board, Player1),
     player1Turn,
     move(Board, NewBoard1, Player1),
@@ -9,7 +8,6 @@ play('Player1', 'Player2', Board, Level) :-
 
     if(Result1 == 1,
         (
-            clearScreen,
             display_game(NewBoard1, Player2),
             player2Turn,
             move(NewBoard1, NewBoard2, Player2),
@@ -29,8 +27,6 @@ play('Player1', 'Computer2', Board, Level) :-
 
     if(Result1 == 1,
         (
-            clearScreen,
-            computer2Turn,
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
 
@@ -38,22 +34,35 @@ play('Player1', 'Computer2', Board, Level) :-
 
         ), player1Win(NewBoard1)).
 
-play('Computer1', 'Computer2', Board, Level) :-
+play('Computer1', 'Computer2', Board, 3) :-
     Player1 = 'Computer1',
     Player2 = 'Computer2',
     display_game(Board, Player1),
-    % sleep(0.8),
-    % clearScreen,
-    computer1Turn,
     moveComputer(Board, NewBoard1, Player1, Level),
     checkVictory(Player1, NewBoard1, Result1),
 
     if(Result1 == 1,
         (
             display_game(NewBoard1, Player2),
-            % sleep(0.8),
-            % clearScreen,
-            computer2Turn,
+            moveComputer(NewBoard1, NewBoard2, Player2, Level),
+            checkVictory(Player2, NewBoard2, Result2),
+
+            if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win(NewBoard2))
+
+        ), computer1Win(NewBoard1)).
+
+play('Computer1', 'Computer2', Board, Level) :-
+    Player1 = 'Computer1',
+    Player2 = 'Computer2',
+    display_game(Board, Player1),
+    sleep(0.5),
+    moveComputer(Board, NewBoard1, Player1, Level),
+    checkVictory(Player1, NewBoard1, Result1),
+
+    if(Result1 == 1,
+        (
+            display_game(NewBoard1, Player2),
+            sleep(0.5),
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
             checkVictory(Player2, NewBoard2, Result2),
 
@@ -242,10 +251,12 @@ checkEmptySpot([], Column, Flag).
 
 makeMove(OldBoard, Player,OldRow, OldColumn, NewRow, NewColumn, NewBoard):-
     isWithinLimits(NewRow),
-	  isWithinLimits(NewColumn),
+	isWithinLimits(NewColumn),
     getColor(Player, Type),
+    
     % REMOVES THE PIECE FROM PREVIOUS POSITION
     makeMoveAux(OldBoard, 1, empty, OldRow, OldColumn, [], TempBoard ),
+
     % PLACES THE PIECE IN THE NEW POSITION
     makeMoveAux(TempBoard, 1, Type, NewRow, NewColumn, [], NewBoard ).
 
@@ -270,11 +281,8 @@ checkVictory(Player, Board, Result) :-
     getColor(Player, Type),
     getPiecesList(Type, Board, [], Ret),
     checkIfSquare(Ret, Square),
-    % write('Check Square '), write(Square), nl,
     checkIfRotate(Ret, Square, Rotate),
-    % write('Check Rotate '), write(Rotate), nl,
     checkIfMinSize(Ret, Rotate, Result).
-    % write('Check Size '), write(Result), nl
 
 
 %-------------------------------------------------------
@@ -288,7 +296,6 @@ getPositionPlayerLine(_, _, _, 9, List, Ret) :- Ret = List.
 getPositionPlayerLine(Player, Board, Row, Col, List, Ret) :-
     matrix(Board, Row, Col, Value),
     Value = Player,
-    % adiciona
     append(List, [[Row, Col]], Ret1),
     Col1 is Col + 1,
     getPositionPlayerLine(Player, Board, Row, Col1, Ret1, Ret);
@@ -334,7 +341,6 @@ validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColu
   getMovesLineList(Player, Board, OldRow, OldColumn, Row, Col1, List, Ret).
 
 validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, _) :-
-  % adiciona
   append(List, [[OldRowTemp, OldColumnTemp, RowTemp, ColTemp]], Ret1),
   Col1 is Col + 1,
   getMovesLineList(Player, Board,OldRow, OldColumn, Row, Col1, Ret1, Ret).
