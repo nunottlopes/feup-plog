@@ -1,3 +1,6 @@
+%----------------------------------------------------------------
+% READ INPUT AND CHECK IF THERE IS A PIECE IN THE POSITION CHOSEN
+
 readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
     write('> Row'), read(R),
     write('> Column'), read(C),
@@ -14,6 +17,10 @@ handleResponsePieceOldPosition(_, Player, OldRow, OldColumn, OldBoard, Rnumber, 
     OldRow = Rnumber,
     OldColumn = Cnumber.
 
+
+%--------------------------------------------------------------------------------
+% READ INPUT AND CHECK IF IT IS POSSIBLE TO MOVE THE PIECE TO THE POSITION CHOSEN
+
 readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
     write('> Row'), read(R),
     write('> Column'), read(C),
@@ -29,6 +36,10 @@ handleResponsePieceNewPosition(1, OldRow, OldColumn, NewRow, NewColumn, OldBoard
 handleResponsePieceNewPosition(_, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber) :-
     NewRow = Rnumber,
     NewColumn = Cnumber.
+
+
+%----------------------------------------------------------------
+% CONVERT INPUT TO VALUES USED BY THE FUNCTIONS
 
 convertRow(1, T) :-
     T = 8.

@@ -1,65 +1,5 @@
-mainMenu :-
-    printMainMenu,
-    askInput,
-    read(Input),
-    handleMainMenuInput(Input).
-
-handleMainMenuInput(0) :-
-    write('\nExiting game...\n\n').
-
-handleMainMenuInput(1) :-
-    printStartMenu,
-    askInput,
-    read(Input),
-    handleStartMenuInput(Input).
-
-handleMainMenuInput(_) :-
-    write('> Wrong option, please chose another option '),
-    read(Input),
-    handleMainMenuInput(Input).
-
-handleStartMenuInput(0) :-
-    write('\nExiting game...\n\n').
-
-handleStartMenuInput(1) :-
-    initializeGame('Player1', 'Player2', 0).
-
-handleStartMenuInput(2) :-
-    printDificultLevelMenu,
-    askInput,
-    read(Input),
-    handleDificultLevelMenuInput('Player1', 'Computer2', Input).
-
-handleStartMenuInput(3) :-  
-    printDificultLevelMenu,
-    askInput,
-    read(Input),
-    handleDificultLevelMenuInput('Computer1', 'Computer2', Input).
-
-handleStartMenuInput(_) :-
-    write('> Wrong option, please chose another option '),
-    read(Input),
-    handleStartMenuInput(Input).
-
-handleDificultLevelMenuInput(Player1, Player2, 1) :-
-    initializeGame(Player1, Player2, 1).
-
-handleDificultLevelMenuInput(Player1, Player2, 2) :-
-    initializeGame(Player1, Player2, 2).
-
-handleDificultLevelMenuInput(Player1, Player2, 3) :-
-    initializeGame(Player1, Player2, 3).
-
-handleDificultLevelMenuInput(Player1, Player2, 0) :-
-    write('\nExiting game...\n\n').
-
-handleDificultLevelMenuInput(Player1, Player2, _) :-
-    write('> Wrong option, please chose another option '),
-    read(Input),
-    handleDificultLevelMenuInput(Player1, Player2, Input).
-
-askInput :-
-    write('> Insert your option ').
+%----------------------------------------------------------------
+% MAIN MENU AND HANDLERS
 
 printMainMenu :-
     clearScreen,
@@ -76,11 +16,11 @@ printMainMenu :-
     write('|         |         |                                       |         |         |'), nl,
     write('|---------|---------|------|                         |------|---------|---------|'), nl,
     write('|         |         |      |-------------------------|      |         |         |'), nl,
-    write('|         |         |      |                         |      |         |         |'), nl,
     write('|         |         |      |      1. Start Game      |      |         |         |'), nl,
-    write('|---------|---------|------|                         |------|---------|---------|'), nl,
-    write('|         |         |      |         0. Exit         |      |         |         |'), nl,
     write('|         |         |      |                         |      |         |         |'), nl,
+    write('|---------|---------|------|      2. How to Play     |------|---------|---------|'), nl,
+    write('|         |         |      |                         |      |         |         |'), nl,
+    write('|         |         |      |         0. Exit         |      |         |         |'), nl,
     write('|         |         |      |-------------------------|      |         |         |'), nl,
     write('|---------|---------|------|                         |------|---------|---------|'), nl,
     write('|         |         |                                       |         |         |'), nl,
@@ -89,6 +29,38 @@ printMainMenu :-
     write('|         |         |          Francisco Ferreira           |         |         |'), nl,
     write('|         |         |                                       |         |         |'), nl,
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl, nl.
+
+mainMenu :-
+    printMainMenu,
+    askInput,
+    read(Input),
+    handleMainMenuInput(Input).
+
+handleMainMenuInput(0) :-
+    write('\nExiting game...\n\n').
+
+handleMainMenuInput(1) :-
+    printStartMenu,
+    askInput,
+    read(Input),
+    handleStartMenuInput(Input).
+
+handleMainMenuInput(2) :-
+    printHowToPlay,
+    pressEnterToContinue,
+    mainMenu.
+
+handleMainMenuInput(_) :-
+    write('> Wrong option, please chose another option '),
+    read(Input),
+    handleMainMenuInput(Input).
+
+askInput :-
+    write('> Insert your option ').
+
+
+%----------------------------------------------------------------
+% START MENU AND HANDLERS 
 
 printStartMenu :-
     clearScreen,
@@ -119,6 +91,33 @@ printStartMenu :-
     write('|         |         |                                       |         |         |'), nl,
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl, nl.
 
+handleStartMenuInput(0) :-
+    write('\nExiting game...\n\n').
+
+handleStartMenuInput(1) :-
+    initializeGame('Player1', 'Player2', 0).
+
+handleStartMenuInput(2) :-
+    printDificultLevelMenu,
+    askInput,
+    read(Input),
+    handleDifficultLevelMenuInput('Player1', 'Computer2', Input).
+
+handleStartMenuInput(3) :-  
+    printDificultLevelMenu,
+    askInput,
+    read(Input),
+    handleDifficultLevelMenuInput('Computer1', 'Computer2', Input).
+
+handleStartMenuInput(_) :-
+    write('> Wrong option, please chose another option '),
+    read(Input),
+    handleStartMenuInput(Input).
+
+
+%----------------------------------------------------------------
+% DIFFICULT LEVEL MENU AND HANDLERS 
+
 printDificultLevelMenu :-
     clearScreen,
     nl,
@@ -148,6 +147,69 @@ printDificultLevelMenu :-
     write('|         |         |                                       |         |         |'), nl,
     write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl, nl.
 
+handleDifficultLevelMenuInput(Player1, Player2, 1) :-
+    initializeGame(Player1, Player2, 1).
+
+handleDifficultLevelMenuInput(Player1, Player2, 2) :-
+    initializeGame(Player1, Player2, 2).
+
+handleDifficultLevelMenuInput(Player1, Player2, 3) :-
+    initializeGame(Player1, Player2, 3).
+
+handleDifficultLevelMenuInput(Player1, Player2, 0) :-
+    write('\nExiting game...\n\n').
+
+handleDifficultLevelMenuInput(Player1, Player2, _) :-
+    write('> Wrong option, please chose another option '),
+    read(Input),
+    handleDifficultLevelMenuInput(Player1, Player2, Input).
+
+
+%----------------------------------------------------------------
+% HOW TO PLAY MENU AND HANDLERS 
+
+printHowToPlay :-
+    clearScreen,
+    nl,
+    write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl,
+    write('|                 _____                 _         _    _                        |'), nl,
+    write('|                |     | _ _  ___  ___ | |_  ___ | |_ | |_  ___                 |'), nl,
+    write('|                |  |  || | || . ||  _||  _|| -_||  _||  _|| . |                |'), nl,
+    write('|                |__  _||___||__,||_|  |_|  |___||_|  |_|  |___|                |'), nl,
+    write('|                   |__|                                                        |'), nl,
+    write('|                                                                               |'), nl,
+    write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl,
+    write('|         |         |                                       |         |         |'), nl,
+    write('|         |         |              HOW TO PLAY              |         |         |'), nl,
+    write('|---------|---------|------|                         |------|---------|---------|'), nl,
+    write('|                          |-------------------------|                          |'), nl,
+    write('|   Objective:                                                                  |'), nl,
+    write('|    Place all own checkers in cells meeting the following conditions:          |'), nl,
+    write('|     1. Middle points of the cells should be vertices of some rotated square.  |'), nl,
+    write('|     2. The smallest bounding box containing the cells should be at least 5x5. |'), nl,
+    write('|                                                                               |'), nl,
+    write('|   Move:                                                                       |'), nl,
+    write('|     Checkers are moved horizontally or vertically any number of cells.        |'), nl,
+    write('|     Checkers cannot land on an occupied cell or jump over such cells.         |'), nl,
+    write('|     IMPORTANT: Use lowercase letters to select the columns.                   |'), nl,
+    write('|                                                                               |'), nl,
+    write('|---------|---------|---------|-------------------|---------|---------|---------|'), nl,
+    write('|         |         |               Nuno Lopes              |         |         |'), nl,
+    write('|         |         |          Francisco Ferreira           |         |         |'), nl,
+    write('|         |         |                                       |         |         |'), nl,
+    write('|---------|---------|---------|---------|---------|---------|---------|---------|'), nl, nl.
+
+pressEnterToContinue:-
+	write('Press <Enter> to go back.'), nl,
+	waitForEnter, !.
+
+waitForEnter:-
+	get_char(_),
+    get_char(_).
+
+
+%----------------------------------------------------------------
+% TURN, MOVE AND WIN PRINTS
 
 player1Turn :-
 	write('\n\n------------------------- PLAYER 1 TURN (X) -------------------------\n').
@@ -190,6 +252,10 @@ printPlayerMove('Computer1') :-
 
 printPlayerMove('Computer2') :-
     write('\n\n------------------------- COMPUTER 2 MOVE (O) -------------------------\n').
+
+
+%----------------------------------------------------------------
+% PRINT PLAYER MOVE FUNCTION 
 
 printMove(Player, OldRow, OldColumn, NewRow, NewColumn) :-
     printPlayerMove(Player),

@@ -1,3 +1,6 @@
+%-------------------------------------------------------
+% CLEAR SCREEN
+
 clearScreen :-
 	addNL(65).
 	
@@ -8,20 +11,38 @@ addNL(A) :-
 	
 addNL(_).
 
+
+%-------------------------------------------------------
+% INCREMENT NUMBER
+
 increment(Old, New) :-
 	New is Old + 1.
 
-% Replace element at Index with New
+
+%-------------------------------------------------------
+% REPLACE ELEMENT AT INDEX WITH NEW
+
 replace([_|T], 1, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > 0, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
-% Get element at index
+
+%-------------------------------------------------------
+% GET ELEMENT AT INDEX
+
 elementAt(N, List, Element):- nth0(N, List, Element).
+
+
+%-------------------------------------------------------
+% CHECK IF VALUE IS WITIHN THE BOARD LIMITS
 
 isWithinLimits(N):-
 	N > 0,
 	N < 9.
+
+
+%-------------------------------------------------------
+% REVERSE BOARD GAME
 
 reverseAllBoard([], []) :- !.
 
@@ -34,6 +55,7 @@ reverseAllBoard([H|T], X) :-
 reverseAllBoard(X, X).
 
 
+%-------------------------------------------------------
 % GET THE LENGTH FROM A LIST
 
 listLength(Xs, L) :- 
@@ -46,6 +68,7 @@ listLength([_|Xs], T, L) :-
   listLength(Xs, T1, L).
 
 
+%-------------------------------------------------------
 % GET THE MAX NUMBER FROM A LIST
 
 maxList([], Max, Max).
@@ -62,6 +85,7 @@ maxList([H|T], Max):-
     maxList(T, H, Max).
 
 
+%-------------------------------------------------------
 % GET THE MIN NUMBER FROM A LIST
 
 minList([], Min, Min).

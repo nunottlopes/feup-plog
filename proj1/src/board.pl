@@ -18,6 +18,10 @@ getColor('Player2', C) :- C = white.
 getColor('Computer1', C) :- C = black.
 getColor('Computer2', C) :- C = white.
 
+
+%-------------------------------------------------------
+% PRINT BOARD
+
 printBoard(B) :-
     nl, write('       A         B         C         D         E         F         G         H     '), nl,
     printBoard(B, 8),
@@ -44,6 +48,10 @@ printLine([H|T]) :-
 
 printLine([]).
 
+
+%-------------------------------------------------------
+% PRINT BOARD REVERSE
+
 printBoardReverse(Board) :-
     reverseAllBoard(Board, BoardReverse),
     nl, write('       H         G         F         E         D         C         B         A     '), nl,
@@ -63,6 +71,10 @@ printBoardReverse([H|T], N) :-
 
 printBoardReverse([], _) :-
     write('  |---------|---------|---------|---------|---------|---------|---------|---------|').
+
+
+%-------------------------------------------------------
+% DISPLAY GAME
 
 display_game(Board, 'Player2') :-
     printBoardReverse(Board).

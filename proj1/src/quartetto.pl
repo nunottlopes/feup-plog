@@ -10,5 +10,8 @@
 :- use_module(library(random)).
 :- use_module(library(system)).
 
+re :-
+    reconsult('src/quartetto'), play.
+    
 play :-
     mainMenu.

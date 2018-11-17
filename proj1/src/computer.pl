@@ -1,3 +1,6 @@
+%-------------------------------------------------------
+% COMPUTER MOVE
+
 moveComputer(OldBoard, NewBoard, Player, Level) :-
     choose_move(Player, OldBoard, Level, OldRow, OldColumn, NewRow, NewColumn),
     makeMove(OldBoard, Player, OldRow, OldColumn, NewRow, NewColumn, NewBoard),

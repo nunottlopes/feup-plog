@@ -1,3 +1,6 @@
+%----------------------------------------------------------------
+% MAIN GAME FUNCTIONS
+
 play('Player1', 'Player2', Board, Level) :-
     Player1 = 'Player1',
     Player2 = 'Player2',
