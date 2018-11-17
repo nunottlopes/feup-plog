@@ -7,13 +7,20 @@ readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
     convertRow(R, Rnumber),
     convertColumn(C, Cnumber),
     checkPieceOnPosition(Rnumber, Cnumber, Player, OldBoard, Valid),
-    handleResponsePieceOldPosition(Valid, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber).
+    convertIndex(Rnumber, Row),
+    convertIndex(Cnumber, Column),
+    getMovesList(Player, OldBoard, Row, Column, 0, 0, [], ListOfMoves),
+    handleResponsePieceOldPosition(Valid, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, ListOfMoves).
 
-handleResponsePieceOldPosition(1, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber) :-
+handleResponsePieceOldPosition(2, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, []) :-
+    write('> No available moves for that piece, please chose another one\n'),
+    readExistPiece(Player, OldRow, OldColumn, OldBoard).
+
+handleResponsePieceOldPosition(1, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, _) :-
     write('> No piece in that position, please chose another one\n'),
     readExistPiece(Player, OldRow, OldColumn, OldBoard).
 
-handleResponsePieceOldPosition(_, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber) :-
+handleResponsePieceOldPosition(_, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, _) :-
     OldRow = Rnumber,
     OldColumn = Cnumber.
 
@@ -97,3 +104,26 @@ convertColumn(_, V) :- !,
     % Error
     V = 10.
 
+convertIndex(1, I) :-
+    I = 0.
+
+convertIndex(2, I) :-
+    I = 1.
+
+convertIndex(3, I) :-
+    I = 2.
+
+convertIndex(4, I) :-
+    I = 3.
+
+convertIndex(5, I) :-
+    I = 4.
+
+convertIndex(6, I) :-
+    I = 5.
+
+convertIndex(7, I) :-
+    I = 6.
+
+convertIndex(8, I) :-
+    I = 7.

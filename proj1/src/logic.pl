@@ -265,7 +265,7 @@ makeMoveAux( [H|T], N, Type, NewRow, NewColumn, TempBoard, FinalBoard ):-
 
 game_over(Player, Board, Result) :-
     getColor(Player, Type),
-    getPiecesList(Type, Board, [], Ret),
+    getPiecesList(Type, Board, Ret),
     checkIfSquare(Ret, Square),
     checkIfRotate(Ret, Square, Rotate),
     checkIfMinSize(Ret, Rotate, Result).
@@ -274,8 +274,8 @@ game_over(Player, Board, Result) :-
 %-------------------------------------------------------
 % FUNCTIONS TO GET THE PIECES POSITION
 
-getPiecesList(Player, Board, List, Ret) :-
-    getPositionPlayer(Player, Board, 0, 0, List, Ret).
+getPiecesList(Player, Board, ListOfPieces) :-
+    getPositionPlayer(Player, Board, 0, 0, [], ListOfPieces).
 
 getPositionPlayerLine(_, _, _, 9, List, Ret) :- Ret = List.
 
@@ -303,13 +303,13 @@ matrix(Matrix, I, J, Value) :-
 %-------------------------------------------------------
 % FUNCTIONS TO GET A LIST WITH ALL THE PLAYER VALID MOVES
 
-valid_moves(Player, Board, List, Ret) :-
+valid_moves(Player, Board, ListOfMoves) :-
   getColor(Player, Type),
-  getPiecesList(Type, Board, [], [[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]]),
-  getMovesList(Player, Board, P1X, P1Y, 0, 0, List, Temp1),
+  getPiecesList(Type, Board, [[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]]),
+  getMovesList(Player, Board, P1X, P1Y, 0, 0, [], Temp1),
   getMovesList(Player, Board, P2X, P2Y, 0, 0, Temp1, Temp2),
   getMovesList(Player, Board, P3X, P3Y, 0, 0, Temp2, Temp3),
-  getMovesList(Player, Board, P4X, P4Y, 0, 0, Temp3, Ret).
+  getMovesList(Player, Board, P4X, P4Y, 0, 0, Temp3, ListOfMoves).
 
 getMovesLineList(_, _, _, _, _, 9, List, Ret) :-
   Ret = List.
