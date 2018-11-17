@@ -7,14 +7,14 @@ play('Player1', 'Player2', Board, Level) :-
     display_game(Board, Player1),
     player1Turn,
     move(Board, NewBoard1, Player1),
-    checkVictory(Player1, NewBoard1, Result1),
+    game_over(Player1, NewBoard1, Result1),
 
     if(Result1 == 1,
         (
             display_game(NewBoard1, Player2),
             player2Turn,
             move(NewBoard1, NewBoard2, Player2),
-            checkVictory(Player2, NewBoard2, Result2),
+            game_over(Player2, NewBoard2, Result2),
 
             if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), player2Win(NewBoard2))
 
@@ -26,33 +26,16 @@ play('Player1', 'Computer2', Board, Level) :-
     display_game(Board, Player1),
     player1Turn,
     move(Board, NewBoard1, Player1),
-    checkVictory(Player1, NewBoard1, Result1),
+    game_over(Player1, NewBoard1, Result1),
 
     if(Result1 == 1,
         (
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
-            checkVictory(Player2, NewBoard2, Result2),
+            game_over(Player2, NewBoard2, Result2),
 
             if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win(NewBoard2))
 
         ), player1Win(NewBoard1)).
-
-play('Computer1', 'Computer2', Board, 3) :-
-    Player1 = 'Computer1',
-    Player2 = 'Computer2',
-    display_game(Board, Player1),
-    moveComputer(Board, NewBoard1, Player1, 3),
-    checkVictory(Player1, NewBoard1, Result1),
-
-    if(Result1 == 1,
-        (
-            display_game(NewBoard1, Player2),
-            moveComputer(NewBoard1, NewBoard2, Player2, 3),
-            checkVictory(Player2, NewBoard2, Result2),
-
-            if(Result2 == 1, play(Player1, Player2, NewBoard2, 3), computer2Win(NewBoard2))
-
-        ), computer1Win(NewBoard1)).
 
 play('Computer1', 'Computer2', Board, Level) :-
     Player1 = 'Computer1',
@@ -60,14 +43,14 @@ play('Computer1', 'Computer2', Board, Level) :-
     display_game(Board, Player1),
     sleep(0.5),
     moveComputer(Board, NewBoard1, Player1, Level),
-    checkVictory(Player1, NewBoard1, Result1),
+    game_over(Player1, NewBoard1, Result1),
 
     if(Result1 == 1,
         (
             display_game(NewBoard1, Player2),
             sleep(0.5),
             moveComputer(NewBoard1, NewBoard2, Player2, Level),
-            checkVictory(Player2, NewBoard2, Result2),
+            game_over(Player2, NewBoard2, Result2),
 
             if(Result2 == 1, play(Player1, Player2, NewBoard2, Level), computer2Win(NewBoard2))
 
@@ -280,7 +263,7 @@ makeMoveAux( [H|T], N, Type, NewRow, NewColumn, TempBoard, FinalBoard ):-
 %-------------------------------------------------------
 % CHECK VICTORY
 
-checkVictory(Player, Board, Result) :-
+game_over(Player, Board, Result) :-
     getColor(Player, Type),
     getPiecesList(Type, Board, [], Ret),
     checkIfSquare(Ret, Square),

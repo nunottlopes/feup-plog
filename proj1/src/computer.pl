@@ -109,7 +109,7 @@ update(Move, Value, [Move1, Value1], [Move2, Value2]) :-
 
 value(Player, Board, [OR, OC, NR, NC], Value) :-
     makeMove(Board, Player, OR, OC, NR, NC, NewBoard),
-    checkVictory(Player, NewBoard, Value).
+    game_over(Player, NewBoard, Value).
 
 
 %-------------------------------------------------------
