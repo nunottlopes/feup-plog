@@ -156,7 +156,7 @@ handleDifficultLevelMenuInput(Player1, Player2, 2) :-
 handleDifficultLevelMenuInput(Player1, Player2, 3) :-
     initializeGame(Player1, Player2, 3).
 
-handleDifficultLevelMenuInput(Player1, Player2, 0) :-
+handleDifficultLevelMenuInput(_Player1, _Player2, 0) :-
     write('\nExiting game...\n\n').
 
 handleDifficultLevelMenuInput(Player1, Player2, _) :-

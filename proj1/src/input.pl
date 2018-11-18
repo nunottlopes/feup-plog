@@ -12,15 +12,15 @@ readExistPiece(Player, OldRow, OldColumn, OldBoard) :-
     getMovesList(Player, OldBoard, Row, Column, 0, 0, [], ListOfMoves),
     handleResponsePieceOldPosition(Valid, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, ListOfMoves).
 
-handleResponsePieceOldPosition(2, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, []) :-
+handleResponsePieceOldPosition(2, Player, OldRow, OldColumn, OldBoard, _Rnumber, _Cnumber, []) :-
     write('> No available moves for that piece, please chose another one\n'),
     readExistPiece(Player, OldRow, OldColumn, OldBoard).
 
-handleResponsePieceOldPosition(1, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, _) :-
+handleResponsePieceOldPosition(1, Player, OldRow, OldColumn, OldBoard, _Rnumber, _Cnumber, _) :-
     write('> No piece in that position, please chose another one\n'),
     readExistPiece(Player, OldRow, OldColumn, OldBoard).
 
-handleResponsePieceOldPosition(_, Player, OldRow, OldColumn, OldBoard, Rnumber, Cnumber, _) :-
+handleResponsePieceOldPosition(_, _Player, OldRow, OldColumn, _OldBoard, Rnumber, Cnumber, _) :-
     OldRow = Rnumber,
     OldColumn = Cnumber.
 
@@ -36,11 +36,11 @@ readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard) :-
     checkValidNewPosition(OldRow, OldColumn, Rnumber, Cnumber, OldBoard, Valid),
     handleResponsePieceNewPosition(Valid, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber).
 
-handleResponsePieceNewPosition(1, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber) :-
+handleResponsePieceNewPosition(1, OldRow, OldColumn, NewRow, NewColumn, OldBoard, _Rnumber, _Cnumber) :-
     write('> Invalid position to place the piece, please chose another one\n'),
     readNewPiece(OldRow, OldColumn, NewRow, NewColumn, OldBoard).
 
-handleResponsePieceNewPosition(_, OldRow, OldColumn, NewRow, NewColumn, OldBoard, Rnumber, Cnumber) :-
+handleResponsePieceNewPosition(_, _OldRow, _OldColumn, NewRow, NewColumn, _OldBoard, Rnumber, Cnumber) :-
     NewRow = Rnumber,
     NewColumn = Cnumber.
 

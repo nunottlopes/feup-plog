@@ -60,50 +60,50 @@ play('Computer1', 'Computer2', Board, Level) :-
 %-------------------------------------------------------
 % CHECK IF THERE IS A PIECE IN THE POSITION CHOSEN
 
-checkPieceOnPosition(OldRow, 10, Player, [H|T], Valid) :-
+checkPieceOnPosition(_OldRow, 10, _Player, _, Valid) :-
     Valid is 1.
 
-checkPieceOnPosition(10, OldColumn, Player, [H|T], Valid) :-
+checkPieceOnPosition(10, _OldColumn, _Player, _, Valid) :-
     Valid is 1.
 
-checkPieceOnPosition(1, OldColumn, Player, [H|T], Valid) :-
+checkPieceOnPosition(1, OldColumn, Player, [H|_T], Valid) :-
     lookOnColumn(OldColumn, Player, H, Valid).
 
-checkPieceOnPosition(OldRow, OldColumn, Player, [H|T], Valid) :-
+checkPieceOnPosition(OldRow, OldColumn, Player, [_H|T], Valid) :-
     OldRow1 is OldRow-1,
     checkPieceOnPosition(OldRow1, OldColumn, Player, T, Valid).
 
-checkPieceOnPosition(OldRow, OldColumn, Player, [], Valid).
+checkPieceOnPosition(_OldRow, _OldColumn, _Player, [], _Valid).
 
-lookOnColumn(1, Player, [H|T], Valid) :-
+lookOnColumn(1, Player, [H|_T], Valid) :-
     checkIfCorrectPiece(H, Player, Valid).
 
-lookOnColumn(OldColumn, Player, [H|T], Valid) :-
+lookOnColumn(OldColumn, Player, [_H|T], Valid) :-
     OldColumn1 is OldColumn-1,
     lookOnColumn(OldColumn1, Player, T, Valid).
 
 checkIfCorrectPiece('black', 'Player1', Valid) :-
     Valid is 2.
 
-checkIfCorrectPiece(Piece, 'Player1', Valid) :-
+checkIfCorrectPiece(_Piece, 'Player1', Valid) :-
     Valid is 1.
 
 checkIfCorrectPiece('white', 'Player2', Valid) :-
     Valid is 2.
 
-checkIfCorrectPiece(Piece, 'Player2', Valid) :-
+checkIfCorrectPiece(_Piece, 'Player2', Valid) :-
     Valid is 1.
 
 checkIfCorrectPiece('black', 'Computer1', Valid) :-
     Valid is 2.
 
-checkIfCorrectPiece(Piece, 'Computer1', Valid) :-
+checkIfCorrectPiece(_Piece, 'Computer1', Valid) :-
     Valid is 1.
 
 checkIfCorrectPiece('white', 'Computer2', Valid) :-
     Valid is 2.
 
-checkIfCorrectPiece(Piece, 'Computer2', Valid) :-
+checkIfCorrectPiece(_Piece, 'Computer2', Valid) :-
     Valid is 1.
 
 checkIfCorrectPiece(_, _, Valid) :-
@@ -113,10 +113,10 @@ checkIfCorrectPiece(_, _, Valid) :-
 %-------------------------------------------------------
 % CHECK IF NEW PLACE CHOSEN IS VALID
 
-checkValidNewPosition(OldRow, OldColumn, NewRow, 10, Board, Valid) :-
+checkValidNewPosition(_OldRow, _OldColumn, _NewRow, 10, _Board, Valid) :-
     Valid is 1.
 
-checkValidNewPosition(OldRow, OldColumn, 10, NewColumn, Board, Valid) :-
+checkValidNewPosition(_OldRow, _OldColumn, 10, _NewColumn, _Board, Valid) :-
     Valid is 1.
 
 checkValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [H|T], Valid) :-
@@ -128,15 +128,15 @@ checkValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [H|T], Valid) :-
     validRow(OldRow, NewRow, OldColumn, [H|T], Valid);
     Valid is 1).
 
-checkIfRowValidNewPosition(1, OldColumn, NewRow, NewColumn, [H|T], Valid) :-
+checkValidNewPosition(_OldRow, _OldColumn, _NewRow, _NewColumn, [], _Valid).
+
+checkIfRowValidNewPosition(1, OldColumn, _NewRow, NewColumn, [H|_T], Valid) :-
     validColumn(OldColumn, NewColumn, H, Valid).
 
-checkIfRowValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [H|T], Valid) :-
+checkIfRowValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [_H|T], Valid) :-
     OldRow1 is OldRow-1,
     NewRow1 is NewRow-1,
     checkValidNewPosition(OldRow1, OldColumn, NewRow1, NewColumn, T, Valid).
-
-checkValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [], Valid).
 
 
 %-------------------------------------------------------
@@ -145,69 +145,69 @@ checkValidNewPosition(OldRow, OldColumn, NewRow, NewColumn, [], Valid).
 validColumn(OldColumn, NewColumn, [H|T], Valid) :-
     checkIfColumnIterator(OldColumn, NewColumn, [H|T], Valid).
 
-checkIfColumnIterator(1, NewColumn, [H|T], Valid) :-
+validColumn(_OldColumn, _NewColumn, [], _Valid).
+
+checkIfColumnIterator(1, NewColumn, [_H|T], Valid) :-
     validColumnIterator(T, NewColumn, Valid).
 
 checkIfColumnIterator(OldColumn, 1, [H|T], Valid) :-
     validColumnIterator([H|T], OldColumn, Valid).
 
-checkIfColumnIterator(OldColumn, NewColumn, [H|T], Valid) :-
+checkIfColumnIterator(OldColumn, NewColumn, [_H|T], Valid) :-
     OldColumn1 is OldColumn-1,
     NewColumn1 is NewColumn-1,
     validColumn(OldColumn1, NewColumn1, T, Valid).
 
-validColumn(OldColumn, NewColumn, [], Valid).
-
 validColumnIterator([H|T], Column, Valid) :-
     checkPieceEmpty(H, T, Column, Valid).
+
+validColumnIterator([], _Column, _Valid).
 
 checkPieceEmpty('empty', T, Column, Valid) :-
     checkEndColumn(T, Column, Valid).
 
-checkEndColumn(T, 2, Valid) :-
+checkPieceEmpty(_H, _T, _Column, Valid) :-
+    Valid is 1.
+
+checkEndColumn(_T, 2, Valid) :-
     Valid is 2.
 
 checkEndColumn(T, Column, Valid) :-
     Column1 is Column-1,
     validColumnIterator(T, Column1, Valid).
 
-checkPieceEmpty(H, T, Column, Valid) :-
-    Valid is 1.
-
-validColumnIterator([], Column, Valid).
-
 
 %-------------------------------------------------------
 % VERTICAL MOVES
 
-validRow(1, NewRow, Column, [H|T], Valid) :-
+validRow(1, NewRow, Column, [_H|T], Valid) :-
     validRowIterator(T, NewRow, Column, Valid).
 
 validRow(OldRow, 1, Column, [H|T], Valid) :-
     validRowIterator([H|T], OldRow, Column, Valid).
 
-validRow(OldRow, NewRow, Column, [H|T], Valid) :-
+validRow(OldRow, NewRow, Column, [_H|T], Valid) :-
     OldRow1 is OldRow-1,
     NewRow1 is NewRow-1,
     validRow(OldRow1, NewRow1, Column, T, Valid).
 
-validRow(OldRow, NewRow, Column, [], Valid).
+validRow(_OldRow, _NewRow, _Column, [], _Valid).
 
 validRowIterator([H|T], Row, Column, Valid) :-
     checkEmptySpot(H, Column, Flag),
     checkFlag(Flag, Valid, Row, T, Column).
 
-checkFlag(1, Valid, Row, T, Column) :-
+validRowIterator([], _Row, _Column, _Valid).
+
+checkFlag(1, Valid, _Row, _T, _Column) :-
     Valid is 1.
 
-checkFlag(_, Valid, 2, T, Column) :-
+checkFlag(_, Valid, 2, _T, _Column) :-
     Valid is 2.
 
 checkFlag(_, Valid, Row, T, Column) :-
     Row1 is Row-1,
     validRowIterator(T, Row1, Column, Valid).
-
-validRowIterator([], Row, Column, Valid).
 
 
 %-------------------------------------------------------
@@ -216,20 +216,20 @@ validRowIterator([], Row, Column, Valid).
 checkEmptySpot([H|T], Column, Flag) :-
     handleIfColumn(Column, [H|T], Flag).
 
-handleIfColumn(1, [H|T], Flag) :-
+checkEmptySpot([], _Column, _Flag).
+
+handleIfColumn(1, [H|_T], Flag) :-
     handleTypePiece(H,Flag).
+
+handleIfColumn(Column, [_H|T], Flag) :-
+    Column1 is Column-1,
+    checkEmptySpot(T, Column1, Flag).
 
 handleTypePiece('empty', Flag) :-
     Flag is 2.
 
 handleTypePiece(_,Flag) :-
     Flag is 1.
-
-handleIfColumn(Column, [H|T], Flag) :-
-    Column1 is Column-1,
-    checkEmptySpot(T, Column1, Flag).
-
-checkEmptySpot([], Column, Flag).
 
 
 %-------------------------------------------------------
@@ -291,9 +291,9 @@ getPositionPlayerLine(Player, Board, Row, Col, List, Ret) :-
 getPositionPlayer(_, _, 9, _, List, Ret) :- Ret = List.
 
 getPositionPlayer(Player, Board, Row, Col, List, Ret) :-
-  getPositionPlayerLine(Player, Board, Row, 0, List, Ret1),
+  getPositionPlayerLine(Player, Board, Row, Col, List, Ret1),
   Row1 is Row + 1,
-  getPositionPlayer(Player, Board, Row1, 0, Ret1, Ret).
+  getPositionPlayer(Player, Board, Row1, Col, Ret1, Ret).
 
 matrix(Matrix, I, J, Value) :-
     nth0(I, Matrix, Row),
@@ -322,7 +322,7 @@ getMovesLineList(Player, Board,OldRow, OldColumn, Row, Col, List, Ret) :-
   checkValidNewPosition(OldRowTemp, OldColumnTemp, RowTemp, ColTemp, Board, Valid),
   validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, Valid).
 
-validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, OldRowTemp, OldColumnTemp, RowTemp, ColTemp, List, Ret, 1) :-
+validMoveHandler(Player, Board, OldRow, OldColumn, Row, Col, _OldRowTemp, _OldColumnTemp, _RowTemp, _ColTemp, List, Ret, 1) :-
   Col1 is Col + 1,
   getMovesLineList(Player, Board, OldRow, OldColumn, Row, Col1, List, Ret).
 
@@ -335,9 +335,9 @@ getMovesList(_, _, _, _, 9, _, List, Ret) :-
   Ret = List.
 
 getMovesList(Player, Board, OldRow, OldColumn, Row, Col, List, Ret) :-
-  getMovesLineList(Player, Board,OldRow, OldColumn, Row, 0, List, Ret1),
+  getMovesLineList(Player, Board,OldRow, OldColumn, Row, Col, List, Ret1),
   Row1 is Row + 1,
-  getMovesList(Player, Board, OldRow, OldColumn, Row1, 0, Ret1, Ret).
+  getMovesList(Player, Board, OldRow, OldColumn, Row1, Col, Ret1, Ret).
 
 
 %-------------------------------------------------------
@@ -376,10 +376,10 @@ checkValues(D2, D3, D4, D5, D6, D7, R1, R2, Square) :-
 %-------------------------------------------------------
 % FUNCTIONS TO CHECK IF SQUARE IS ROTATED
 
-checkIfRotate(Ret, 1, Rotate) :-
+checkIfRotate(_Ret, 1, Rotate) :-
     Rotate is 1.
 
-checkIfRotate([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], _, Rotate) :-
+checkIfRotate([[P1X,_P1Y],[P2X,_P2Y],[P3X,_P3Y],[P4X,_P4Y]], _, Rotate) :-
     (P1X == P2X, P3X == P4X), (
         Rotate is 1
     );(
@@ -398,10 +398,10 @@ checkIfRotate([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], _, Rotate) :-
 %-------------------------------------------------------
 % FUNCTIONS TO CHECK IF SQUARE HAS MIN SIZE
 
-checkIfMinSize(Ret, 1, Result) :-
+checkIfMinSize(_Ret, 1, Result) :-
     Result is 1.
 
-checkIfMinSize([[P1X,P1Y],[P2X,P2Y],[P3X,P3Y],[P4X,P4Y]], Rotate, Result) :-
+checkIfMinSize([[P1X,_P1Y],[P2X,_P2Y],[P3X,_P3Y],[P4X,_P4Y]], _Rotate, Result) :-
     maxList([P1X,P2X,P3X,P4X], MaxRow),
     minList([P1X,P2X,P3X,P4X], MinRow),
     Dif is (MaxRow - MinRow),

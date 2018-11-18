@@ -79,5 +79,5 @@ printBoardReverse([], _) :-
 display_game(Board, 'Player2') :-
     printBoardReverse(Board).
 
-display_game(Board, Player) :-
+display_game(Board, _Player) :-
     printBoard(Board).
