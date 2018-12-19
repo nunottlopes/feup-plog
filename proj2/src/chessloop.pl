@@ -5,7 +5,8 @@
 :- include('board.pl').
 
 re :-
-    reconsult('src/chessloop').
+    reconsult('chessloop').
+
 
 puzzle(L) :-
     L=[A, B, C, D, E, F],
@@ -129,3 +130,64 @@ noAttackKnight(KnightColumn1, KnightRow1, KnightColumn2, KnightRow2) :-
 %     KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn-1 #/\
 %     KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn+1 #/\
 %     KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn-1.
+
+solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece2, Result) :-
+    BoardSize is NumRows*NumColumns,
+    length(Piece1, NumPieces),
+    length(Piece2, NumPieces),
+
+    domain(Piece1, 1, BoardSize),
+    domain(Piece2, 1, BoardSize),
+
+    all_different(Piece1),
+    all_different(Piece2),
+
+    element(1, Piece1, 4),
+    kingNoAttack(Piece1, NumColumns),
+
+    append(Piece1, Piece2, Result),
+    all_different(Result),
+    labeling([], Result).
+
+
+
+
+% solveBoard(4, 4, 3, 1, 1, P1, P2, Result).
+
+
+
+% element(Posição da lista, Lista, Elemento que está na lista nessa posição) -> falha se não existir nenhum elemento nessa posição
+
+
+nqueens(N,Cols) :-
+    length(Cols,N),
+    domain(Cols,1,N),
+    constrain(Cols),
+    % all_distinct(Cols), % redundante mas diminui tempo
+    labeling([],Cols).
+
+constrain([]).
+constrain([H|RCols]) :- safe(H,RCols,1), constrain(RCols).
+
+safe(_,[],_).
+safe(X,[Y|T],K) :- noattack(X,Y,K), K1 is K + 1, safe(X,T,K1).
+
+noattack(X,Y,K) :- X #\= Y, X + K #\= Y, X - K #\= Y.
+
+
+kingNoAttack([A|Rest], NumColumns) :- forEachKing(A, Rest, NumColumns), kingNoAttack(Rest, NumColumns).
+kingNoAttack([], _).
+
+forEachKing(A, [B|Rest], NumColumns) :- verifyNoKingAttack(A, B, NumColumns), forEachKing(A, Rest, NumColumns).
+forEachKing(_, [], _).
+
+% Problem if the king is in one side, this doens't accept to another king to be in the opposite side in the next row
+verifyNoKingAttack(A, B, NumColumns) :- 
+    A-NumColumns-1 #\= B #/\
+    A-NumColumns #\= B #/\
+    A-NumColumns+1 #\= B #/\
+    A+NumColumns-1 #\= B #/\
+    A+NumColumns #\= B #/\
+    A+NumColumns+1 #\= B #/\
+    A+1 #\= B #/\
+    A-1 #\= B.
