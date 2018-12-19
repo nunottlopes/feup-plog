@@ -7,34 +7,6 @@
 re :-
     reconsult('chessloop').
 
-
-puzzle(L) :-
-    L=[A, B, C, D, E, F],
-    domain(L, 0, 2), Empty = 0, Knight = 1, King = 2,
-    
-    count(Knight, L, #=, 2),
-    count(King, L, #=, 2),
-
-    getPosition(L, Knight, [], [PosKnight1, PosKnight2], 0),
-    getPosition(L, King, [], [PosKing1, PosKing2], 0),
-
-    convertColumnRow(PosKnight1, KnightColumn1, KnightRow1),
-    convertColumnRow(PosKnight2, KnightColumn2, KnightRow2),
-    convertColumnRow(PosKing1, KingColumn1, KingRow1),
-    convertColumnRow(PosKing2, KingColumn2, KingRow2),
-
-    % valid_position_knight(KnightColumn1, KnightRow1, KingColumn1, KingRow1), valid_position_king(KingColumn2, KingRow2, KnightColumn2, KnightRow2),
-    % valid_position_knight(KnightColumn1, KnightRow1, KingColumn2, KingRow2), valid_position_king(KingColumn1, KingRow1, KnightColumn2, KnightRow2),
-    % valid_position_knight(KnightColumn2, KnightRow2, KingColumn1, KingRow1), valid_position_king(KingColumn2, KingRow2, KnightColumn1, KnightRow1),
-    valid_position_knight(KnightColumn2, KnightRow2, KingColumn2, KingRow2), valid_position_king(KingColumn1, KingRow1, KnightColumn1, KnightRow1),
-
-    invalid_position_knight(KnightColumn1, KnightRow1, KnightColumn2, KnightRow2),
-    invalid_position_knight(KnightColumn2, KnightRow2, KnightColumn1, KnightRow1),
-    invalid_position_king(KingColumn1, KingRow1, KingColumn2, KingRow2),
-    invalid_position_king(KingColumn2, KingRow2, KingColumn1, KingRow1),
-
-    labeling([], L).
-
 valid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
     KingColumn #= KnightColumn+2 #/\ KingRow #= KnightRow+1 #\/
     KingColumn #= KnightColumn+2 #/\ KingRow #= KnightRow-1 #\/
@@ -65,60 +37,15 @@ valid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
 %     KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn+1 #/\
 %     KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn-1.
 
-% invalid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
-%     KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow+1 #/\
-%     KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow-1 #/\
-%     KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow+1 #/\
-%     KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow-1 #/\
-%     KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow+1 #/\
-%     KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow-1 #/\
-%     KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow #/\
-%     KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow.
-
-% valid_position_knight(1, 1, 2, 3).
-getPosition([], _, Result, Result, _).
-getPosition([H|T], Type, List, Result, Counter) :-
-    H #= Type,
-    append(List, [Counter], NewList),
-    Counter1 is Counter+1,
-    getPosition(T, Type, NewList, Result, Counter1);
-    Counter1 is Counter+1,
-    getPosition(T, Type, List, Result, Counter1).
-
-convertColumnRow(0, 1, 1).
-convertColumnRow(1, 2, 1).
-convertColumnRow(2, 3, 1).
-convertColumnRow(3, 1, 2).
-convertColumnRow(4, 2, 2).
-convertColumnRow(5, 3, 2).
-
-
-puzzle2(Knight, King, Final) :-
-    length(Knight, 2),
-    length(King, 2),
-
-    domain(Knight, 1, 6),
-    domain(King, 1, 6),
-
-    all_different(Knight),
-    all_different(King),
-
-    element(1, Knight, PosKnight1),
-    element(2, Knight, PosKnight2),
-    element(1, King, PosKing1),
-    element(2, King, PosKing2),
-
-
-
-    append(Knight, King, Final),
-    all_different(Final),
-
-    labeling([], Final).
-    
-    
-noAttackKnight(KnightColumn1, KnightRow1, KnightColumn2, KnightRow2) :-
-    % Falta terminar
-    KnightColumn1 #\= KnightColumn2+2.
+invalid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
+    (KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow+1) #/\
+    (KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow-1) #/\
+    (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow+1) #/\
+    (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow-1) #/\
+    (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow+1) #/\
+    (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow-1) #/\
+    (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow) #/\
+    (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow).
 
 
 % invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
@@ -130,6 +57,10 @@ noAttackKnight(KnightColumn1, KnightRow1, KnightColumn2, KnightRow2) :-
 %     KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn-1 #/\
 %     KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn+1 #/\
 %     KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn-1.
+
+
+
+
 
 solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece2, Result) :-
     BoardSize is NumRows*NumColumns,
@@ -143,6 +74,7 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
     all_different(Piece2),
 
     %element(1, Piece1, 4),
+    %element(2, Piece1, 9),
     kingNoAttackSelf(Piece1, NumColumns),
 
     kingAttack(Piece1, Piece2, NumColumns),
@@ -154,7 +86,9 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
 
 
 
-% solveBoard(4, 5, 2, 1, 1, P1, P2, Result).
+% solveBoard(2, 3, 2, 1, 1, P1, P2, Result).
+% solveBoard(4, 4, 2, 1, 1, P1, P2, Result).
+% solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,4,6]).
 
 
 % Verify King can't attack another King
@@ -165,16 +99,20 @@ forEachKing(A, [B|Rest], NumColumns) :- verifyNoKingAttack(A, B, NumColumns), fo
 forEachKing(_, [], _).
 
 % Problem if the king is in one side, this doens't accept to another king to be in the opposite side in the next row
-verifyNoKingAttack(A, B, NumColumns) :- 
-    A-NumColumns-1 #\= B #/\
-    A-NumColumns #\= B #/\
-    A-NumColumns+1 #\= B #/\
-    A+NumColumns-1 #\= B #/\
-    A+NumColumns #\= B #/\
-    A+NumColumns+1 #\= B #/\
-    A+1 #\= B #/\
-    A-1 #\= B.
+% verifyNoKingAttack(A, B, NumColumns) :- 
+%     A-NumColumns-1 #\= B #/\
+%     A-NumColumns #\= B #/\
+%     A-NumColumns+1 #\= B #/\
+%     A+NumColumns-1 #\= B #/\
+%     A+NumColumns #\= B #/\
+%     A+NumColumns+1 #\= B #/\
+%     A+1 #\= B #/\
+%     A-1 #\= B.
 
+verifyNoKingAttack(A, B, NumColumns) :-
+    convertColumnRow(A, KingColumn, KingRow),
+    convertColumnRow(B, OtherColumn, OtherRow),
+    invalid_position_king(KingColumn, KingRow, OtherColumn, OtherRow).
 
 % Verify if King attack only one of the others
 kingAttack(King, Other, NumColumns) :-
@@ -189,15 +127,15 @@ kingAttackIterator([A|King], [B|Other], NumColumns, Previous) :-
 kingAttackIterator([], [], _, _).
 
 
-verifyKingAttack(A, B, NumColumns) :- 
-    A-NumColumns-1 #= B #\/
-    A-NumColumns #= B #\/
-    A-NumColumns+1 #= B #\/
-    A+NumColumns-1 #= B #\/
-    A+NumColumns #= B #\/
-    A+NumColumns+1 #= B #\/
-    A+1 #= B #\/
-    A-1 #= B.
+% verifyKingAttack(A, B, NumColumns) :- 
+%     A-NumColumns-1 #= B #\/
+%     A-NumColumns #= B #\/
+%     A-NumColumns+1 #= B #\/
+%     A+NumColumns-1 #= B #\/
+%     A+NumColumns #= B #\/
+%     A+NumColumns+1 #= B #\/
+%     A+1 #= B #\/
+%     A-1 #= B.
 
 kingNoAttackOthers(_, [], _).
 kingNoAttackOthers(A, [B|Other], NumColumns) :-
@@ -205,24 +143,51 @@ kingNoAttackOthers(A, [B|Other], NumColumns) :-
     kingNoAttackOthers(A, Other, NumColumns).
 
 
+verifyKingAttack(A, B, NumColumns) :- 
+    convertColumnRow(A, KingColumn, KingRow),
+    convertColumnRow(B, OtherColumn, OtherRow),
+    valid_position_king(KingColumn, KingRow, OtherColumn, OtherRow).
 
+convertColumnRow(Pos, Column, Row) :-
+    Pos #= 1 #/\ Column #= 1 #/\ Row #= 1 #\/
+    Pos #= 2 #/\ Column #= 2 #/\ Row #= 1 #\/
+    Pos #= 3 #/\ Column #= 3 #/\ Row #= 1 #\/
+    Pos #= 4 #/\ Column #= 1 #/\ Row #= 2 #\/
+    Pos #= 5 #/\ Column #= 2 #/\ Row #= 2 #\/
+    Pos #= 6 #/\ Column #= 3 #/\ Row #= 2.
 
+% convertColumnRow(Pos, Column, Row) :-
+%     Pos #= 1 #/\ Column #= 1 #/\ Row #= 1 #\/
+%     Pos #= 2 #/\ Column #= 2 #/\ Row #= 1 #\/
+%     Pos #= 3 #/\ Column #= 3 #/\ Row #= 1 #\/
+%     Pos #= 4 #/\ Column #= 4 #/\ Row #= 1 #\/
 
+%     Pos #= 5 #/\ Column #= 1 #/\ Row #= 2 #\/
+%     Pos #= 6 #/\ Column #= 2 #/\ Row #= 2 #\/
+%     Pos #= 7 #/\ Column #= 3 #/\ Row #= 2 #\/
+%     Pos #= 8 #/\ Column #= 4 #/\ Row #= 2 #\/
 
-% element(Posição da lista, Lista, Elemento que está na lista nessa posição) -> falha se não existir nenhum elemento nessa posição
+%     Pos #= 9 #/\ Column #= 1 #/\ Row #= 3 #\/
+%     Pos #= 10 #/\ Column #= 2 #/\ Row #= 3 #\/
+%     Pos #= 11 #/\ Column #= 3 #/\ Row #= 3 #\/
+%     Pos #= 12 #/\ Column #= 4 #/\ Row #= 3 #\/
 
+%     Pos #= 13 #/\ Column #= 1 #/\ Row #= 4 #\/
+%     Pos #= 14 #/\ Column #= 2 #/\ Row #= 4 #\/
+%     Pos #= 15 #/\ Column #= 3 #/\ Row #= 4 #\/
+%     Pos #= 16 #/\ Column #= 4 #/\ Row #= 4.
 
-nqueens(N,Cols) :-
-    length(Cols,N),
-    domain(Cols,1,N),
-    constrain(Cols),
-    % all_distinct(Cols), % redundante mas diminui tempo
-    labeling([],Cols).
+% getMatrixPosition(Position, NumColumns, PosRow, PosColumn) :-
+%     getColumn(Position, NumColumns, PosColumn),
+%     getRow(Position, NumColumns, PosRow).
 
-constrain([]).
-constrain([H|RCols]) :- safe(H,RCols,1), constrain(RCols).
+% getColumn(Position, NumColumns, PosColumn) :-
+%     (Position mod NumColumns) =:= 0, !,
+%     PosColumn is 5;
+%     PosColumn is (Position mod NumColumns).
 
-safe(_,[],_).
-safe(X,[Y|T],K) :- noattack(X,Y,K), K1 is K + 1, safe(X,T,K1).
+% getRow(Position, NumColumns, PosRow) :-
+%     floor(Position/NumColumns) =:= ceiling(Position/NumColumns), !,
+%     PosRow is round(Position/NumColumns);
+%     PosRow is floor(Position/NumColumns)+1.
 
-noattack(X,Y,K) :- X #\= Y, X + K #\= Y, X - K #\= Y.
