@@ -142,8 +142,10 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
     all_different(Piece1),
     all_different(Piece2),
 
-    element(1, Piece1, 4),
-    kingNoAttack(Piece1, NumColumns),
+    %element(1, Piece1, 4),
+    kingNoAttackSelf(Piece1, NumColumns),
+
+    kingAttack(Piece1, Piece2, NumColumns),
 
     append(Piece1, Piece2, Result),
     all_different(Result),
@@ -152,7 +154,58 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
 
 
 
-% solveBoard(4, 4, 3, 1, 1, P1, P2, Result).
+% solveBoard(4, 5, 2, 1, 1, P1, P2, Result).
+
+
+% Verify King can't attack another King
+kingNoAttackSelf([A|Rest], NumColumns) :- forEachKing(A, Rest, NumColumns), kingNoAttackSelf(Rest, NumColumns).
+kingNoAttackSelf([], _).
+
+forEachKing(A, [B|Rest], NumColumns) :- verifyNoKingAttack(A, B, NumColumns), forEachKing(A, Rest, NumColumns).
+forEachKing(_, [], _).
+
+% Problem if the king is in one side, this doens't accept to another king to be in the opposite side in the next row
+verifyNoKingAttack(A, B, NumColumns) :- 
+    A-NumColumns-1 #\= B #/\
+    A-NumColumns #\= B #/\
+    A-NumColumns+1 #\= B #/\
+    A+NumColumns-1 #\= B #/\
+    A+NumColumns #\= B #/\
+    A+NumColumns+1 #\= B #/\
+    A+1 #\= B #/\
+    A-1 #\= B.
+
+
+% Verify if King attack only one of the others
+kingAttack(King, Other, NumColumns) :-
+    kingAttackIterator(King, Other, NumColumns, []).
+
+kingAttackIterator([A|King], [B|Other], NumColumns, Previous) :- 
+    verifyKingAttack(A, B, NumColumns), 
+    kingNoAttackOthers(A, Other, NumColumns), 
+    kingNoAttackOthers(A, Previous, NumColumns), 
+    append([B], Previous, NewPrevious),
+    kingAttackIterator(King, Other, NumColumns, NewPrevious).
+kingAttackIterator([], [], _, _).
+
+
+verifyKingAttack(A, B, NumColumns) :- 
+    A-NumColumns-1 #= B #\/
+    A-NumColumns #= B #\/
+    A-NumColumns+1 #= B #\/
+    A+NumColumns-1 #= B #\/
+    A+NumColumns #= B #\/
+    A+NumColumns+1 #= B #\/
+    A+1 #= B #\/
+    A-1 #= B.
+
+kingNoAttackOthers(_, [], _).
+kingNoAttackOthers(A, [B|Other], NumColumns) :-
+    verifyNoKingAttack(A, B, NumColumns),
+    kingNoAttackOthers(A, Other, NumColumns).
+
+
+
 
 
 
@@ -173,21 +226,3 @@ safe(_,[],_).
 safe(X,[Y|T],K) :- noattack(X,Y,K), K1 is K + 1, safe(X,T,K1).
 
 noattack(X,Y,K) :- X #\= Y, X + K #\= Y, X - K #\= Y.
-
-
-kingNoAttack([A|Rest], NumColumns) :- forEachKing(A, Rest, NumColumns), kingNoAttack(Rest, NumColumns).
-kingNoAttack([], _).
-
-forEachKing(A, [B|Rest], NumColumns) :- verifyNoKingAttack(A, B, NumColumns), forEachKing(A, Rest, NumColumns).
-forEachKing(_, [], _).
-
-% Problem if the king is in one side, this doens't accept to another king to be in the opposite side in the next row
-verifyNoKingAttack(A, B, NumColumns) :- 
-    A-NumColumns-1 #\= B #/\
-    A-NumColumns #\= B #/\
-    A-NumColumns+1 #\= B #/\
-    A+NumColumns-1 #\= B #/\
-    A+NumColumns #\= B #/\
-    A+NumColumns+1 #\= B #/\
-    A+1 #\= B #/\
-    A-1 #\= B.
