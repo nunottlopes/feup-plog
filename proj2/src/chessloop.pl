@@ -27,18 +27,6 @@ valid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
     KnightColumn #= KingColumn+1 #/\ KnightRow #= KingRow #\/
     KnightColumn #= KingColumn-1 #/\ KnightRow #= KingRow.
 
-% invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
-%     (KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow+1) #/\
-%     (KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow-1) #/\
-%     (KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow+1) #/\
-%     (KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow-1) #/\
-%     (KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn+1) #/\
-%     (KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn-1) #/\
-%     (KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn+1) #/\
-%     (KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn-1).
-
-% invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow).
-
 invalid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
     (KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow+1) #/\
     (KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow-1) #/\
@@ -49,16 +37,8 @@ invalid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
     (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow) #/\
     (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow).
 
-
-invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
-    KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow+1 #/\
-    KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow-1 #/\
-    KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow+1 #/\
-    KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow-1 #/\
-    KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn+1 #/\
-    KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn-1 #/\
-    KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn+1 #/\
-    KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn-1.
+invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow).
+% TODO: here
 
 
 
@@ -77,19 +57,22 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
 
     %element(1, Piece1, 4),
     %element(2, Piece1, 9),
+    
+    % pieceNoAttackSelf(Piece1, NumColumns, king),
+    % pieceAttack(Piece1, Piece2, NumColumns, king),
+
+    % pieceNoAttackSelf(Piece2, NumColumns, knight),
+    % pieceAttack(Piece2, Piece1, NumColumns, knight),
+
     kingNoAttackSelf(Piece1, NumColumns),
     kingAttack(Piece1, Piece2, NumColumns),
 
     knightNoAttackSelf(Piece2, NumColumns),
     knightAttack(Piece2, Piece1, NumColumns),
 
-
     append(Piece1, Piece2, Result),
     all_different(Result),
     labeling([], Result).
-
-
-
 
 % solveBoard(2, 3, 2, 1, 1, P1, P2, Result).
 % solveBoard(4, 4, 2, 1, 1, P1, P2, Result).
@@ -99,10 +82,14 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
 % -------------------------------------- KNIGHT --------------------------------------
 
 % Verify Knight can't attack another Knight
-knightNoAttackSelf([A|Rest], NumColumns) :- forEachKnight(A, Rest, NumColumns), knightNoAttackSelf(Rest, NumColumns).
+knightNoAttackSelf([A|Rest], NumColumns) :- 
+  forEachKnight(A, Rest, NumColumns), 
+  knightNoAttackSelf(Rest, NumColumns).
 knightNoAttackSelf([], _).
 
-forEachKnight(A, [B|Rest], NumColumns) :- verifyNoKnightAttack(A, B, NumColumns), forEachKnight(A, Rest, NumColumns).
+forEachKnight(A, [B|Rest], NumColumns) :- 
+  verifyNoKnightAttack(A, B, NumColumns), 
+  forEachKnight(A, Rest, NumColumns).
 forEachKnight(_, [], _).
 
 verifyNoKnightAttack(A, B, NumColumns) :-
@@ -184,6 +171,82 @@ verifyKingAttack(A, B, NumColumns) :-
 
 
 
+% % -------------------------------------- EACH TYPE OF PIECE HANDLER --------------------------------------
+
+% % Verify Piece can't attack Piece of the same type
+% pieceNoAttackSelf([A|Rest], NumColumns, Type) :- 
+%     forEachPiece(A, Rest, NumColumns, Type), 
+%     pieceNoAttackSelf(Rest, NumColumns, Type).
+% pieceNoAttackSelf([], _, _).
+
+% forEachPiece(A, [B|Rest], NumColumns, Type) :- 
+%     verifyNoPieceAttack(A, B, NumColumns, Type), 
+%     forEachPiece(A, Rest, NumColumns, Type).
+% forEachPiece(_, [], _, _).
+
+% verifyNoPieceAttack(A, B, NumColumns, Type) :-
+%     convertColumnRow(A, PieceColumn, PieceRow),
+%     %getMatrixPosition(A, NumColumns, PieceRow, PieceColumn),
+%     convertColumnRow(B, OtherColumn, OtherRow),
+%     %getMatrixPosition(B, NumColumns, OtherRow, OtherColumn),
+%     invalid_position(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
+
+% % Verify if the Piece attack only one of the other type of Piece
+% pieceAttack(Piece, Other, NumColumns, Type) :-
+%     pieceAttackIterator(Piece, Other, NumColumns, [], Type).
+
+% pieceAttackIterator([A|Piece], [B|Other], NumColumns, Previous, Type) :- 
+%     verifyPieceAttack(A, B, NumColumns, Type), 
+%     pieceNoAttackOthers(A, Other, NumColumns, Type), 
+%     pieceNoAttackOthers(A, Previous, NumColumns, Type), 
+%     append([B], Previous, NewPrevious),
+%     pieceAttackIterator(Piece, Other, NumColumns, NewPrevious, Type).
+% pieceAttackIterator([], [], _, _, _).
+
+% pieceNoAttackOthers(_, [], _, _).
+% pieceNoAttackOthers(A, [B|Other], NumColumns, Type) :-
+%     verifyNoPieceAttack(A, B, NumColumns, Type),
+%     pieceNoAttackOthers(A, Other, NumColumns, Type).
+
+
+% verifyPieceAttack(A, B, NumColumns, Type) :- 
+%     convertColumnRow(A, PieceColumn, PieceRow),
+%     %getMatrixPosition(A, NumColumns, PieceRow, PieceColumn),
+%     convertColumnRow(B, OtherColumn, OtherRow),
+%     %getMatrixPosition(B, NumColumns, OtherRow, OtherColumn),
+%     valid_position(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
+
+
+
+% valid_position(king, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+%     valid_position_king(PieceColumn, PieceRow, OtherColumn, OtherRow).
+
+% valid_position(knight, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+%     valid_position_knight(PieceColumn, PieceRow, OtherColumn, OtherRow).
+
+% invalid_position(king, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+%     invalid_position_king(PieceColumn, PieceRow, OtherColumn, OtherRow).
+
+% invalid_position(knight, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+%     invalid_position_knight(PieceColumn, PieceRow, OtherColumn, OtherRow).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -196,6 +259,8 @@ convertColumnRow(Pos, Column, Row) :-
     Pos #= 4 #/\ Column #= 1 #/\ Row #= 2 #\/
     Pos #= 5 #/\ Column #= 2 #/\ Row #= 2 #\/
     Pos #= 6 #/\ Column #= 3 #/\ Row #= 2.
+
+
 
 % convertColumnRow(Pos, Column, Row) :-
 %     Pos #= 1 #/\ Column #= 1 #/\ Row #= 1 #\/
@@ -217,6 +282,9 @@ convertColumnRow(Pos, Column, Row) :-
 %     Pos #= 14 #/\ Column #= 2 #/\ Row #= 4 #\/
 %     Pos #= 15 #/\ Column #= 3 #/\ Row #= 4 #\/
 %     Pos #= 16 #/\ Column #= 4 #/\ Row #= 4.
+
+
+
 
 % getMatrixPosition(Position, NumColumns, PosRow, PosColumn) :-
 %     getColumn(Position, NumColumns, PosColumn),
@@ -241,6 +309,8 @@ convertColumnRow(Pos, Column, Row) :-
 
 
 
+
+
 % Vêr problema do floor e ceiling...
 
 % Como evitar estas soluções?
@@ -249,3 +319,19 @@ convertColumnRow(Pos, Column, Row) :-
 
 % P1 = [3,1],
 % P2 = [6,4],
+
+
+% sorting(+Xs,+Ps,+Ys)
+% – captura a relação entre uma lista de valores, uma lista de valores ordenada de forma
+% ascendente e as suas posições na lista original
+% – Xs, Ps e Ys são listas de igual comprimento n de variáveis de domínio ou inteiros
+% – a restrição verifica-se se:
+% • Ys está em ordenação ascendente
+% • Ps é uma permutação de [1,n]
+% • para cada i em [1,n], Xs[i] = Ys[Ps[i]]
+% • Exemplos:
+% | ?- length(Ys,5), length(Ps,5), sorting([2,7,9,1,3],Ps,Ys).
+% Ps = [2,4,5,1,3], Ys = [1,2,3,7,9]
+% | ?- length(Ys,5), length(Ps,5), sorting([2,7,3,1,3],Ps,Ys).
+% Ps = [2,5,_A,1,_B], Ys = [1,2,3,3,7],
+% _A in 3..4, _B in 3..4
