@@ -3,166 +3,20 @@
 :- use_module(library(random)).
 
 :- include('board.pl').
+:- include('moves.pl').
+:- include('solver.pl').
+:- include('utils.pl').
 
 re :-
     reconsult('chessloop').
 
 
-% solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piece2A, Result) :-
-%     BoardSize is NumRows*NumColumns,
-%     length(Piece1A, NumPieces),
-%     length(Piece2A, NumPieces),
-%     length(Piece1B, NumPieces),
-%     length(Piece2B, NumPieces),
+chessloop :-
+    solveBoard(2, 3, 2, 1, 1, P1, P2, Result),
+    write(P1), nl,
+    write(P2), nl,
+    write(Result).
 
-%     domain(Piece1A, 1, BoardSize),
-%     domain(Piece1B, 1, BoardSize),
-%     domain(Piece2A, 1, BoardSize),
-%     domain(Piece2B, 1, BoardSize),
-
-%     all_different(Piece1A),
-%     all_different(Piece1B),
-%     all_different(Piece2A),
-%     all_different(Piece2B),
-
-%     same_elements_list(Piece1A, Piece1B),
-%     different_lists(Piece1A, Piece1B),
-%     %reverse_list(Piece1A, Piece1B),
-%     %same_elements_list(Piece2A, Piece2B),
-
-%     pieceNoAttackSelf(Piece1A, NumColumns, king),
-%     pieceAttack(Piece1A, Piece2A, NumColumns, king),
-
-%     pieceNoAttackSelf(Piece2A, NumColumns, knight),
-%     pieceAttack(Piece2A, Piece1B, NumColumns, knight),
-
-%     %append(Piece1A, Piece1B, Piece2A, Piece2B, Result),
-%     append(Piece1A, Piece2A, Result),
-%     all_different(Result),
-%     labeling([], Result).
-
-
-solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piece2A, Result) :-
-    BoardSize is NumRows*NumColumns,
-    length(Piece1A, NumPieces),
-    length(Piece2A, NumPieces),
-    length(Piece1B, NumPieces),
-    length(Piece2B, NumPieces),
-
-    domain(Piece1A, 1, BoardSize),
-    domain(Piece1B, 1, BoardSize),
-    domain(Piece2A, 1, BoardSize),
-    domain(Piece2B, 1, BoardSize),
-
-    all_different(Piece1A),
-    all_different(Piece1B),
-    all_different(Piece2A),
-    all_different(Piece2B),
-
-    same_elements_list(Piece1A, Piece1B),
-    same_elements_list(Piece2A, Piece2B),
-
-    % Piece A Attacks
-    pieceNoAttackSelf(Piece1A, NumColumns, king),
-    pieceAttack(Piece1A, Piece2A, NumColumns, king),
-
-    % Piece B Attacks
-    pieceNoAttackSelf(Piece2B, NumColumns, knight),
-    pieceAttack(Piece2B, Piece1B, NumColumns, knight),
-
-    % Check if the positions form a loop
-    checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumPieces),
-
-    % Check if the positions of the type of Piece1 are different from the positions of the piece type Piece2 
-    append(Piece1A, Piece2A, FirstResult),
-    all_different(FirstResult),
-    append(Piece1B, Piece2B, SecondResult),
-    all_different(SecondResult),
-    different_lists(FirstResult, SecondResult, NumPieces), % verify if the solutions are different, if not we don't have a loop
-
-    append(Piece1A, Piece1B, Piece1),
-    append(Piece2A, Piece2B, Piece2),
-
-    %append(Piece1A, Piece1B, Piece2A, Piece2B, Result),
-    append(Piece1, Piece2, Result),
-
-    labeling([], Result).
-
-
-
-% checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
-%     element(1, Piece1A, FirstPiece),
-%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, FirstPiece).
-
-
-% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece) :-
-%     element(Pos1A, Piece1A, NextPiece),
-%     element(Pos1A, Piece2A, NextPiece2),
-%     element(Pos2B, Piece2B, NextPiece2),
-%     element(Pos2B, Piece1B, NextPiece3),
-
-%     NextPiece3 #\= FirstPiece,
-
-%     element(Pos1A_2, Piece1A, NextPiece3),
-%     element(Pos1A_2, Piece2A, NextPiece4),
-%     element(Pos2B_2, Piece2B, NextPiece4),
-%     element(Pos2B_2, Piece1B, NextPiece5),
-
-%     FirstPiece #= NextPiece5.
-
-checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
-    element(1, Piece1A, FirstPiece),
-    loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, FirstPiece, NumLoops).
-
-
-loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, 1) :-
-    element(Pos1A, Piece1A, NextPiece),
-    element(Pos1A, Piece2A, NextPiece2),
-    element(Pos2B, Piece2B, NextPiece2),
-    element(Pos2B, Piece1B, NextPiece3),
-
-    NextPiece3 #= FirstPiece.
-
-loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, Counter) :-
-    Counter #> 1,
-    element(Pos1A, Piece1A, NextPiece),
-    element(Pos1A, Piece2A, NextPiece2),
-    element(Pos2B, Piece2B, NextPiece2),
-    element(Pos2B, Piece1B, NextPiece3),
-
-    NextPiece3 #\= FirstPiece,
-
-    Counter1 is Counter-1,
-    loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece3, FirstPiece, Counter1).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
-%     element(1, Piece1A, FirstPiece),
-%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, FirstPiece, NumLoops),!.
-
-% loop(_,_,_,_, FirstPiece, FirstPiece, 0).
-% loop(_,_,_,_,_,_,0).
-% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, Counter) :-
-%     element(Pos1A, Piece1A, NextPiece),
-%     element(Pos1A, Piece2A, NextPiece2),
-%     element(Pos2B, Piece2B, NextPiece2),
-%     element(Pos2B, Piece1B, NextPiece3),
-%     element(PosNext, Piece1A, NextPiece3),
-%     Counter1 is Counter-1,
-%     loop(Piece1A, Piece2A, Piece1B, Piece2B, PosNext, FirstPiece, Counter1).
 
 
 
@@ -183,144 +37,6 @@ loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, Counter) :-
 
 
 
-% ----------------- UTILS -----------------
-
-same_elements_list([], _).
-same_elements_list([A|Rest], ListB) :-
-    element(_, ListB, A),
-    same_elements_list(Rest, ListB).
-
-% checks if two lists with same size have the same elements in a different order
-different_lists(ListA, ListB, ListLength) :-
-    different_lists_iterator(ListA, ListB, Counter),
-    count(1, Counter, #<, 4).
-
-different_lists_iterator([A|ListA], [B|ListB], [X|Xs]) :-
-    (A #= B) #<=> X,
-    different_lists_iterator(ListA, ListB, Xs).
-different_lists_iterator([], [], []).
-    
-
-
-% -------------------------------------- EACH TYPE OF PIECE HANDLER --------------------------------------
-
-% Verify Piece can't attack Piece of the same type
-pieceNoAttackSelf([A|Rest], NumColumns, Type) :- 
-    forEachPiece(A, Rest, NumColumns, Type), 
-    pieceNoAttackSelf(Rest, NumColumns, Type).
-pieceNoAttackSelf([], _, _).
-
-forEachPiece(A, [B|Rest], NumColumns, Type) :- 
-    verifyNoPieceAttack(A, B, NumColumns, Type), 
-    forEachPiece(A, Rest, NumColumns, Type).
-forEachPiece(_, [], _, _).
-
-verifyNoPieceAttack(A, B, NumColumns, Type) :-
-    getMatrixPosition(A, NumColumns, PieceRow, PieceColumn),
-    getMatrixPosition(B, NumColumns, OtherRow, OtherColumn),
-    invalid_position(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
-
-% Verify if the Piece attack only one of the other type of Piece
-pieceAttack(Piece, Other, NumColumns, Type) :-
-    pieceAttackIterator(Piece, Other, NumColumns, [], Type).
-
-pieceAttackIterator([A|Piece], [B|Other], NumColumns, Previous, Type) :- 
-    verifyPieceAttack(A, B, NumColumns, Type), 
-    pieceNoAttackOthers(A, Other, NumColumns, Type), 
-    pieceNoAttackOthers(A, Previous, NumColumns, Type), 
-    append([B], Previous, NewPrevious),
-    pieceAttackIterator(Piece, Other, NumColumns, NewPrevious, Type).
-pieceAttackIterator([], [], _, _, _).
-
-pieceNoAttackOthers(_, [], _, _).
-pieceNoAttackOthers(A, [B|Other], NumColumns, Type) :-
-    verifyNoPieceAttack(A, B, NumColumns, Type),
-    pieceNoAttackOthers(A, Other, NumColumns, Type).
-
-
-verifyPieceAttack(A, B, NumColumns, Type) :- 
-    getMatrixPosition(A, NumColumns, PieceRow, PieceColumn),
-    getMatrixPosition(B, NumColumns, OtherRow, OtherColumn),
-    valid_position(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
-
-
-
-
-% ------------------- PIECES MOVES HANDLERS -------------------------
-
-valid_position(king, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
-    valid_position_king(PieceColumn, PieceRow, OtherColumn, OtherRow).
-
-valid_position(knight, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
-    valid_position_knight(PieceColumn, PieceRow, OtherColumn, OtherRow).
-
-invalid_position(king, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
-    invalid_position_king(PieceColumn, PieceRow, OtherColumn, OtherRow).
-
-invalid_position(knight, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
-    invalid_position_knight(PieceColumn, PieceRow, OtherColumn, OtherRow).
-
-valid_position_knight(KnightColumn, KnightRow, OtherColumn, OtherRow) :-
-    OtherColumn #= KnightColumn+2 #/\ OtherRow #= KnightRow+1 #\/
-    OtherColumn #= KnightColumn+2 #/\ OtherRow #= KnightRow-1 #\/
-    OtherColumn #= KnightColumn-2 #/\ OtherRow #= KnightRow+1 #\/
-    OtherColumn #= KnightColumn-2 #/\ OtherRow #= KnightRow-1 #\/
-    OtherRow #= KnightRow+2 #/\ OtherColumn #= KnightColumn+1 #\/
-    OtherRow #= KnightRow+2 #/\ OtherColumn #= KnightColumn-1 #\/
-    OtherRow #= KnightRow-2 #/\ OtherColumn #= KnightColumn+1 #\/
-    OtherRow #= KnightRow-2 #/\ OtherColumn #= KnightColumn-1.
-
-valid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
-    KnightColumn #= KingColumn #/\ KnightRow #= KingRow+1 #\/
-    KnightColumn #= KingColumn #/\ KnightRow #= KingRow-1 #\/
-    KnightColumn #= KingColumn+1 #/\ KnightRow #= KingRow+1 #\/
-    KnightColumn #= KingColumn+1 #/\ KnightRow #= KingRow-1 #\/
-    KnightColumn #= KingColumn-1 #/\ KnightRow #= KingRow+1 #\/
-    KnightColumn #= KingColumn-1 #/\ KnightRow #= KingRow-1 #\/
-    KnightColumn #= KingColumn+1 #/\ KnightRow #= KingRow #\/
-    KnightColumn #= KingColumn-1 #/\ KnightRow #= KingRow.
-
-invalid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
-    (KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow+1) #/\
-    (KnightColumn #\= KingColumn #\/ KnightRow #\= KingRow-1) #/\
-    (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow+1) #/\
-    (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow-1) #/\
-    (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow+1) #/\
-    (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow-1) #/\
-    (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow) #/\
-    (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow).
-
-invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
-    (KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow+1) #/\
-    (KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow-1) #/\
-    (KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow+1) #/\
-    (KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow-1) #/\
-    (KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn+1) #/\
-    (KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn-1) #/\
-    (KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn+1) #/\
-    (KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn-1).
-
-% valid_position_Rook(RookColumn, RookRow, KingColumn, KingRow) :-
-%     (KingColumn #= RookColumn #/\ KingRow #\= RookRow) #\/
-%     (KingColumn #\= RookColumn #/\ KingRow #= RookRow).
-
-% invalid_position_Rook(RookColumn, RookRow, KingColumn, KingRow) :-
-%     (KingColumn #\= RookColumn #/\ KingRow #\= RookRow).
-
-% valid_position_Bishop(BishopColumn, BishopRow, KingColumn, KingRow) :-
-%     abs(BishopColumn - KingColumn) #= abs(BishopRow - KingRow).
-
-% invalid_position_Bishop(BishopColumn, BishopRow, KingColumn, KingRow) :-
-%     abs(BishopColumn - KingColumn) #\= abs(BishopRow - KingRow).
-
-% valid_position_Queen(QueenColumn, QueenRow, KingColumn, KingRow) :-
-%     (KingColumn #= QueenColumn #/\ KingRow #\= QueenRow) #\/
-%     (KingColumn #\= QueenColumn #/\ KingRow #= QueenRow) #\/
-%     (abs(QueenColumn - KingColumn) #= abs(QueenRow - KingRow)).
-
-% invalid_position_Queen(QueenColumn, QueenRow, KingColumn, KingRow) :-
-%     (KingColumn #\= QueenColumn #/\ KingRow #\= QueenRow) #\/
-%     abs(QueenColumn - KingColumn) #\= abs(QueenRow - KingRow).
 
 
 
@@ -333,19 +49,7 @@ invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
 
 
 
-% ---------------------- GET BOARD POSITION ------------------------
 
-getMatrixPosition(Position, NumColumns, PosRow, PosColumn) :-
-    getColumn(Position, NumColumns, PosColumn),
-    getRow(Position, NumColumns, PosRow).
-
-getColumn(Position, NumColumns, PosColumn) :-
-    ((Position mod NumColumns) #= 0 #/\ PosColumn #= NumColumns) #\/
-    ((Position mod NumColumns) #\= 0 #/\ PosColumn #= (Position mod NumColumns)).
-
-getRow(Position, NumColumns, PosRow) :-
-    ((Position mod NumColumns) #= 0 #/\ PosRow #= Position/NumColumns) #\
-    ((Position mod NumColumns) #\= 0 #/\ PosRow #= (Position/NumColumns +1)).
 
 
 
