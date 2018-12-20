@@ -35,7 +35,13 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
     all_different(FirstResult),
     append(Piece1B, Piece2B, SecondResult),
     all_different(SecondResult),
-    different_lists(FirstResult, SecondResult, NumPieces), % verify if the solutions are different, if not we don't have a loop
+
+    Value #= NumPieces*2,
+    different_lists(FirstResult, SecondResult, Value), % verify if the solutions are different, if not we don't have a loop
+
+    % Constraints to avoid repeated solutions
+    sorted(Piece1A),
+    different_lists(Piece1A, Piece1B, NumPieces),
 
     append(Piece1A, Piece1B, Piece1),
     append(Piece2A, Piece2B, Piece2),
@@ -44,6 +50,35 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
     %append(Piece1A, Piece2A, Result),
 
     labeling([], Result).
+
+
+
+
+% ------------------ SOME EXAMPLE SOLUTIONS ------------------
+% solveBoard(2, 3, 2, 1, 1, P1, P2, Result).
+% solveBoard(4, 4, 2, 1, 1, P1, P2, Result).
+% solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,4,6]).
+% solveBoard(2,3,2,1,1,[1,3],[4,6], Result).
+% solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,3,1,4,6,6,4]).
+
+% solveBoard(4, 5, 3, 1, 1, P1, P2, Result).
+% solveBoard(4, 5, 3, 1, 1, [3,12,15], [4,6,19], Result).
+% solveBoard(6, 6, 3, 1, 1, P1, P2, Result).
+
+
+% solveBoard(2,3,2,1,1, [1,3,4,6]).
+% solveBoard(2,3,2,1,1, Result).
+
+
+
+
+
+
+
+
+
+
+
 
 
 
