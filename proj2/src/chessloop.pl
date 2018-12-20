@@ -37,14 +37,43 @@ invalid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
     (KnightColumn #\= KingColumn+1 #\/ KnightRow #\= KingRow) #/\
     (KnightColumn #\= KingColumn-1 #\/ KnightRow #\= KingRow).
 
-invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow).
-% TODO: here
+invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
+    (KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow+1) #/\
+    (KingColumn #\= KnightColumn+2 #\/ KingRow #\= KnightRow-1) #/\
+    (KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow+1) #/\
+    (KingColumn #\= KnightColumn-2 #\/ KingRow #\= KnightRow-1) #/\
+    (KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn+1) #/\
+    (KingRow #\= KnightRow+2 #\/ KingColumn #\= KnightColumn-1) #/\
+    (KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn+1) #/\
+    (KingRow #\= KnightRow-2 #\/ KingColumn #\= KnightColumn-1).
+
+% valid_position_Rook(RookColumn, RookRow, KingColumn, KingRow) :-
+%     (KingColumn #= RookColumn #/\ KingRow #\= RookRow) #\/
+%     (KingColumn #\= RookColumn #/\ KingRow #= RookRow).
+
+% invalid_position_Rook(RookColumn, RookRow, KingColumn, KingRow) :-
+%     (KingColumn #\= RookColumn #/\ KingRow #\= RookRow).
+
+% valid_position_Bishop(BishopColumn, BishopRow, KingColumn, KingRow) :-
+%     abs(BishopColumn - KingColumn) #= abs(BishopRow - KingRow).
+
+% invalid_position_Bishop(BishopColumn, BishopRow, KingColumn, KingRow) :-
+%     abs(BishopColumn - KingColumn) #\= abs(BishopRow - KingRow).
+
+% valid_position_Queen(QueenColumn, QueenRow, KingColumn, KingRow) :-
+%     (KingColumn #= QueenColumn #/\ KingRow #\= QueenRow) #\/
+%     (KingColumn #\= QueenColumn #/\ KingRow #= QueenRow) #\/
+%     (abs(QueenColumn - KingColumn) #= abs(QueenRow - KingRow)).
+
+% invalid_position_Queen(QueenColumn, QueenRow, KingColumn, KingRow) :-
+%     (KingColumn #\= QueenColumn #/\ KingRow #\= QueenRow) #\/
+%     abs(QueenColumn - KingColumn) #\= abs(QueenRow - KingRow).
 
 
 
 
 
-solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Result) :-
+solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piece2A, Result) :-
     BoardSize is NumRows*NumColumns,
     length(Piece1A, NumPieces),
     length(Piece2A, NumPieces),
@@ -83,7 +112,7 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Result) :-
 
     %append(Piece1A, Piece1B, Piece2A, Piece2B, Result),
     append(Piece1A, Piece2A, Result),
-    %all_different(Result),
+    all_different(Result),
     labeling([], Result).
 
 % solveBoard(2, 3, 2, 1, 1, P1, P2, Result).
@@ -92,14 +121,12 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Result) :-
 % solveBoard(2,3,2,1,1,[1,3],[4,6], Result).
 % solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,3,1,4,6,6,4]).
 
+% solveBoard(4, 5, 3, 1, 1, P1, P2, Result).
+% solveBoard(4, 5, 3, 1, 1, [3,12,15], [4,6,19], Result).
+
 
 % solveBoard(2,3,2,1,1, [1,3,4,6]).
 % solveBoard(2,3,2,1,1, Result).
-
-reverse_list([A,B], [C,D]) :-
-    A #= D,
-    B #= C.
-
 
 same_elements_list([], _).
 same_elements_list([A|Rest], ListB) :-
@@ -288,7 +315,7 @@ verifyKingAttack(A, B, NumColumns) :-
 
 
 
-
+% 2X3 BOARD
 convertColumnRow(Pos, Column, Row) :-
     Pos #= 1 #/\ Column #= 1 #/\ Row #= 1 #\/
     Pos #= 2 #/\ Column #= 2 #/\ Row #= 1 #\/
@@ -298,7 +325,34 @@ convertColumnRow(Pos, Column, Row) :-
     Pos #= 6 #/\ Column #= 3 #/\ Row #= 2.
 
 
+% 4X5 BOARD
+% convertColumnRow(Pos, Column, Row) :-
+%     Pos #= 1 #/\ Column #= 1 #/\ Row #= 1 #\/
+%     Pos #= 2 #/\ Column #= 2 #/\ Row #= 1 #\/
+%     Pos #= 3 #/\ Column #= 3 #/\ Row #= 1 #\/
+%     Pos #= 4 #/\ Column #= 4 #/\ Row #= 1 #\/
+%     Pos #= 5 #/\ Column #= 5 #/\ Row #= 1 #\/
 
+%     Pos #= 6 #/\ Column #= 1 #/\ Row #= 2 #\/
+%     Pos #= 7 #/\ Column #= 2 #/\ Row #= 2 #\/
+%     Pos #= 8 #/\ Column #= 3 #/\ Row #= 2 #\/
+%     Pos #= 9 #/\ Column #= 4 #/\ Row #= 2 #\/
+%     Pos #= 10 #/\ Column #= 5 #/\ Row #= 2 #\/
+
+%     Pos #= 11 #/\ Column #= 1 #/\ Row #= 3 #\/
+%     Pos #= 12 #/\ Column #= 2 #/\ Row #= 3 #\/
+%     Pos #= 13 #/\ Column #= 3 #/\ Row #= 3 #\/
+%     Pos #= 14 #/\ Column #= 4 #/\ Row #= 3 #\/
+%     Pos #= 15 #/\ Column #= 5 #/\ Row #= 3 #\/
+
+%     Pos #= 16 #/\ Column #= 1 #/\ Row #= 4 #\/
+%     Pos #= 17 #/\ Column #= 2 #/\ Row #= 4 #\/
+%     Pos #= 18 #/\ Column #= 3 #/\ Row #= 4 #\/
+%     Pos #= 19 #/\ Column #= 4 #/\ Row #= 4 #\/
+%     Pos #= 20 #/\ Column #= 5 #/\ Row #= 4.
+
+
+% 4X4 BOARD
 % convertColumnRow(Pos, Column, Row) :-
 %     Pos #= 1 #/\ Column #= 1 #/\ Row #= 1 #\/
 %     Pos #= 2 #/\ Column #= 2 #/\ Row #= 1 #\/
