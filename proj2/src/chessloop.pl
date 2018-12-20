@@ -89,63 +89,81 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
     labeling([], Result).
 
 
+
 % checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
 %     element(1, Piece1A, FirstPiece),
-%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, 0, NumLoops, FirstPiece).
+%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, FirstPiece).
 
-% loop(_, _, _, _, FirstPiece, Counter, Counter, FirstPiece).
-% loop(_, _, _, _, _, Counter, Counter, _) :- fail.
 
-% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, Counter, NumLoops, FirstPiece) :-
+% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece) :-
+%     element(Pos1A, Piece1A, NextPiece),
+%     element(Pos1A, Piece2A, NextPiece2),
+%     element(Pos2B, Piece2B, NextPiece2),
+%     element(Pos2B, Piece1B, NextPiece3),
+
+%     NextPiece3 #\= FirstPiece,
+
+%     element(Pos1A_2, Piece1A, NextPiece3),
+%     element(Pos1A_2, Piece2A, NextPiece4),
+%     element(Pos2B_2, Piece2B, NextPiece4),
+%     element(Pos2B_2, Piece1B, NextPiece5),
+
+%     FirstPiece #= NextPiece5.
+
+checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
+    element(1, Piece1A, FirstPiece),
+    loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, FirstPiece, NumLoops).
+
+
+loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, 1) :-
+    element(Pos1A, Piece1A, NextPiece),
+    element(Pos1A, Piece2A, NextPiece2),
+    element(Pos2B, Piece2B, NextPiece2),
+    element(Pos2B, Piece1B, NextPiece3),
+
+    NextPiece3 #= FirstPiece.
+
+loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, Counter) :-
+    Counter #> 1,
+    element(Pos1A, Piece1A, NextPiece),
+    element(Pos1A, Piece2A, NextPiece2),
+    element(Pos2B, Piece2B, NextPiece2),
+    element(Pos2B, Piece1B, NextPiece3),
+
+    NextPiece3 #\= FirstPiece,
+
+    Counter1 is Counter-1,
+    loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece3, FirstPiece, Counter1).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
+%     element(1, Piece1A, FirstPiece),
+%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, FirstPiece, NumLoops),!.
+
+% loop(_,_,_,_, FirstPiece, FirstPiece, 0).
+% loop(_,_,_,_,_,_,0).
+% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, Counter) :-
 %     element(Pos1A, Piece1A, NextPiece),
 %     element(Pos1A, Piece2A, NextPiece2),
 %     element(Pos2B, Piece2B, NextPiece2),
 %     element(Pos2B, Piece1B, NextPiece3),
 %     element(PosNext, Piece1A, NextPiece3),
-%     write('----------------------'), nl,
-%     write(NumLoops), nl,
-%     write('Aqui'), nl,
-%     write(Counter), nl,
-%     Counter1 is Counter +1,
-%     loop(Piece1A, Piece2A, Piece1B, Piece2B, PosNext, Counter1, NumLoops, FirstPiece).
+%     Counter1 is Counter-1,
+%     loop(Piece1A, Piece2A, Piece1B, Piece2B, PosNext, FirstPiece, Counter1).
 
-
-
-
-checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
-    element(1, Piece1A, FirstPiece),
-    loop(Piece1A, Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, Counter, FirstPiece).
-
-% loop([], _, _, _, _, FirstPiece, _, FirstPiece).
-% loop([], _, _, _, _, _, _, _) :- fail.
-loop([], _, _, _, _, FirstPiece, 0, FirstPiece).
-loop([], _, _, _, _, _, 0, _).
-loop([H|T], Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, Counter, FirstPiece) :-
-    (element(Pos1A, Piece1A, NextPiece) #/\
-    element(Pos1A, Piece2A, NextPiece2) #/\
-    element(Pos2B, Piece2B, NextPiece2) #/\
-    element(Pos2B, Piece1B, NextPiece3) #/\
-    element(PosNext, Piece1A, NextPiece3)) #<=> X,
-    write(Counter), nl,
-    Counter #= M+X,
-    loop(T, Piece1A, Piece2A, Piece1B, Piece2B, PosNext, M, FirstPiece).
-
-
-% checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
-%     element(1, Piece1A, FirstPiece),
-%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, Counter, FirstPiece),
-%     count(1, Counter, #=, NumLoops).
-
-% loop(_, _, _, _, FirstPiece, _, FirstPiece).
-% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, [Counter|Rest], FirstPiece) :-
-%     element(Pos1A, Piece1A, NextPiece) #/\
-%     element(Pos1A, Piece2A, NextPiece2) #/\
-%     element(Pos2B, Piece2B, NextPiece2) #/\
-%     element(Pos2B, Piece1B, NextPiece3) #/\
-%     element(PosNext, Piece1A, NextPiece3) #/\
-%     Counter #= 1,
-%     write('Aqui'), nl,
-%     loop(Piece1A, Piece2A, Piece1B, Piece2B, PosNext, Rest, FirstPiece).
 
 
 % ------------------ SOME EXAMPLE SOLUTIONS ------------------
