@@ -44,16 +44,22 @@ invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow).
 
 
 
-solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, NewPiece1, Piece2, Result) :-
+solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Result) :-
     BoardSize is NumRows*NumColumns,
-    length(Piece1, NumPieces),
-    length(Piece2, NumPieces),
+    length(Piece1A, NumPieces),
+    length(Piece2A, NumPieces),
+    length(Piece1B, NumPieces),
+    length(Piece2B, NumPieces),
 
-    domain(Piece1, 1, BoardSize),
-    domain(Piece2, 1, BoardSize),
+    domain(Piece1A, 1, BoardSize),
+    domain(Piece1B, 1, BoardSize),
+    domain(Piece2A, 1, BoardSize),
+    domain(Piece2B, 1, BoardSize),
 
-    all_different(Piece1),
-    all_different(Piece2),
+    all_different(Piece1A),
+    all_different(Piece1B),
+    all_different(Piece2A),
+    all_different(Piece2B),
 
     %element(1, Piece1, 4),
     %element(2, Piece1, 9),
@@ -64,19 +70,49 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, NewPiece1, Pi
     % pieceNoAttackSelf(Piece2, NumColumns, knight),
     % pieceAttack(Piece2, Piece1, NumColumns, knight),
 
-    kingNoAttackSelf(Piece1, NumColumns),
-    kingAttack([Piece1], Piece2, NumColumns),
+    same_elements_list(Piece1A, Piece1B),
+    different_lists(Piece1A, Piece1B),
+    %reverse_list(Piece1A, Piece1B),
+    %same_elements_list(Piece2A, Piece2B),
 
-    knightNoAttackSelf(Piece2, NumColumns),
-    knightAttack(Piece2, Piece1, NumColumns),
+    kingNoAttackSelf(Piece1A, NumColumns),
+    kingAttack(Piece1A, Piece2A, NumColumns),
 
-    append(Piece1, Piece2, Result),
-    all_different(Result),
+    knightNoAttackSelf(Piece2A, NumColumns),
+    knightAttack(Piece2A, Piece1B, NumColumns),
+
+    %append(Piece1A, Piece1B, Piece2A, Piece2B, Result),
+    append(Piece1A, Piece2A, Result),
+    %all_different(Result),
     labeling([], Result).
 
 % solveBoard(2, 3, 2, 1, 1, P1, P2, Result).
 % solveBoard(4, 4, 2, 1, 1, P1, P2, Result).
 % solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,4,6]).
+% solveBoard(2,3,2,1,1,[1,3],[4,6], Result).
+% solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,3,1,4,6,6,4]).
+
+
+% solveBoard(2,3,2,1,1, [1,3,4,6]).
+% solveBoard(2,3,2,1,1, Result).
+
+reverse_list([A,B], [C,D]) :-
+    A #= D,
+    B #= C.
+
+
+same_elements_list([], _).
+same_elements_list([A|Rest], ListB) :-
+    element(_, ListB, A),
+    same_elements_list(Rest, ListB).
+
+different_lists([],[]).
+different_lists([A|RestA], [B|RestB]) :-
+    A #\= B,
+    different_lists(RestA, RestB).
+    
+
+
 
 
 
@@ -287,25 +323,18 @@ convertColumnRow(Pos, Column, Row) :-
 
 
 
-% getMatrixPosition(Position, NumColumns, PosRow, PosColumn) :-
-%     getColumn(Position, NumColumns, PosColumn),
-%     getRow(Position, NumColumns, PosRow).
+getMatrixPosition(Position, NumColumns, PosRow, PosColumn) :-
+    getColumn(Position, NumColumns, PosColumn),
+    getRow(Position, NumColumns, PosRow).
 
-% getColumn(Position, NumColumns, PosColumn) :-
-%     (Position mod NumColumns) #= 0 #/\ PosColumn #= NumColumns #\/
-%     PosColumn #= (Position mod NumColumns).
+getColumn(Position, NumColumns, PosColumn) :-
+    ((Position mod NumColumns) #= 0 #/\ PosColumn #= NumColumns) #\/
+    PosColumn #= (Position mod NumColumns).
 
-% getRow(Position, NumColumns, PosRow) :-
-%     A #= floor(Position/NumColumns),
-%     B #= ceiling(Position/NumColumns),
-%     C #= round(Position/NumColumns),
-%     A #= B #/\ PosRow #= C #\/
-%     PosRow #= A+1.
+getRow(Position, NumColumns, PosRow) :-
+    ((Position mod NumColumns) #= 0 #/\ PosRow #= Position/NumColumns) #\/
+    PosRow #= (Position/NumColumns +1).
 
-% getRow(Position, NumColumns, PosRow) :-
-%     floor(Position/NumColumns) =:= ceiling(Position/NumColumns), !,
-%     PosRow is round(Position/NumColumns);
-%     PosRow is floor(Position/NumColumns)+1.
 
 
 
