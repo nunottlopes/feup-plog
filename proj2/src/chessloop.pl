@@ -383,12 +383,11 @@ getMatrixPosition(Position, NumColumns, PosRow, PosColumn) :-
 
 getColumn(Position, NumColumns, PosColumn) :-
     ((Position mod NumColumns) #= 0 #/\ PosColumn #= NumColumns) #\/
-    PosColumn #= (Position mod NumColumns).
+    ((Position mod NumColumns) #\= 0 #/\ PosColumn #= (Position mod NumColumns)).
 
 getRow(Position, NumColumns, PosRow) :-
-    ((Position mod NumColumns) #= 0 #/\ PosRow #= Position/NumColumns) #\/
-    PosRow #= (Position/NumColumns +1).
-
+    ((Position mod NumColumns) #= 0 #/\ PosRow #= Position/NumColumns) #\
+    ((Position mod NumColumns) #\= 0 #/\ PosRow #= (Position/NumColumns +1)).
 
 
 
