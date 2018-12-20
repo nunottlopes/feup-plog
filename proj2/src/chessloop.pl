@@ -42,7 +42,7 @@ re :-
 %     labeling([], Result).
 
 
-solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece2, Result) :-
+solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piece2A, Result) :-
     BoardSize is NumRows*NumColumns,
     length(Piece1A, NumPieces),
     length(Piece2A, NumPieces),
@@ -60,23 +60,22 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
     all_different(Piece2B),
 
     same_elements_list(Piece1A, Piece1B),
-    %different_lists(Piece1A, Piece1B),
-    %reverse_list(Piece1A, Piece1B),
     same_elements_list(Piece2A, Piece2B),
 
-    % Piece A
+    % Piece A Attacks
     pieceNoAttackSelf(Piece1A, NumColumns, king),
     pieceAttack(Piece1A, Piece2A, NumColumns, king),
 
-    % Piece B
+    % Piece B Attacks
     pieceNoAttackSelf(Piece2B, NumColumns, knight),
     pieceAttack(Piece2B, Piece1B, NumColumns, knight),
 
+    % Check if the positions of the type of Piece1 are different from the positions of the piece type Piece2 
     append(Piece1A, Piece2A, FirstResult),
     all_different(FirstResult),
     append(Piece1B, Piece2B, SecondResult),
     all_different(SecondResult),
-    %different_lists(FirstResult, SecondResult), % verify if the solutions are different, if not we don't have a loop
+    different_lists(FirstResult, SecondResult, NumPieces), % verify if the solutions are different, if not we don't have a loop
 
     append(Piece1A, Piece1B, Piece1),
     append(Piece2A, Piece2B, Piece2),
@@ -113,16 +112,15 @@ same_elements_list([A|Rest], ListB) :-
     element(_, ListB, A),
     same_elements_list(Rest, ListB).
 
-% checks if two lists with same elements have a different order
-different_lists(ListA, ListB) :-
-    different_lists_iterator(ListA, ListA, ListB).
+% checks if two lists with same size have the same elements in a different order
+different_lists(ListA, ListB, ListLength) :-
+    different_lists_iterator(ListA, ListB, Counter),
+    count(1, Counter, #<, 4).
 
-different_lists_iterator([],_,_).
-different_lists_iterator([A|RestA], ListA, ListB) :-
-    element(PosListA, ListA, A),
-    element(PosListB, ListB, A),
-    PosListA #\= PosListB,
-    different_lists_iterator(RestA, ListA, ListB).
+different_lists_iterator([A|ListA], [B|ListB], [X|Xs]) :-
+    (A #= B) #<=> X,
+    different_lists_iterator(ListA, ListB, Xs).
+different_lists_iterator([], [], []).
     
 
 
