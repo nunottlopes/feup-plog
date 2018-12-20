@@ -7,15 +7,15 @@
 re :-
     reconsult('chessloop').
 
-valid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow) :-
-    KingColumn #= KnightColumn+2 #/\ KingRow #= KnightRow+1 #\/
-    KingColumn #= KnightColumn+2 #/\ KingRow #= KnightRow-1 #\/
-    KingColumn #= KnightColumn-2 #/\ KingRow #= KnightRow+1 #\/
-    KingColumn #= KnightColumn-2 #/\ KingRow #= KnightRow-1 #\/
-    KingRow #= KnightRow+2 #/\ KingColumn #= KnightColumn+1 #\/
-    KingRow #= KnightRow+2 #/\ KingColumn #= KnightColumn-1 #\/
-    KingRow #= KnightRow-2 #/\ KingColumn #= KnightColumn+1 #\/
-    KingRow #= KnightRow-2 #/\ KingColumn #= KnightColumn-1.
+valid_position_knight(KnightColumn, KnightRow, OtherColumn, OtherRow) :-
+    OtherColumn #= KnightColumn+2 #/\ OtherRow #= KnightRow+1 #\/
+    OtherColumn #= KnightColumn+2 #/\ OtherRow #= KnightRow-1 #\/
+    OtherColumn #= KnightColumn-2 #/\ OtherRow #= KnightRow+1 #\/
+    OtherColumn #= KnightColumn-2 #/\ OtherRow #= KnightRow-1 #\/
+    OtherRow #= KnightRow+2 #/\ OtherColumn #= KnightColumn+1 #\/
+    OtherRow #= KnightRow+2 #/\ OtherColumn #= KnightColumn-1 #\/
+    OtherRow #= KnightRow-2 #/\ OtherColumn #= KnightColumn+1 #\/
+    OtherRow #= KnightRow-2 #/\ OtherColumn #= KnightColumn-1.
 
 valid_position_king(KingColumn, KingRow, KnightColumn, KnightRow) :-
     KnightColumn #= KingColumn #/\ KnightRow #= KingRow+1 #\/
@@ -44,7 +44,7 @@ invalid_position_knight(KnightColumn, KnightRow, KingColumn, KingRow).
 
 
 
-solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece2, Result) :-
+solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, NewPiece1, Piece2, Result) :-
     BoardSize is NumRows*NumColumns,
     length(Piece1, NumPieces),
     length(Piece2, NumPieces),
@@ -57,7 +57,7 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
 
     %element(1, Piece1, 4),
     %element(2, Piece1, 9),
-    
+
     % pieceNoAttackSelf(Piece1, NumColumns, king),
     % pieceAttack(Piece1, Piece2, NumColumns, king),
 
@@ -65,7 +65,7 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
     % pieceAttack(Piece2, Piece1, NumColumns, knight),
 
     kingNoAttackSelf(Piece1, NumColumns),
-    kingAttack(Piece1, Piece2, NumColumns),
+    kingAttack([Piece1], Piece2, NumColumns),
 
     knightNoAttackSelf(Piece2, NumColumns),
     knightAttack(Piece2, Piece1, NumColumns),
@@ -77,6 +77,7 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1, Piece
 % solveBoard(2, 3, 2, 1, 1, P1, P2, Result).
 % solveBoard(4, 4, 2, 1, 1, P1, P2, Result).
 % solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,4,6]).
+
 
 
 % -------------------------------------- KNIGHT --------------------------------------
@@ -123,7 +124,7 @@ verifyKnightAttack(A, B, NumColumns) :-
     %getMatrixPosition(A, NumColumns, KnightRow, KnightColumn),
     convertColumnRow(B, OtherColumn, OtherRow),
     %getMatrixPosition(B, NumColumns, OtherRow, OtherColumn),
-    valid_position_king(KnightColumn, KnightRow, OtherColumn, OtherRow).
+    valid_position_knight(KnightColumn, KnightRow, OtherColumn, OtherRow).
 
 
 
@@ -309,7 +310,10 @@ convertColumnRow(Pos, Column, Row) :-
 
 
 
+% Temos de adicionar circuit por causa do loop que tem de fazer
 
+% O problema que temos agora é que ele usa uma ordem [1,3][4,6] - ([4,6][1,3] em vez de [6,4][1,3])
+% Precisamos de um predicado que faça para qualquer ordem de listas
 
 % Vêr problema do floor e ceiling...
 
@@ -335,3 +339,4 @@ convertColumnRow(Pos, Column, Row) :-
 % | ?- length(Ys,5), length(Ps,5), sorting([2,7,3,1,3],Ps,Ys).
 % Ps = [2,5,_A,1,_B], Ys = [1,2,3,3,7],
 % _A in 3..4, _B in 3..4
+
