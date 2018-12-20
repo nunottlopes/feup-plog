@@ -70,6 +70,9 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
     pieceNoAttackSelf(Piece2B, NumColumns, knight),
     pieceAttack(Piece2B, Piece1B, NumColumns, knight),
 
+    % Check if the positions form a loop
+    checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumPieces),
+
     % Check if the positions of the type of Piece1 are different from the positions of the piece type Piece2 
     append(Piece1A, Piece2A, FirstResult),
     all_different(FirstResult),
@@ -86,7 +89,63 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
     labeling([], Result).
 
 
-%checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B) :-
+% checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
+%     element(1, Piece1A, FirstPiece),
+%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, 0, NumLoops, FirstPiece).
+
+% loop(_, _, _, _, FirstPiece, Counter, Counter, FirstPiece).
+% loop(_, _, _, _, _, Counter, Counter, _) :- fail.
+
+% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, Counter, NumLoops, FirstPiece) :-
+%     element(Pos1A, Piece1A, NextPiece),
+%     element(Pos1A, Piece2A, NextPiece2),
+%     element(Pos2B, Piece2B, NextPiece2),
+%     element(Pos2B, Piece1B, NextPiece3),
+%     element(PosNext, Piece1A, NextPiece3),
+%     write('----------------------'), nl,
+%     write(NumLoops), nl,
+%     write('Aqui'), nl,
+%     write(Counter), nl,
+%     Counter1 is Counter +1,
+%     loop(Piece1A, Piece2A, Piece1B, Piece2B, PosNext, Counter1, NumLoops, FirstPiece).
+
+
+
+
+checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
+    element(1, Piece1A, FirstPiece),
+    loop(Piece1A, Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, Counter, FirstPiece).
+
+% loop([], _, _, _, _, FirstPiece, _, FirstPiece).
+% loop([], _, _, _, _, _, _, _) :- fail.
+loop([], _, _, _, _, FirstPiece, 0, FirstPiece).
+loop([], _, _, _, _, _, 0, _).
+loop([H|T], Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, Counter, FirstPiece) :-
+    (element(Pos1A, Piece1A, NextPiece) #/\
+    element(Pos1A, Piece2A, NextPiece2) #/\
+    element(Pos2B, Piece2B, NextPiece2) #/\
+    element(Pos2B, Piece1B, NextPiece3) #/\
+    element(PosNext, Piece1A, NextPiece3)) #<=> X,
+    write(Counter), nl,
+    Counter #= M+X,
+    loop(T, Piece1A, Piece2A, Piece1B, Piece2B, PosNext, M, FirstPiece).
+
+
+% checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumLoops) :-
+%     element(1, Piece1A, FirstPiece),
+%     loop(Piece1A, Piece2A, Piece1B, Piece2B, FirstPiece, Counter, FirstPiece),
+%     count(1, Counter, #=, NumLoops).
+
+% loop(_, _, _, _, FirstPiece, _, FirstPiece).
+% loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, [Counter|Rest], FirstPiece) :-
+%     element(Pos1A, Piece1A, NextPiece) #/\
+%     element(Pos1A, Piece2A, NextPiece2) #/\
+%     element(Pos2B, Piece2B, NextPiece2) #/\
+%     element(Pos2B, Piece1B, NextPiece3) #/\
+%     element(PosNext, Piece1A, NextPiece3) #/\
+%     Counter #= 1,
+%     write('Aqui'), nl,
+%     loop(Piece1A, Piece2A, Piece1B, Piece2B, PosNext, Rest, FirstPiece).
 
 
 % ------------------ SOME EXAMPLE SOLUTIONS ------------------
@@ -98,6 +157,7 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
 
 % solveBoard(4, 5, 3, 1, 1, P1, P2, Result).
 % solveBoard(4, 5, 3, 1, 1, [3,12,15], [4,6,19], Result).
+% solveBoard(6, 6, 3, 1, 1, P1, P2, Result).
 
 
 % solveBoard(2,3,2,1,1, [1,3,4,6]).
