@@ -32,49 +32,52 @@ getRow(Position, NumColumns, PosRow) :-
 
 % -------------------------------------- BOARD DISPLAY --------------------------------------
 
-replace([_|T], 1, X, [X|T]).
-replace([H|T], I, X, [H|R]):- I > 0, NI is I-1, replace(T, NI, X, R), !.
-replace(L, _, _, L).
+symbol(empty, S) :- S=' '.
+symbol(king, S) :- S='\x2654\'.
+symbol(knight, S) :- S='\x2658\'.
+symbol(queen, S) :- S='\x2655\'.
+symbol(bishop, S) :- S='\x2657\'.
+symbol(rook, S) :- S='\x2656\'.
 
-createMatrix(NRows, NCols).
+replaceBoard([],_,NewBoard,NewBoard).
+replaceBoard([H|T], Type, Board, NewBoard) :-
+    replace(Board, H, Type, NewBoard1),
+    replaceBoard(T, Type, NewBoard1, NewBoard).
 
-length_list(N, List) :- length(List, N).
+generateEmptyBoard(N, Board) :-
+    generateBoard(N, [], Board).
 
-generate_matrix(Cols, Rows, Matrix) :-
-    length_list(Rows, Matrix),
-    maplist(length_list(Cols), Matrix).
+generateBoard(0, Board, Board).
+generateBoard(N, BoardIterator, Board) :-
+    N > 0,
+    append([empty], BoardIterator, NewBoard),
+    N1 is N-1,
+    generateBoard(N1, NewBoard, Board).
 
-replaceMatrix(DisplayMatrix, NRow, NCol, Val, NewMatrix) :-
-    nth1(NRow, DisplayMatrix, Elem),
-    replace(Elem, NCol, Val, NewElem),
-    replace(DisplayMatrix, NRow, NewElem, NewMatrix).   
+writeBoard([], _).
+writeBoard([H|T], NumColumns, Counter) :-
+    X is floor(Counter/NumColumns),
+    Y is ceiling(Counter/NumColumns),
+    X == Y, !,
+    printSquare(H), write(' |'), nl,
+    Counter1 is Counter+1,
+    writeBoard(T, NumColumns, Counter1);
+    printSquare(H),
+    Counter1 is Counter+1,
+    writeBoard(T, NumColumns, Counter1).
 
-replace([_|T], 0, X, [X|T]).
-replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
-replace(L, _, _, L).
+printSquare(Piece) :-
+    symbol(Piece, PieceSymbol),
+    write(' |'),
+    write(PieceSymbol).
 
-getDisplayMatrix(NRows, NCols, [P1|P2], P1Type, [P3|P4], P2Type, DisplayMatrix) :-
-    getMatrixPosition(P1, NCols, PR1, PC1),
-    getMatrixPosition(P2, NCols, PR2, PC2),
-    getMatrixPosition(P3, NCols, PR3, PC3),
-    getMatrixPosition(P4, NCols, PR4, PC4),
-    generate_matrix(NCols, NRows, DisplayMatrixTemp),
-    replaceMatrix(DisplayMatrixTemp, PR1, PC1, P1Type, MatrixTemp),
-    replaceMatrix(MatrixTemp, PR2, PC2, P1Type, MatrixTemp1),
-    replaceMatrix(MatrixTemp1, PR3, PC3, P2Type, MatrixTemp2),
-    replaceMatrix(MatrixTemp2, PR4, PC4, P2Type, DisplayMatrix).
+displayBoard(NumColumns, NumRows, Pieces1, TypePiece1, Pieces2, TypePiece2) :-
+    Size is NumColumns*NumRows,
+    generateEmptyBoard(Size, Board),
+    replaceBoard(Pieces1, TypePiece1, Board, NewBoard),
+    replaceBoard(Pieces2, TypePiece2, NewBoard, NewBoard1), !,
+    writeBoard(NewBoard1, NumColumns, 1).
 
+% displayBoard(3, 3, [1,2], king, [4,6], knight).
 
-symbol(V, ' ') :- var(V).
-symbol(king, 'k').
-symbol(knight, 'c').
-symbol( _ , ' ').
-
-printElem([]).
-
-printElem([H|T]):-
-    symbol(H, S), write('|  '), write(S), write('  |'),
-    printElem(T).
-
-print_matrix([]).
-print_matrix([H|T]) :- printElem(H), nl, print_matrix(T).
+% writeBoard([king,king,empty,knight,empty,knight,empty,empty,empty],3, 1)
