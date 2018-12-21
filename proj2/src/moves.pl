@@ -117,4 +117,4 @@ noAttackPositionsQueen(QueenColumn, QueenRow, OtherColumn, OtherRow) :-
     (OtherColumn #= QueenColumn #\/ OtherRow #\= QueenRow) #/\
     (abs(QueenColumn - OtherColumn) #\= abs(QueenRow - OtherRow)).
 
-% attackPositionsKnight(4, 4, 4, 2).
+% noAttackPositionsQueen(1, 2, 3, 1).

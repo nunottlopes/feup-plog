@@ -88,8 +88,9 @@ chessloop :-
 % solveBoard(2, 4, 2, knight, queen, [2,7], [1,8], Result). ---- Correct
 
 % 13.
-% solveBoard(3, 6, 3, knight, queen, P1, P2, Result). -------------- Lot of solutions (WRONG noAttackPositionsQueen)
+% solveBoard(3, 6, 3, knight, queen, P1, P2, Result). -------------- Wrong
 % solveBoard(3, 6, 3, knight, queen, [3,9,10], [6,7,17], Result). ------ Correct (check again after change predicate)
+% solveBoard(3, 6, 3, queen, knight, P1, P2, Result). -------- Wrong
 
 % 14.
 % solveBoard(4, 5, 3, knight, queen, P1, P2, Result). -------------- Lot of solutions
