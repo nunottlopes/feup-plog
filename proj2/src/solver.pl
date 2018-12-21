@@ -1,5 +1,5 @@
 % -------------------------------------- BOARD SOLVER PREDICATE --------------------------------------
-solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piece2A, Result) :-
+solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, FinalPiece2, Result) :-
     BoardSize is NumRows*NumColumns,
     length(Piece1A, NumPieces),
     length(Piece2A, NumPieces),
@@ -55,7 +55,10 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
 
     append(Piece1, Piece2, Result),
 
-    labeling([], Result).
+    labeling([], Result),
+    
+    sort(Piece1A, FinalPiece1),
+    sort(Piece2A, FinalPiece2).
 
 
 

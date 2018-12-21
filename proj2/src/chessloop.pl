@@ -51,7 +51,7 @@ chessloop :-
 
 % 6.
 % solveBoard(4, 4, 4, bishop, knight, P1, P2, Result).
-% solveBoard(4, 4, 4, bishop, knight, [2,8,9,15], [6,7,10,11], Result). ------ Wrong, but we can obtain a similar response (different order)
+% solveBoard(4, 4, 4, bishop, knight, [2,8,9,15], [6,7,10,11], Result). --- working but takes too long
 
 % 7. 
 % solveBoard(3, 5, 3, bishop, knight, P1, P2, Result). --------- Wrong
