@@ -44,8 +44,8 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2) :-
     % Constraints to avoid repeated solutions
     % Remove this if you want to have all the possible combinations
     % -------------------------------------------------------------
-    sorted(Piece1A),
-    different_lists(Piece1A, Piece1B, NumPieces),
+    % sorted(Piece1A),
+    % different_lists(Piece1A, Piece1B, NumPieces),
     % -------------------------------------------------------------
 
     append(Piece1A, Piece1B, Piece1),
@@ -136,13 +136,7 @@ loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, Counter) :-
 
 
 
-
-
-% To solve the problem if possible
-
-
-
-% -------------------------------------- BOARD SOLVER PREDICATE FOR TESTING --------------------------------------
+% -------------------------------------- BOARD SOLVER PREDICATE TO VERIFY SOLUTIONS --------------------------------------
 solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, FinalPiece2) :-
     BoardSize is NumRows*NumColumns,
     length(Piece1A, NumPieces),

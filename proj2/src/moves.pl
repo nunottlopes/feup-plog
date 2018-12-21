@@ -87,12 +87,21 @@ noAttackPositionsKnight(KnightColumn, KnightRow, OtherColumn, OtherRow) :-
 
 % -------------------------------------- ROOK MOVES --------------------------------------
 
+% attackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow) :-
+%     (OtherColumn #= RookColumn #\ OtherRow #= RookRow).
+
+% noAttackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow) :-
+%     (OtherColumn #\= RookColumn #/\ OtherRow #\= RookRow).
+
 attackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow) :-
     (OtherColumn #= RookColumn #\ OtherRow #= RookRow).
 
-noAttackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow) :-
-    (OtherColumn #\= RookColumn #/\ OtherRow #\= RookRow).
-
+noAttackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+    (OtherColumn #\= RookColumn #/\ OtherRow #\= RookRow) #\
+    (OtherColumn #= RookColumn #/\ OtherColumn #= MiddlePieceColumn #/\ OtherRow #< MiddlePieceRow #/\ MiddlePieceRow #< RookRow) #\
+    (OtherColumn #= RookColumn #/\ OtherColumn #= MiddlePieceColumn #/\ OtherRow #> MiddlePieceRow #/\ MiddlePieceRow #> RookRow) #\
+    (OtherRow #= RookRow #/\ OtherRow #= MiddlePieceRow #/\ OtherColumn #< MiddlePieceColumn #/\ MiddlePieceColumn #< RookColumn) #\
+    (OtherRow #= RookRow #/\ OtherRow #= MiddlePieceRow #/\ OtherColumn #> MiddlePieceColumn #/\ MiddlePieceColumn #> RookColumn).
 
 
 % -------------------------------------- BISHOP MOVES --------------------------------------
