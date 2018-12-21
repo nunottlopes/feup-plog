@@ -11,11 +11,62 @@ re :-
     reconsult('chessloop').
 
 
+replace([_|T], 1, X, [X|T]).
+replace([H|T], I, X, [H|R]):- I > 0, NI is I-1, replace(T, NI, X, R), !.
+replace(L, _, _, L).
+
+createMatrix(NRows, NCols).
+
+length_list(N, List) :- length(List, N).
+
+generate_matrix(Cols, Rows, Matrix) :-
+    length_list(Rows, Matrix),
+    maplist(length_list(Cols), Matrix).
+
+replaceMatrix(DisplayMatrix, NRow, NCol, Val, NewMatrix) :-
+    nth1(NRow, DisplayMatrix, Elem),
+    replace(Elem, NCol, Val, NewElem),
+    replace(DisplayMatrix, NRow, NewElem, NewMatrix).   
+
+replace([_|T], 0, X, [X|T]).
+replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
+replace(L, _, _, L).
+
+getDisplayMatrix(NRows, NCols, [P1|P2], P1Type, [P3|P4], P2Type, DisplayMatrix) :-
+    getMatrixPosition(P1, NCols, PR1, PC1),
+    getMatrixPosition(P2, NCols, PR2, PC2),
+    getMatrixPosition(P3, NCols, PR3, PC3),
+    getMatrixPosition(P4, NCols, PR4, PC4),
+    generate_matrix(NCols, NRows, DisplayMatrixTemp),
+    replaceMatrix(DisplayMatrixTemp, PR1, PC1, P1Type, MatrixTemp),
+    replaceMatrix(MatrixTemp, PR2, PC2, P1Type, MatrixTemp1),
+    replaceMatrix(MatrixTemp1, PR3, PC3, P2Type, MatrixTemp2),
+    replaceMatrix(MatrixTemp2, PR4, PC4, P2Type, DisplayMatrix).
+
+
+symbol(V, ' ') :- var(V).
+symbol(king, 'k').
+symbol(knight, 'c').
+symbol( _ , ' ').
+
+printElem([]).
+
+printElem([H|T]):-
+    symbol(H, S), write('|  '), write(S), write('  |'),
+    printElem(T).
+
+print_matrix([]).
+print_matrix([H|T]) :- printElem(H), nl, print_matrix(T).
+
 chessloop :-
     solveBoard(2, 3, 2, 1, 1, P1, P2, Result),
     write(P1), nl,
     write(P2), nl,
-    write(Result).
+    write(Result), nl,
+    write('Board Representation: '),nl,
+    getDisplayMatrix(2, 3, P1, king, P2, knight, Matrix),
+    % write(H), nl.
+    print_matrix(Matrix), nl.
 
 
 
