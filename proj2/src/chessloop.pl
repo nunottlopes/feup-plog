@@ -30,9 +30,10 @@ chessloop :-
 % solveBoard(2, 3, 2, knight, king, P1, P2, Result). ----- Wrong
 
 % 2.
-% solveBoard(4, 5, 3, king, knight, P1, P2, Result).
-% solveBoard(4, 5, 3, king, knight, [3,12,15], [4,6,19], Result).
-% solveBoard(4, 5, 3, knight, king, P1, P2, Result). ------ Wrong
+% solveBoard(4, 5, 3, king, knight, P1, P2, Result). -------- Correct
+% solveBoard(4, 5, 3, king, knight, [3,12,15], [4,6,19], Result). ----- Correct
+% solveBoard(4, 5, 3, knight, king, P1, P2, Result). ------ Correct 
+% solveBoard(4, 5, 3, knight, king, [4,6,19], [3,12,15], Result). ---- Correct
 
 % 3.
 % solveBoard(2, 4, 2, rook, king, P1, P2, Result).
@@ -40,9 +41,10 @@ chessloop :-
 % solveBoard(2, 4, 2, king, rook, P1, P2, Result). ------- Wrong
 
 % 4.
-% solveBoard(4, 5, 3, rook, king, P1, P2, Result).  ------- Wrong
-% solveBoard(4, 5, 3, king, rook, P1, P2, Result).
-% solveBoard(4, 5, 3, king, rook, [4,6,15], [8,12,19], Result).
+% solveBoard(4, 5, 3, rook, king, P1, P2, Result).  ------- Correct
+% solveBoard(4, 5, 3, king, rook, P1, P2, Result).  ------- Correct
+% solveBoard(4, 5, 3, king, rook, [4,6,15], [8,12,19], Result). ------ Correct
+% solveBoard(4, 5, 3, rook, king, [8,12,19],[4,6,15], Result). ------ Correct
 	
 % 5.
 % solveBoard(3, 3, 2, bishop, knight, P1, P2, Result). ----- Wrong Results or missing results
@@ -50,8 +52,8 @@ chessloop :-
 % solveBoard(3, 3, 2, knight, bishop, [1,2], [6,9], Result).
 
 % 6.
-% solveBoard(4, 4, 4, bishop, knight, P1, P2, Result).
-% solveBoard(4, 4, 4, bishop, knight, [2,8,9,15], [6,7,10,11], Result). --- working but takes too long
+% solveBoard(4, 4, 4, bishop, knight, P1, P2, Result). --- Correct but takes too long
+% solveBoard(4, 4, 4, bishop, knight, [2,8,9,15], [6,7,10,11], Result). --- Correct but takes too long
 
 % 7. 
 % solveBoard(3, 5, 3, bishop, knight, P1, P2, Result). --------- Wrong
@@ -76,8 +78,9 @@ chessloop :-
 % solveBoard(3, 8, 5, knight, rook, [3,4,11,12,24], [1,7,10,13,22], Result).
 
 % 12.
-% solveBoard(2, 4, 2, knight, queen, P1, P2, Result).
-% solveBoard(2, 4, 2, knight, queen, [2,7], [1,8], Result).
+% solveBoard(2, 4, 2, knight, queen, P1, P2, Result). ----- Correct
+% solveBoard(2, 4, 2, queen, knight, P1, P2, Result). ----- Correct
+% solveBoard(2, 4, 2, knight, queen, [2,7], [1,8], Result). ---- Correct
 
 % 13.
 % solveBoard(3, 6, 3, knight, queen, P1, P2, Result). -------------- Lot of solutions
