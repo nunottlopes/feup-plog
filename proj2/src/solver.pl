@@ -16,16 +16,17 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
     all_different(Piece2A),
     all_different(Piece2B),
 
+    % Check if the lists have same elements
     same_elements_list(Piece1A, Piece1B),
     same_elements_list(Piece2A, Piece2B),
 
-    % Piece A Attacks
-    pieceNoAttackSelf(Piece1A, NumColumns, king),
-    pieceAttack(Piece1A, Piece2A, NumColumns, king),
+    % Piece A attack constraints
+    pieceNoAttackSelf(Piece1A, NumColumns, TypePiece1),
+    pieceAttack(Piece1A, Piece2A, NumColumns, TypePiece1),
 
-    % Piece B Attacks
-    pieceNoAttackSelf(Piece2B, NumColumns, knight),
-    pieceAttack(Piece2B, Piece1B, NumColumns, knight),
+    % Piece B attack constraints
+    pieceNoAttackSelf(Piece2B, NumColumns, TypePiece2),
+    pieceAttack(Piece2B, Piece1B, NumColumns, TypePiece2),
 
     % Check if the positions form a loop
     checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumPieces),
@@ -36,50 +37,25 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Piece1A, Piec
     append(Piece1B, Piece2B, SecondResult),
     all_different(SecondResult),
 
+    % Verifies if the solutions are different, if not there is no loop in the solutions
     Value #= NumPieces*2,
-    different_lists(FirstResult, SecondResult, Value), % verify if the solutions are different, if not we don't have a loop
+    different_lists(FirstResult, SecondResult, Value), 
 
     % Constraints to avoid repeated solutions
+    % Remove this if you want to have all the possible combinations
+    % -------------------------------------------------------------
     sorted(Piece1A),
+    % Remove next so that you can change types order
+    %sorted(Piece2B),
     different_lists(Piece1A, Piece1B, NumPieces),
+    % -------------------------------------------------------------
 
     append(Piece1A, Piece1B, Piece1),
     append(Piece2A, Piece2B, Piece2),
 
     append(Piece1, Piece2, Result),
-    %append(Piece1A, Piece2A, Result),
 
     labeling([], Result).
-
-
-
-
-% ------------------ SOME EXAMPLE SOLUTIONS ------------------
-% solveBoard(2, 3, 2, 1, 1, P1, P2, Result).
-% solveBoard(4, 4, 2, 1, 1, P1, P2, Result).
-% solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,4,6]).
-% solveBoard(2,3,2,1,1,[1,3],[4,6], Result).
-% solveBoard(2,3,2,1,1,[1,3],[4,6], [1,3,3,1,4,6,6,4]).
-
-% solveBoard(4, 5, 3, 1, 1, P1, P2, Result).
-% solveBoard(4, 5, 3, 1, 1, [3,12,15], [4,6,19], Result).
-% solveBoard(6, 6, 3, 1, 1, P1, P2, Result).
-
-
-% solveBoard(2,3,2,1,1, [1,3,4,6]).
-% solveBoard(2,3,2,1,1, Result).
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -99,7 +75,8 @@ forEachPiece(_, [], _, _).
 verifyNoPieceAttack(A, B, NumColumns, Type) :-
     getMatrixPositionPLR(A, NumColumns, PieceRow, PieceColumn),
     getMatrixPositionPLR(B, NumColumns, OtherRow, OtherColumn),
-    invalid_position(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
+    noAttackPositions(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
+
 
 % Verify if the Piece attack only one of the other type of Piece
 pieceAttack(Piece, Other, NumColumns, Type) :-
@@ -122,7 +99,7 @@ pieceNoAttackOthers(A, [B|Other], NumColumns, Type) :-
 verifyPieceAttack(A, B, NumColumns, Type) :- 
     getMatrixPositionPLR(A, NumColumns, PieceRow, PieceColumn),
     getMatrixPositionPLR(B, NumColumns, OtherRow, OtherColumn),
-    valid_position(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
+    attackPositions(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
 
 
 
