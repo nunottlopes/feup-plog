@@ -21,7 +21,7 @@ getMatrixPosition(Position, NumColumns, PosRow, PosColumn) :-
 
 getColumn(Position, NumColumns, PosColumn) :-
     (Position mod NumColumns) =:= 0, !,
-    PosColumn is 5;
+    PosColumn is NumColumns;
     PosColumn is (Position mod NumColumns).
 
 getRow(Position, NumColumns, PosRow) :-
