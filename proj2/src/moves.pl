@@ -126,13 +126,27 @@ attackPositionsQueen(QueenColumn, QueenRow, OtherColumn, OtherRow) :-
     (OtherColumn #\= QueenColumn #/\ OtherRow #= QueenRow) #\
     (abs(QueenColumn - OtherColumn) #= abs(QueenRow - OtherRow)).
 
-noAttackPositionsQueen(QueenColumn, QueenRow, OtherColumn, OtherRow) :-
-    (OtherColumn #\= QueenColumn #\/ OtherRow #= QueenRow) #/\
-    (OtherColumn #= QueenColumn #\/ OtherRow #\= QueenRow) #/\
-    (abs(QueenColumn - OtherColumn) #\= abs(QueenRow - OtherRow)).
+% noAttackPositionsQueen(QueenColumn, QueenRow, OtherColumn, OtherRow) :-
+%     (OtherColumn #\= QueenColumn #\/ OtherRow #= QueenRow) #/\
+%     (OtherColumn #= QueenColumn #\/ OtherRow #\= QueenRow) #/\
+%     (abs(QueenColumn - OtherColumn) #\= abs(QueenRow - OtherRow)).
+
+noAttackPositionsQueen(QueenColumn, QueenRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+    ((OtherColumn #\= QueenColumn #/\ OtherRow #\= QueenRow) #\
+    (OtherColumn #= QueenColumn #/\ OtherColumn #= MiddlePieceColumn #/\ OtherRow #< MiddlePieceRow #/\ MiddlePieceRow #< QueenRow) #\
+    (OtherColumn #= QueenColumn #/\ OtherColumn #= MiddlePieceColumn #/\ OtherRow #> MiddlePieceRow #/\ MiddlePieceRow #> QueenRow) #\
+    (OtherRow #= QueenRow #/\ OtherRow #= MiddlePieceRow #/\ OtherColumn #< MiddlePieceColumn #/\ MiddlePieceColumn #< QueenColumn) #\
+    (OtherRow #= QueenRow #/\ OtherRow #= MiddlePieceRow #/\ OtherColumn #> MiddlePieceColumn #/\ MiddlePieceColumn #> QueenColumn)) #/\
+    ((abs(QueenColumn - OtherColumn) #\= abs(QueenRow - OtherRow)) #\
+    (abs(QueenColumn - OtherColumn) #= abs(QueenRow - OtherRow) #/\ abs(QueenColumn - MiddlePieceColumn) #= abs(QueenRow - MiddlePieceRow) #/\ MiddlePieceColumn #> QueenColumn #/\ OtherColumn #> MiddlePieceColumn) #\
+    (abs(QueenColumn - OtherColumn) #= abs(QueenRow - OtherRow) #/\ abs(QueenColumn - MiddlePieceColumn) #= abs(QueenRow - MiddlePieceRow) #/\ MiddlePieceColumn #< QueenColumn #/\ OtherColumn #< MiddlePieceColumn)).
+
+
+
+
 
 % noAttackPositionsQueen(1, 2, 3, 1).
 
 
-% noAttackPositionsBishop(3, 3, 5, 5, 4, 4)
+% noAttackPositionsQueen(3, 3, 4, 1, 4, 4)
 
