@@ -11,11 +11,19 @@ re :-
     reconsult('chessloop').
 
 chessloop :-
-    nl,write('To solve a board use: '), nl,
+    nl,
+    write('----------------------- CHESS LOOP PUZZLE-----------------------'), nl, nl,
+    write('> To solve a board and see the solution visually use:'), nl,
     write('solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2).'), nl, nl,
-    write('Example:'), nl,
-    write('- Place 2 knights and kings on a 2x3 chess board'), nl,
-    write('solveBoard(2, 3, 2, kings, knights).'), nl, nl.
+    write('     Example:'), nl,
+    write('     - Place 2 knights and kings on a 2x3 chess board'), nl,
+    write('     solveBoard(2, 3, 2, kings, knights).'), nl, nl,
+
+    write('> To generate a random problem and a solution use:'), nl,
+    write('chessloopRandom.'), nl, nl,
+
+    write('> If you want to check all solutions manually use:'), nl,
+    write('solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, Pieces1List, Pieces2List).'), nl, nl.
 
 chessloopRandom :-
     random(2, 7, NumRows),

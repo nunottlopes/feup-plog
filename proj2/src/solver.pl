@@ -188,61 +188,76 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
 % ------------------ SOME EXAMPLE SOLUTIONS ------------------
 
 % 1.
-% solveBoard(2, 3, 2, kings, knights, P1, P2).  ------- Correct
-% solveBoard(2, 3, 2, kings, knights,[1,3],[4,6]). ----- Correct
+% Elapsed time: 0.005 seconds
+% solveBoard(2, 3, 2, kings, knights, P1, P2).
+% solveBoard(2, 3, 2, kings, knights,[1,3],[4,6]).
 
 % 2.
-% solveBoard(4, 5, 3, kings, knights, P1, P2). -------- Correct
-% solveBoard(4, 5, 3, kings, knights, [3,12,15], [4,6,19]). ----- Correct
+% Elapsed time: 23.790 seconds
+% solveBoard(4, 5, 3, kings, knights, P1, P2).
+% solveBoard(4, 5, 3, kings, knights, [3,12,15], [4,6,19]).
 
 % 3.
-% solveBoard(2, 4, 2, rooks, kings, P1, P2).  ------ Correct
-% solveBoard(2, 4, 2, rooks, kings, [3,6], [1,8]). ------ Correct
+% Elapsed time: 0.006 seconds
+% solveBoard(2, 4, 2, rooks, kings, P1, P2).
+% solveBoard(2, 4, 2, rooks, kings, [3,6], [1,8]).
 
 % 4.
-% solveBoard(4, 5, 3, rooks, kings, P1, P2).  ------- Correct
-% solveBoard(4, 5, 3, rooks, kings, [8,12,19],[4,6,15]). ------ Correct
+% Elapsed time: 16.882 seconds
+% solveBoard(4, 5, 3, rooks, kings, P1, P2).
+% solveBoard(4, 5, 3, rooks, kings, [8,12,19],[4,6,15]).
 	
 % 5.
-% solveBoard(3, 3, 2, bishops, knights, P1, P2). ----- Correct
-% solveBoard(3, 3, 2, bishops, knights, [6,9], [1,2]). ----- Correct
+% Elapsed time: 0.002 seconds
+% solveBoard(3, 3, 2, bishops, knights, P1, P2).
+% solveBoard(3, 3, 2, bishops, knights, [6,9], [1,2]).
 
 % 6.
-% solveBoard(4, 4, 4, bishops, knights, P1, P2). --- Correct but takes too long
-% solveBoard(4, 4, 4, bishops, knights, [2,8,9,15], [6,7,10,11]). --- Correct but takes too long
+% Elapsed time: 942.598 seconds
+% solveBoard(4, 4, 4, bishops, knights, P1, P2).
+% solveBoard(4, 4, 4, bishops, knights, [2,8,9,15], [6,7,10,11]).
 
-% 7. 
-% solveBoard(3, 5, 4, bishops, knights, P1, P2). --------- Correct
-% solveBoard(3, 5, 4, bishops, knights, [4,6,13,15], [2,3,7,8]). ---- Correct
+% 7.
+% Elapsed time: 88.578 seconds
+% solveBoard(3, 5, 4, bishops, knights, P1, P2).
+% solveBoard(3, 5, 4, bishops, knights, [4,6,13,15], [2,3,7,8]).
 
 % 8.
-% solveBoard(4, 6, 4, bishops, kings, P1, P2). ------------- Prolly infinite loop
+% Longer than 3 hours
+% solveBoard(4, 6, 4, bishops, kings, P1, P2).
 % solveBoard(4, 6, 4, bishops, kings, [4,12,13,21], [3,7,18,22]).
 
 % 9.
-% solveBoard(5, 5, 4, bishops, kings, P1, P2). ------------- Correct but takes really long time
+% Longer than 3 hours
+% solveBoard(5, 5, 4, bishops, kings, P1, P2).
 % solveBoard(5, 5, 4, bishops, kings, [1,9,18,20], [6,8,17,25]). ----- Correct
 
 % 10.
-% solveBoard(3, 4, 3, knights, rooks, P1, P2). ------------- Correct
-% solveBoard(3, 4, 3, knights, rooks, [3,4,7], [1,6,12]). -------- Correct
+% Elapsed time: 0.118 seconds
+% solveBoard(3, 4, 3, knights, rooks, P1, P2).
+% solveBoard(3, 4, 3, knights, rooks, [3,4,7], [1,6,12]).
 
 % 11.
-% solveBoard(3, 8, 5, knights, rooks, P1, P2). ----------- Taking too long, not sure if wrong (2)
+% Longer than 3 hours
+% solveBoard(3, 8, 5, knights, rooks, P1, P2).
 % solveBoard(3, 8, 5, knights, rooks, [3,4,11,12,24], [1,7,10,13,22]).
 
 % 12.
-% solveBoard(2, 4, 2, knights, queens, P1, P2). ----- Correct
-% solveBoard(2, 4, 2, knights, queens, [2,7], [1,8]). ---- Correct
+% Elapsed time: 0.010 seconds
+% solveBoard(2, 4, 2, knights, queens, P1, P2).
+% solveBoard(2, 4, 2, knights, queens, [2,7], [1,8]).
 
 % 13.
-% solveBoard(3, 6, 3, knights, queens, P1, P2). -------------- Correct
-% solveBoard(3, 6, 3, knights, queens, [3,9,10], [6,7,17]). ------ Correct
+% Elapsed time: 12.432 seconds
+% solveBoard(3, 6, 3, knights, queens, P1, P2).
+% solveBoard(3, 6, 3, knights, queens, [3,9,10], [6,7,17]).
 
 % 14.
-% solveBoard(4, 5, 3, knights, queens, P1, P2). -------------- Correct
-% solveBoard(4, 5, 3, knights, queens, [2,12,14], [5,11,19]). ----- Correct
+% Elapsed time: 11.641 seconds
+% solveBoard(4, 5, 3, knights, queens, P1, P2).
+% solveBoard(4, 5, 3, knights, queens, [2,12,14], [5,11,19]).
 
 % 15.
-% solveBoard(4, 7, 4, knights, queens, P1, P2). ----------- Too Long
-% solveBoard(4, 7, 4, knights, queens, [1,8,21,28], [6,10,19,23]). --------- Too Long
+% Elapsed time: 3138.089 seconds
+% solveBoard(4, 7, 4, knights, queens, P1, P2).
+% solveBoard(4, 7, 4, knights, queens, [1,8,21,28], [6,10,19,23]).
