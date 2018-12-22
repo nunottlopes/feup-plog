@@ -269,14 +269,15 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
 % solveBoard(2, 4, 2, knight, queen, [2,7], [1,8]). ---- Correct
 
 % 13.
-% solveBoard(3, 6, 3, knight, queen, P1, P2). -------------- Wrong
-% solveBoard(3, 6, 3, knight, queen, [3,9,10], [6,7,17]). ------ Correct (check again after change predicate)
-% solveBoard(3, 6, 3, queen, knight, P1, P2). -------- Wrong
+% solveBoard(3, 6, 3, knight, queen, P1, P2). -------------- Correct
+% solveBoard(3, 6, 3, knight, queen, [3,9,10], [6,7,17]). ------ Correct
+% solveBoard(3, 6, 3, queen, knight, P1, P2). -------- Correct
+% solveBoard(3, 6, 3, queen, knight, [6,7,17], [3,9,10]). ------- Correct
 
 % 14.
-% solveBoard(4, 5, 3, knight, queen, P1, P2). -------------- Lot of solutions
-% solveBoard(4, 5, 3, knight, queen, [2,12,14], [5,11,19]). ----- wrong
+% solveBoard(4, 5, 3, knight, queen, P1, P2). -------------- Correct
+% solveBoard(4, 5, 3, knight, queen, [2,12,14], [5,11,19]). ----- Correct
 
 % 15.
-% solveBoard(4, 7, 4, knight, queen, P1, P2). -------------- Lot of solutions (WRONG noAttackPositionsQueen)
-% solveBoard(4, 7, 4, knight, queen, [1,8,21,28], [6,10,19,23]). ---- wrong
+% solveBoard(4, 7, 4, knight, queen, P1, P2). ----------- Too Long
+% solveBoard(4, 7, 4, knight, queen, [1,8,21,28], [6,10,19,23]). --------- Too Long
