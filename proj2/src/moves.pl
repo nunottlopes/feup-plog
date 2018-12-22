@@ -109,8 +109,13 @@ noAttackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow, MiddlePieceCol
 attackPositionsBishop(BishopColumn, BishopRow, OtherColumn, OtherRow) :-
     abs(BishopColumn - OtherColumn) #= abs(BishopRow - OtherRow).
 
-noAttackPositionsBishop(BishopColumn, BishopRow, OtherColumn, OtherRow) :-
-    abs(BishopColumn - OtherColumn) #\= abs(BishopRow - OtherRow).
+% noAttackPositionsBishop(BishopColumn, BishopRow, OtherColumn, OtherRow) :-
+%     abs(BishopColumn - OtherColumn) #\= abs(BishopRow - OtherRow).
+
+noAttackPositionsBishop(BishopColumn, BishopRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+    (abs(BishopColumn - OtherColumn) #\= abs(BishopRow - OtherRow)) #\
+    (abs(BishopColumn - OtherColumn) #= abs(BishopRow - OtherRow) #/\ abs(BishopColumn - MiddlePieceColumn) #= abs(BishopRow - MiddlePieceRow) #/\ MiddlePieceColumn #> BishopColumn #/\ OtherColumn #> MiddlePieceColumn) #\
+    (abs(BishopColumn - OtherColumn) #= abs(BishopRow - OtherRow) #/\ abs(BishopColumn - MiddlePieceColumn) #= abs(BishopRow - MiddlePieceRow) #/\ MiddlePieceColumn #< BishopColumn #/\ OtherColumn #< MiddlePieceColumn).
 
 
 
@@ -127,3 +132,7 @@ noAttackPositionsQueen(QueenColumn, QueenRow, OtherColumn, OtherRow) :-
     (abs(QueenColumn - OtherColumn) #\= abs(QueenRow - OtherRow)).
 
 % noAttackPositionsQueen(1, 2, 3, 1).
+
+
+% noAttackPositionsBishop(3, 3, 5, 5, 4, 4)
+
