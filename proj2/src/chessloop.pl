@@ -17,3 +17,4 @@ chessloop :-
     write('- Place 2 knights and kings on a 2/3 chess board'), nl,
     write('solveBoard(2, 3, 2, king, knight).'), nl, nl.
 
+chessloopRandom :-

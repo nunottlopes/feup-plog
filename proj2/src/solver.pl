@@ -41,19 +41,17 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2) :-
     Value #= NumPieces*2,
     different_lists(FirstResult, SecondResult, Value), 
 
-    % Constraints to avoid repeated solutions
-    % Remove this if you want to have all the possible combinations
-    % -------------------------------------------------------------
-    % sorted(Piece1A),
-    % different_lists(Piece1A, Piece1B, NumPieces),
-    % -------------------------------------------------------------
 
     append(Piece1A, Piece1B, Piece1),
     append(Piece2A, Piece2B, Piece2),
 
     append(Piece1, Piece2, Result),
 
+    statistics(walltime, _),
     labeling([], Result),
+    statistics(walltime, [_, ElapsedTime | _]),
+	format('A solution has been found!~nElapsed time: ~3d seconds', ElapsedTime), nl,
+    fd_statistics, nl,
 
     !, displayBoard(NumColumns, NumRows, Piece1A, TypePiece1, Piece2A, TypePiece2).
 
@@ -140,9 +138,7 @@ loop(Piece1A, Piece2A, Piece1B, Piece2B, NextPiece, FirstPiece, Counter) :-
 
 
 
-
-
-% -------------------------------------- BOARD SOLVER PREDICATE TO VERIFY SOLUTIONS --------------------------------------
+% -------------------------------------- BOARD SOLVER PREDICATE TO SEE/VERIFY ALL SOLUTIONS --------------------------------------
 solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, FinalPiece2) :-
     BoardSize is NumRows*NumColumns,
     length(Piece1A, NumPieces),
@@ -175,18 +171,17 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
     % Check if the positions form a loop
     checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumPieces),
 
-    % Check if the positions of the type of Piece1 are different from the positions of the piece type Piece2 
-    append(Piece1A, Piece2A, FirstResult),
-    all_different(FirstResult),
-    append(Piece1B, Piece2B, SecondResult),
-    all_different(SecondResult),
+    % % Check if the positions of the type of Piece1 are different from the positions of the piece type Piece2 
+    % append(Piece1A, Piece2A, FirstResult),
+    % all_different(FirstResult),
+    % append(Piece1B, Piece2B, SecondResult),
+    % all_different(SecondResult),
 
-    % Verifies if the solutions are different, if not there is no loop in the solutions
-    Value #= NumPieces*2,
-    different_lists(FirstResult, SecondResult, Value), 
+    % % Verifies if the solutions are different, if not there is no loop in the solutions
+    % Value #= NumPieces*2,
+    % different_lists(FirstResult, SecondResult, Value), 
 
-    % Constraints to avoid repeated solutions
-    % Remove this if you want to have all the possible combinations
+    % Constraints to avoid some repeated solutions
     % -------------------------------------------------------------
     sorted(Piece1A),
     different_lists(Piece1A, Piece1B, NumPieces),
@@ -197,10 +192,15 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
 
     append(Piece1, Piece2, Result),
 
+    statistics(walltime, _),
     labeling([], Result),
-    
+    statistics(walltime, [_, ElapsedTime | _]),
+
     sort(Piece1A, FinalPiece1),
-    sort(Piece2A, FinalPiece2).
+    sort(Piece2A, FinalPiece2),
+
+    nl, format('A solution has been found!~nElapsed time: ~3d seconds', ElapsedTime), nl,
+    fd_statistics, nl.
 
 
 % ------------------ SOME EXAMPLE SOLUTIONS ------------------
@@ -240,10 +240,10 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
 % solveBoard(4, 4, 4, bishop, knight, [2,8,9,15], [6,7,10,11]). --- Correct but takes too long
 
 % 7. 
-% solveBoard(3, 5, 3, bishop, knight, P1, P2). --------- Wrong
-% solveBoard(3, 5, 3, bishop, knight, [4,6,13,15], [2,3,7,8]). ---- Wrong
-% solveBoard(3, 5, 3, knight, bishop, P1, P2). --------- Wrong
-% solveBoard(3, 5, 3, knight, bishop, [2,3,7,8], [4,6,13,15]). ---- Wrong
+% solveBoard(3, 5, 4, bishop, knight, P1, P2). --------- Correct
+% solveBoard(3, 5, 4, bishop, knight, [4,6,13,15], [2,3,7,8]). ---- Correct
+% solveBoard(3, 5, 4, knight, bishop, P1, P2). --------- Correct
+% solveBoard(3, 5, 4, knight, bishop, [2,3,7,8], [4,6,13,15]). ---- Correct
 
 % 8.
 % solveBoard(4, 6, 4, bishop, king, P1, P2). ------------- Prolly infinite loop
