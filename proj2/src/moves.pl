@@ -2,54 +2,53 @@
 
 % Attack
 
-attackPositions(king, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+attackPositions(kings, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     attackPositionsKing(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-attackPositions(knight, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+attackPositions(knights, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     attackPositionsKnight(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-attackPositions(rook, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+attackPositions(rooks, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     attackPositionsRook(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-attackPositions(bishop, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+attackPositions(bishops, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     attackPositionsBishop(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-attackPositions(queen, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+attackPositions(queens, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     attackPositionsQueen(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
 
 % No Attack
 
-noAttackPositions(king, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+noAttackPositions(kings, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     noAttackPositionsKing(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-noAttackPositions(knight, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+noAttackPositions(knights, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     noAttackPositionsKnight(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-noAttackPositions(rook, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+noAttackPositions(rooks, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     noAttackPositionsRook(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-noAttackPositions(bishop, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+noAttackPositions(bishops, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     noAttackPositionsBishop(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-noAttackPositions(queen, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
+noAttackPositions(queens, PieceColumn, PieceRow, OtherColumn, OtherRow) :-
     noAttackPositionsQueen(PieceColumn, PieceRow, OtherColumn, OtherRow).
 
-%--------------------------------------------------------------------------
 
-noAttackPositions(king, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+noAttackPositions(kings, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
     noAttackPositionsKing(PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow).
 
-noAttackPositions(knight, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+noAttackPositions(knights, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
     noAttackPositionsKnight(PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow).
 
-noAttackPositions(rook, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+noAttackPositions(rooks, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
     noAttackPositionsRook(PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow).
 
-noAttackPositions(bishop, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+noAttackPositions(bishops, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
     noAttackPositionsBishop(PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow).
 
-noAttackPositions(queen, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
+noAttackPositions(queens, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow) :-
     noAttackPositionsQueen(PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow).
 
 
@@ -124,9 +123,6 @@ noAttackPositionsKnight(KnightColumn, KnightRow, OtherColumn, OtherRow, _, _) :-
 
 % -------------------------------------- ROOK MOVES --------------------------------------
 
-% attackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow) :-
-%     (OtherColumn #= RookColumn #\ OtherRow #= RookRow).
-
 attackPositionsRook(RookColumn, RookRow, OtherColumn, OtherRow) :-
     (OtherColumn #= RookColumn #\ OtherRow #= RookRow).
 
@@ -178,12 +174,4 @@ noAttackPositionsQueen(QueenColumn, QueenRow, OtherColumn, OtherRow, MiddlePiece
     (abs(QueenColumn - OtherColumn) #= abs(QueenRow - OtherRow) #/\ abs(QueenColumn - MiddlePieceColumn) #= abs(QueenRow - MiddlePieceRow) #/\ MiddlePieceColumn #> QueenColumn #/\ OtherColumn #> MiddlePieceColumn) #\
     (abs(QueenColumn - OtherColumn) #= abs(QueenRow - OtherRow) #/\ abs(QueenColumn - MiddlePieceColumn) #= abs(QueenRow - MiddlePieceRow) #/\ MiddlePieceColumn #< QueenColumn #/\ OtherColumn #< MiddlePieceColumn)).
 
-
-
-
-
-% noAttackPositionsQueen(1, 2, 3, 1).
-
-
-% noAttackPositionsQueen(3, 3, 6, 3, 4, 3)
 

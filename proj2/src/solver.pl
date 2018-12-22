@@ -1,4 +1,5 @@
 % -------------------------------------- BOARD SOLVER PREDICATE --------------------------------------
+
 solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2) :-
     BoardSize is NumRows*NumColumns,
     length(Piece1A, NumPieces),
@@ -30,17 +31,6 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2) :-
 
     % Check if the positions form a loop
     checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumPieces),
-
-    % Check if the positions of the type of Piece1 are different from the positions of the piece type Piece2 
-    append(Piece1A, Piece2A, FirstResult),
-    all_different(FirstResult),
-    append(Piece1B, Piece2B, SecondResult),
-    all_different(SecondResult),
-
-    % Verifies if the solutions are different, if not there is no loop in the solutions
-    Value #= NumPieces*2,
-    different_lists(FirstResult, SecondResult, Value), 
-
 
     append(Piece1A, Piece1B, Piece1),
     append(Piece2A, Piece2B, Piece2),
@@ -171,16 +161,6 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
     % Check if the positions form a loop
     checkForLoop(Piece1A, Piece2A, Piece1B, Piece2B, NumPieces),
 
-    % % Check if the positions of the type of Piece1 are different from the positions of the piece type Piece2 
-    % append(Piece1A, Piece2A, FirstResult),
-    % all_different(FirstResult),
-    % append(Piece1B, Piece2B, SecondResult),
-    % all_different(SecondResult),
-
-    % % Verifies if the solutions are different, if not there is no loop in the solutions
-    % Value #= NumPieces*2,
-    % different_lists(FirstResult, SecondResult, Value), 
-
     % Constraints to avoid some repeated solutions
     % -------------------------------------------------------------
     sorted(Piece1A),
@@ -203,81 +183,66 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
     fd_statistics, nl.
 
 
+
+
 % ------------------ SOME EXAMPLE SOLUTIONS ------------------
 
 % 1.
-% solveBoard(2, 3, 2, king, knight, P1, P2).  ------- Correct
-% solveBoard(2, 3, 2, king, knight,[1,3],[4,6]). ----- Correct
-% solveBoard(2, 3, 2, knight, king, P1, P2). ----- Correct
-% solveBoard(2, 3, 2, knight, king,[4,6],[1,3]). ----- Correct
+% solveBoard(2, 3, 2, kings, knights, P1, P2).  ------- Correct
+% solveBoard(2, 3, 2, kings, knights,[1,3],[4,6]). ----- Correct
 
 % 2.
-% solveBoard(4, 5, 3, king, knight, P1, P2). -------- Correct
-% solveBoard(4, 5, 3, king, knight, [3,12,15], [4,6,19]). ----- Correct
-% solveBoard(4, 5, 3, knight, king, P1, P2). ------ Correct 
-% solveBoard(4, 5, 3, knight, king, [4,6,19], [3,12,15]). ---- Correct
+% solveBoard(4, 5, 3, kings, knights, P1, P2). -------- Correct
+% solveBoard(4, 5, 3, kings, knights, [3,12,15], [4,6,19]). ----- Correct
 
 % 3.
-% solveBoard(2, 4, 2, rook, king, P1, P2).  ------ Correct
-% solveBoard(2, 4, 2, rook, king, [3,6], [1,8]). ------ Correct
-% solveBoard(2, 4, 2, king, rook, P1, P2). ------- Correct
-% solveBoard(2, 4, 2, king, rook, [1,8], [3,6]). ------ Correct
+% solveBoard(2, 4, 2, rooks, kings, P1, P2).  ------ Correct
+% solveBoard(2, 4, 2, rooks, kings, [3,6], [1,8]). ------ Correct
 
 % 4.
-% solveBoard(4, 5, 3, rook, king, P1, P2).  ------- Correct
-% solveBoard(4, 5, 3, king, rook, P1, P2).  ------- Correct
-% solveBoard(4, 5, 3, king, rook, [4,6,15], [8,12,19]). ------ Correct
-% solveBoard(4, 5, 3, rook, king, [8,12,19],[4,6,15]). ------ Correct
+% solveBoard(4, 5, 3, rooks, kings, P1, P2).  ------- Correct
+% solveBoard(4, 5, 3, rooks, kings, [8,12,19],[4,6,15]). ------ Correct
 	
 % 5.
-% solveBoard(3, 3, 2, bishop, knight, P1, P2). ----- Correct
-% solveBoard(3, 3, 2, bishop, knight, [6,9], [1,2]). ----- Correct
-% solveBoard(3, 3, 2, knight, bishop, P1, P2).  ------ Correct
-% solveBoard(3, 3, 2, knight, bishop, [1,2], [6,9]). ----- Correct
+% solveBoard(3, 3, 2, bishops, knights, P1, P2). ----- Correct
+% solveBoard(3, 3, 2, bishops, knights, [6,9], [1,2]). ----- Correct
 
 % 6.
-% solveBoard(4, 4, 4, bishop, knight, P1, P2). --- Correct but takes too long
-% solveBoard(4, 4, 4, bishop, knight, [2,8,9,15], [6,7,10,11]). --- Correct but takes too long
+% solveBoard(4, 4, 4, bishops, knights, P1, P2). --- Correct but takes too long
+% solveBoard(4, 4, 4, bishops, knights, [2,8,9,15], [6,7,10,11]). --- Correct but takes too long
 
 % 7. 
-% solveBoard(3, 5, 4, bishop, knight, P1, P2). --------- Correct
-% solveBoard(3, 5, 4, bishop, knight, [4,6,13,15], [2,3,7,8]). ---- Correct
-% solveBoard(3, 5, 4, knight, bishop, P1, P2). --------- Correct
-% solveBoard(3, 5, 4, knight, bishop, [2,3,7,8], [4,6,13,15]). ---- Correct
+% solveBoard(3, 5, 4, bishops, knights, P1, P2). --------- Correct
+% solveBoard(3, 5, 4, bishops, knights, [4,6,13,15], [2,3,7,8]). ---- Correct
 
 % 8.
-% solveBoard(4, 6, 4, bishop, king, P1, P2). ------------- Prolly infinite loop
-% solveBoard(4, 6, 4, bishop, king, [4,12,13,21], [3,7,18,22]).
+% solveBoard(4, 6, 4, bishops, kings, P1, P2). ------------- Prolly infinite loop
+% solveBoard(4, 6, 4, bishops, kings, [4,12,13,21], [3,7,18,22]).
 
 % 9.
-% solveBoard(5, 5, 4, bishop, king, P1, P2). ------------- Correct but takes really long time
-% solveBoard(5, 5, 4, bishop, king, [1,9,18,20], [6,8,17,25]). ----- Correct
-% solveBoard(5, 5, 4, bishop, king, [6,8,17,25], [1,9,18,20]).
+% solveBoard(5, 5, 4, bishops, kings, P1, P2). ------------- Correct but takes really long time
+% solveBoard(5, 5, 4, bishops, kings, [1,9,18,20], [6,8,17,25]). ----- Correct
 
 % 10.
-% solveBoard(3, 4, 3, knight, rook, P1, P2). ------------- Correct
-% solveBoard(3, 4, 3, rook, knight, P1, P2). ------------- Correct
-% solveBoard(3, 4, 3, knight, rook, [3,4,7], [1,6,12]). -------- Correct
+% solveBoard(3, 4, 3, knights, rooks, P1, P2). ------------- Correct
+% solveBoard(3, 4, 3, knights, rooks, [3,4,7], [1,6,12]). -------- Correct
 
 % 11.
-% solveBoard(3, 8, 5, knight, rook, P1, P2). ----------- Taking too long, not sure if wrong (2)
-% solveBoard(3, 8, 5, knight, rook, [3,4,11,12,24], [1,7,10,13,22]).
+% solveBoard(3, 8, 5, knights, rooks, P1, P2). ----------- Taking too long, not sure if wrong (2)
+% solveBoard(3, 8, 5, knights, rooks, [3,4,11,12,24], [1,7,10,13,22]).
 
 % 12.
-% solveBoard(2, 4, 2, knight, queen, P1, P2). ----- Correct
-% solveBoard(2, 4, 2, queen, knight, P1, P2). ----- Correct
-% solveBoard(2, 4, 2, knight, queen, [2,7], [1,8]). ---- Correct
+% solveBoard(2, 4, 2, knights, queens, P1, P2). ----- Correct
+% solveBoard(2, 4, 2, knights, queens, [2,7], [1,8]). ---- Correct
 
 % 13.
-% solveBoard(3, 6, 3, knight, queen, P1, P2). -------------- Correct
-% solveBoard(3, 6, 3, knight, queen, [3,9,10], [6,7,17]). ------ Correct
-% solveBoard(3, 6, 3, queen, knight, P1, P2). -------- Correct
-% solveBoard(3, 6, 3, queen, knight, [6,7,17], [3,9,10]). ------- Correct
+% solveBoard(3, 6, 3, knights, queens, P1, P2). -------------- Correct
+% solveBoard(3, 6, 3, knights, queens, [3,9,10], [6,7,17]). ------ Correct
 
 % 14.
-% solveBoard(4, 5, 3, knight, queen, P1, P2). -------------- Correct
-% solveBoard(4, 5, 3, knight, queen, [2,12,14], [5,11,19]). ----- Correct
+% solveBoard(4, 5, 3, knights, queens, P1, P2). -------------- Correct
+% solveBoard(4, 5, 3, knights, queens, [2,12,14], [5,11,19]). ----- Correct
 
 % 15.
-% solveBoard(4, 7, 4, knight, queen, P1, P2). ----------- Too Long
-% solveBoard(4, 7, 4, knight, queen, [1,8,21,28], [6,10,19,23]). --------- Too Long
+% solveBoard(4, 7, 4, knights, queens, P1, P2). ----------- Too Long
+% solveBoard(4, 7, 4, knights, queens, [1,8,21,28], [6,10,19,23]). --------- Too Long

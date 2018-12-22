@@ -33,11 +33,11 @@ getRow(Position, NumColumns, PosRow) :-
 % -------------------------------------- BOARD DISPLAY --------------------------------------
 
 symbol(empty, S) :- S=' '.
-symbol(king, S) :- S='\x2654\'.
-symbol(knight, S) :- S='\x2658\'.
-symbol(queen, S) :- S='\x2655\'.
-symbol(bishop, S) :- S='\x2657\'.
-symbol(rook, S) :- S='\x2656\'.
+symbol(kings, S) :- S='\x2654\'.
+symbol(knights, S) :- S='\x2658\'.
+symbol(queens, S) :- S='\x2655\'.
+symbol(bishops, S) :- S='\x2657\'.
+symbol(rooks, S) :- S='\x2656\'.
 
 replaceBoard([],_,NewBoard,NewBoard).
 replaceBoard([H|T], Type, Board, NewBoard) :-
@@ -78,6 +78,3 @@ displayBoard(NumColumns, NumRows, Pieces1, TypePiece1, Pieces2, TypePiece2) :-
     replaceBoard(Pieces2, TypePiece2, NewBoard, NewBoard1), !,
     writeBoard(NewBoard1, NumColumns, 1).
 
-% displayBoard(3, 3, [1,2], king, [4,6], knight).
-
-% writeBoard([king,king,empty,knight,empty,knight,empty,empty,empty],3, 1)
