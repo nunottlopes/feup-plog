@@ -77,6 +77,12 @@ verifyNoPieceAttack(A, B, NumColumns, Type) :-
     getMatrixPositionPLR(B, NumColumns, OtherRow, OtherColumn),
     noAttackPositions(Type, PieceColumn, PieceRow, OtherColumn, OtherRow).
 
+verifyNoPieceAttack(A, B, NumColumns, Type, C) :-
+    getMatrixPositionPLR(A, NumColumns, PieceRow, PieceColumn),
+    getMatrixPositionPLR(B, NumColumns, OtherRow, OtherColumn),
+    getMatrixPositionPLR(C, NumColumns, MiddlePieceRow, MiddlePieceColumn),
+    noAttackPositions(Type, PieceColumn, PieceRow, OtherColumn, OtherRow, MiddlePieceColumn, MiddlePieceRow).
+
 
 % Verify if the Piece attack only one of the other type of Piece
 pieceAttack(Piece, Other, NumColumns, Type) :-
@@ -84,16 +90,16 @@ pieceAttack(Piece, Other, NumColumns, Type) :-
 
 pieceAttackIterator([A|Piece], [B|Other], NumColumns, Previous, Type) :- 
     verifyPieceAttack(A, B, NumColumns, Type), 
-    pieceNoAttackOthers(A, Other, NumColumns, Type), 
-    pieceNoAttackOthers(A, Previous, NumColumns, Type), 
+    pieceNoAttackOthers(A, Other, NumColumns, Type, B), 
+    pieceNoAttackOthers(A, Previous, NumColumns, Type, B), 
     append([B], Previous, NewPrevious),
     pieceAttackIterator(Piece, Other, NumColumns, NewPrevious, Type).
 pieceAttackIterator([], [], _, _, _).
 
-pieceNoAttackOthers(_, [], _, _).
-pieceNoAttackOthers(A, [B|Other], NumColumns, Type) :-
-    verifyNoPieceAttack(A, B, NumColumns, Type),
-    pieceNoAttackOthers(A, Other, NumColumns, Type).
+pieceNoAttackOthers(_, [], _, _, _).
+pieceNoAttackOthers(A, [C|Other], NumColumns, Type, B) :-
+    verifyNoPieceAttack(A, C, NumColumns, Type, B),
+    pieceNoAttackOthers(A, Other, NumColumns, Type, B).
 
 
 verifyPieceAttack(A, B, NumColumns, Type) :- 
@@ -249,9 +255,9 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
 % solveBoard(5, 5, 4, bishop, king, [6,8,17,25], [1,9,18,20]).
 
 % 10.
-% solveBoard(3, 4, 3, knight, rook, P1, P2). ------------- Wrong
-% solveBoard(3, 4, 3, rook, knight, P1, P2). ------------- Wrong
-% solveBoard(3, 4, 3, knight, rook, [3,4,7], [1,6,12]).
+% solveBoard(3, 4, 3, knight, rook, P1, P2). ------------- Correct
+% solveBoard(3, 4, 3, rook, knight, P1, P2). ------------- Correct
+% solveBoard(3, 4, 3, knight, rook, [3,4,7], [1,6,12]). -------- Correct
 
 % 11.
 % solveBoard(3, 8, 5, knight, rook, P1, P2). ----------- Taking too long, not sure if wrong (2)
@@ -263,14 +269,14 @@ solveBoard(NumRows, NumColumns, NumPieces, TypePiece1, TypePiece2, FinalPiece1, 
 % solveBoard(2, 4, 2, knight, queen, [2,7], [1,8]). ---- Correct
 
 % 13.
-% solveBoard(3, 6, 3, knight, queen, P1, P2, Result). -------------- Wrong
-% solveBoard(3, 6, 3, knight, queen, [3,9,10], [6,7,17], Result). ------ Correct (check again after change predicate)
-% solveBoard(3, 6, 3, queen, knight, P1, P2, Result). -------- Wrong
+% solveBoard(3, 6, 3, knight, queen, P1, P2). -------------- Wrong
+% solveBoard(3, 6, 3, knight, queen, [3,9,10], [6,7,17]). ------ Correct (check again after change predicate)
+% solveBoard(3, 6, 3, queen, knight, P1, P2). -------- Wrong
 
 % 14.
-% solveBoard(4, 5, 3, knight, queen, P1, P2, Result). -------------- Lot of solutions
-% solveBoard(4, 5, 3, knight, queen, [2,12,14], [5,11,19], Result). ----- wrong
+% solveBoard(4, 5, 3, knight, queen, P1, P2). -------------- Lot of solutions
+% solveBoard(4, 5, 3, knight, queen, [2,12,14], [5,11,19]). ----- wrong
 
 % 15.
-% solveBoard(4, 7, 4, knight, queen, P1, P2, Result). -------------- Lot of solutions (WRONG noAttackPositionsQueen)
-% solveBoard(4, 7, 4, knight, queen, [1,8,21,28], [6,10,19,23], Result). ---- wrong
+% solveBoard(4, 7, 4, knight, queen, P1, P2). -------------- Lot of solutions (WRONG noAttackPositionsQueen)
+% solveBoard(4, 7, 4, knight, queen, [1,8,21,28], [6,10,19,23]). ---- wrong
